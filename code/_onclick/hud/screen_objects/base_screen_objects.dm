@@ -145,7 +145,7 @@
 
 /obj/screen/item_action/top_bar/Initialize()
 	. = ..()
-	name = initial(name)
+	name = initial(name) // TODO: see if that even does something -- KIROV
 
 /obj/screen/item_action/top_bar/update_icon()
 	..()
@@ -254,7 +254,7 @@
 /obj/screen/text
 	icon = null
 	icon_state = null
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	screen_loc = "CENTER-7,CENTER-7"
 	maptext_height = 480
 	maptext_width = 480
@@ -1203,7 +1203,7 @@ obj/screen/fire/DEADelize()
 	icon_state = "blank"
 	name = "drugs"
 	screen_loc = "WEST,SOUTH to EAST,NORTH"
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	process_flag = TRUE
 	layer = 17 //The black screen overlay sets layer to 18 to display it, this one has to be just on top.
 	plane = HUD_PLANE
@@ -1230,14 +1230,14 @@ obj/screen/fire/DEADelize()
 	screen_loc = "WEST,SOUTH to EAST,NORTH"
 	layer = 21
 	plane = HUD_PLANE
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /obj/screen/damageoverlay
 	icon = 'icons/mob/screen1_full.dmi'
 	icon_state = "oxydamageoverlay0"
 	name = "dmg"
 	screen_loc = "1,1:-32"
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	process_flag = TRUE
 	layer = UI_DAMAGE_LAYER
 	plane = HUD_PLANE
@@ -1344,7 +1344,7 @@ obj/screen/fire/DEADelize()
 	icon = null
 	name = "glasses"
 	screen_loc = "1:-32,1:-32"
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	process_flag = TRUE
 	layer = 17 //The black screen overlay sets layer to 18 to display it, this one has to be just on top.
 	plane = HUD_PLANE

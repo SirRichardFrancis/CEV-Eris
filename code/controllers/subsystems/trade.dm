@@ -48,7 +48,7 @@ SUBSYSTEM_DEF(trade)
 /datum/controller/subsystem/trade/proc/DiscoverAllTradeStations()
 	discovered_stations = all_stations.Copy()
 
-/datum/controller/subsystem/trade/Initialize()
+/datum/controller/subsystem/trade/SS_initialize()
 	InitStations()
 	. = ..()
 

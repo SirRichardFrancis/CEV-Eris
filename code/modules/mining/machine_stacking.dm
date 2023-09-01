@@ -81,7 +81,7 @@
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/machinery/mineral/stacking_machine/LateInitialize()
-	. = ..()
+	power_change()
 	//Locate our output and input machinery.
 	var/obj/marker
 	marker = locate(/obj/landmark/machinery/input) in range(1, loc)

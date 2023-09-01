@@ -109,7 +109,7 @@
 	visible_message(SPAN_DANGER(pick("Prepare to die!", "JUSTICE", "Run!")))
 
 /mob/living/simple_animal/hostile/megafauna/proc/spiral_shoot(negative = pick(TRUE, FALSE), rounds = 20)
-	set waitfor = 0
+	set waitfor = FALSE
 	var/turf/start_turf = get_step(src, pick(GLOB.alldirs))
 	var/incvar = negative ? -1 : 1
 	var/dirpoint = 1

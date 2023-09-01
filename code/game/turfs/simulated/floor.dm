@@ -3,11 +3,11 @@
 	icon = 'icons/turf/flooring/plating.dmi'
 	icon_state = "plating"
 	plane = FLOOR_PLANE
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/floor
 
 	// Damage to flooring.
 	var/broken
 	var/burnt
-
 
 	// Flooring data.
 	var/flooring_override
@@ -44,21 +44,12 @@
 
 
 /turf/simulated/floor/Initialize()
+	. = ..()
 	turfs += src
-	..()
-	return INITIALIZE_HINT_LATELOAD
+	update_icon(TRUE)
+	// There used to be Nanako's icon update optimizations, but alas, they didn't even work
+	// TODO: consider actually optimizing this somehow -- KIROV
 
-//Floors no longer update their icon in New, but instead update it here, after everything else is setup
-/turf/simulated/floor/LateInitialize(list/mapload_arg)
-	..()
-	//At roundstart, we call update icon with update_neighbors set to false.
-	//So each floor tile will only work once
-	if (mapload_arg)
-		update_icon(FALSE)
-	else
-		//If its not roundstart, then we call update icon with update_neighbors set to true.
-		//That will update surroundings for any floors that are created or destroyed during runtime
-		update_icon(TRUE)
 
 //If the update var is false we don't call update icons
 /turf/simulated/floor/proc/set_flooring(var/decl/flooring/newflooring, var/update = TRUE)

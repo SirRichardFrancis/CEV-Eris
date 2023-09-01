@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(mapping)
 	var/list/teleportlocs = list()
 	var/list/ghostteleportlocs = list()
 
-/datum/controller/subsystem/mapping/Initialize(start_timeofday)
+/datum/controller/subsystem/mapping/SS_initialize(start_timeofday)
 	if(config.generate_asteroid)
 		// These values determine the specific area that the map is applied to.
 		// Because we do not use Bay's default map, we check the config file to see if custom parameters are needed, so we need to avoid hardcoding.

@@ -38,6 +38,8 @@
 	var/affected_by_emp_until = 0
 	var/last_shown_time = 0
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/camera
+
 /obj/machinery/camera/New()
 	..()
 

@@ -33,12 +33,16 @@
 
 	var/sanity_damage = 0
 
+	var/cyberspace_reflection_type // If this object should be present in cyberspace - specify reflection type. Must be a path and subtype of atom/movable/cyber_shadow
+	var/atom/movable/cyber_shadow/shadow_on_cyberspace // Holds reference to cyberspace reflection/shadow/presence, if any is created
+
 		/**
 	  * used to store the different colors on an atom
 	  *
 	  * its inherent color, the colored paint applied on it, special color effect etc...
 	  */
 	var/list/atom_colours
+	var/list/statverbs
 
 /atom/proc/update_icon()
 	return
@@ -55,7 +59,7 @@
  */
 /atom/New(loc, ...)
 	init_plane()
-	update_plane()
+	update_plane() // TODO: Check is this even needed -- KIROV
 	init_light()
 
 	if(datum_flags & DF_USE_TAG)
@@ -102,13 +106,15 @@
  * * [/turf/proc/Initialize]
  * * [/turf/open/space/proc/Initialize]
  */
+
+
 /atom/proc/Initialize(mapload, ...)
 	if(initialized)
 		CRASH("Warning: [src]([type]) initialized multiple times!")
 	initialized = TRUE
 
-	if(light_power && light_range)
-		update_light()
+//	if(light_power && light_range) // Already done in New()
+//		update_light()
 
 	update_plane()
 
@@ -121,8 +127,39 @@
 		for(var/reagent in preloaded_reagents)
 			reagents.add_reagent(reagent, preloaded_reagents[reagent])
 
+	if(cyberspace_reflection_type)
+		shadow_on_cyberspace = new cyberspace_reflection_type(get_turf(loc))
+		shadow_on_cyberspace.origin = src
 
 	return INITIALIZE_HINT_NORMAL
+
+// Following defines help to mitigate excessive use of ..() proc on initialization -- KIROV
+// Overriding the same proc more than once in the same type should be avoided wherever possible, because it incurs extra overhead. Usually, the only time you'll want this to happen is when using libraries -- BYOND documentation
+
+#define ATOM_INIT_CHECK if(initialized){ CRASH("Warning: [src]([type]) initialized multiple times!")}; initialized = TRUE;
+
+#define ATOM_INIT_PLANE update_plane();
+
+#define ATOM_INIT_REAGENTS	if(preloaded_reagents)											\
+							{																\
+								if(!reagents)												\
+								{															\
+									var/volume = 0;											\
+									for(var/reagent in preloaded_reagents)					\
+									{														\
+										volume += preloaded_reagents[reagent];				\
+									};														\
+									create_reagents(volume);								\
+								};															\
+								for(var/reagent in preloaded_reagents)						\
+								{															\
+								reagents.add_reagent(reagent, preloaded_reagents[reagent]);	\
+								}															\
+							};																\
+
+#define ATOM_INIT_CYBERSHADOW if(cyberspace_reflection_type){ shadow_on_cyberspace = new cyberspace_reflection_type(get_turf(loc)); shadow_on_cyberspace.origin = src; };
+
+#define ATOM_INIT_ALL ATOM_INIT_CHECK ATOM_INIT_PLANE ATOM_INIT_REAGENTS ATOM_INIT_CYBERSHADOW
 
 /**
  * Late Intialization, for code that should run after all atoms have run Intialization
@@ -136,7 +173,7 @@
  * code has been run
  */
 /atom/proc/LateInitialize()
-	set waitfor = FALSE
+	CRASH("Warning: [name ? name : "Nameless atom"] called empty parent LateInitialize() proc! Make sure no redundant ..() call is present in LateInitialize() of [type].")
 
 /**
  * Top level of the destroy chain for most atoms
@@ -153,10 +190,18 @@
 	if(reagents)
 		QDEL_NULL(reagents)
 
+	if(statverbs)
+		statverbs.Cut()
+
 	SEND_SIGNAL(src, COMSIG_NULL_TARGET)
 	SEND_SIGNAL(src, COMSIG_NULL_SECONDARY_TARGET)
 
 	update_openspace()
+
+	if(shadow_on_cyberspace)
+		qdel(shadow_on_cyberspace)
+		shadow_on_cyberspace = null
+
 	return ..()
 
 ///Generate a tag for this atom
@@ -711,18 +756,28 @@ its easier to just keep the beam vertical.
 	return loc // If onDropInto returns something, then dropInto will attempt to drop AM there.
 
 
-/atom/Entered(var/atom/movable/AM, var/atom/old_loc, var/special_event)
+/atom/Entered(atom/movable/AM, atom/old_loc, special_event)
+	GLOB.entered_event.raise_event(src, AM, old_loc)
+
+	if(AM && old_loc != src) // Implemented here because forceMove() doesn't call Move()
+		for(var/datum/light_source/light as anything in AM.light_sources)
+			light.source_atom.update_light()
+
 	if(loc)
 		for(var/i in AM.contents)
 			var/atom/movable/A = i
 			A.entered_with_container(old_loc)
-		if(MOVED_DROP == special_event)
-			AM.forceMove(loc, MOVED_DROP)
-			return CANCEL_MOVE_EVENT
-	return ..()
+		if(special_event)
+			AM.forceMove(destination = loc, special_event = TRUE)
 
-/turf/Entered(var/atom/movable/AM, var/atom/old_loc, var/special_event)
-	return ..(AM, old_loc, 0)
+
+/atom/Exited(atom/movable/Obj, atom/newloc)
+	GLOB.exited_event.raise_event(src, Obj, newloc)
+
+	if(!newloc && Obj && newloc != src) // Incase the atom is being moved to nullspace, we handle queuing for a lighting update here.
+		for(var/datum/light_source/light in Obj.light_sources) // Cycle through the light sources on this atom and tell them to update.
+			light.source_atom.update_light()
+
 
 /atom/proc/get_footstep_sound()
 	return

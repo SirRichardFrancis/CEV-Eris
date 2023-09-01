@@ -9,7 +9,7 @@ SUBSYSTEM_DEF(spawn_data)
 /datum/controller/subsystem/spawn_data/Recover()
 	flags |= SS_NO_INIT // Make extra sure we don't initialize twice.
 
-/datum/controller/subsystem/spawn_data/Initialize(timeofday)
+/datum/controller/subsystem/spawn_data/SS_initialize(timeofday)
 	generate_data()
 	. = ..()
 

@@ -35,7 +35,6 @@
 	. = ..()
 
 /obj/item/device/taperecorder/LateInitialize()
-	. = ..()
 	add_hearing()
 
 /obj/item/device/taperecorder/examine(mob/user)

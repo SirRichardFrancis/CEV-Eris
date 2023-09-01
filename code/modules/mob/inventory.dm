@@ -77,11 +77,11 @@
 //Drops the item in our active hand. TODO: rename this to drop_active_hand or something
 /mob/proc/drop_item(var/atom/Target)
 	var/obj/item/I = get_active_hand()
-	unEquip(I, Target, MOVED_DROP)
+	unEquip(I, Target, TRUE)
 
 /mob/proc/drop_offhand(var/atom/Target)
 	var/obj/item/I = get_inactive_hand()
-	unEquip(I, Target, MOVED_DROP)
+	unEquip(I, Target, TRUE)
 
 /*
 	Removes the object from any slots the mob might have, calling the appropriate icon update proc.
@@ -146,7 +146,7 @@
 	if(istype(O, /obj/item))
 		var/obj/item/I = O
 		if(drop && !QDELING(O))
-			I.forceMove(get_turf(src), MOVED_DROP)
+			I.forceMove(get_turf(src), TRUE)
 		I.dropped(src)
 	return TRUE
 

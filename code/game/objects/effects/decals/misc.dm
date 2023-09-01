@@ -6,7 +6,7 @@
 	plane = GAME_PLANE
 	layer = POINT_LAYER
 	anchored = TRUE
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 
 // Used for spray that you spray at walls, tables, hydrovats etc

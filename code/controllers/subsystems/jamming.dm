@@ -7,7 +7,7 @@ SUBSYSTEM_DEF(jamming)
 	flags = SS_NO_FIRE
 	var/list/active_jammers
 
-/datum/controller/subsystem/jamming/Initialize(start_timeofday)
+/datum/controller/subsystem/jamming/SS_initialize(start_timeofday)
 	active_jammers = new /list(world.maxz)
 	for(var/i = 1, i < world.maxz; i++)
 		active_jammers[i] = list()

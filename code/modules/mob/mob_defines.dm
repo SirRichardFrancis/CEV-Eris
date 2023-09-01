@@ -51,10 +51,6 @@
 	var/hand
 	var/real_name
 
-	var/bhunger = 0			//Carbon
-	var/ajourn = 0
-	var/seer = 0 //for cult//Carbon, probably Human
-
 	var/druggy = 0			//Carbon
 	var/confused = 0		//Carbon
 	var/sleeping = 0		//Carbon

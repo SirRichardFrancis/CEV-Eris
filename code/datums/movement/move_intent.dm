@@ -14,7 +14,7 @@
 	flags = MOVE_INTENT_DELIBERATE
 	hud_icon_state = "walking"
 
-/decl/move_intent/walk/Initialize()
+/decl/move_intent/walk/Decl_initialize()
 	. = ..()
 	move_delay = 5 //Placeholder. TODO: Movespeed in species datums
 
@@ -24,6 +24,6 @@
 	flags = MOVE_INTENT_EXERTIVE | MOVE_INTENT_QUICK
 	hud_icon_state = "running"
 
-/decl/move_intent/run/Initialize()
+/decl/move_intent/run/Decl_initialize()
 	. = ..()
 	move_delay = 3.5

@@ -5,7 +5,7 @@ SUBSYSTEM_DEF(misc)
 	var/num_exoplanets = 2
 	var/list/planet_size  //dimensions of planet zlevel, defaults to world size. Due to how maps are generated, must be (2^n+1) e.g. 17,33,65,129 etc. Map will just round up to those if set to anything other.
 
-/datum/controller/subsystem/misc/Initialize(timeofday)
+/datum/controller/subsystem/misc/SS_initialize(timeofday)
 	if(!LAZYLEN(planet_size))
 		planet_size = list(world.maxx - 30 , world.maxy - 30)
 	initialize_cursors()

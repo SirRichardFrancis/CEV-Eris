@@ -29,8 +29,8 @@
 	density = TRUE
 	range = 3 //the eris' hallways are wider than other maps
 
-/obj/machinery/flasher/Initialize()
-	. = ..()
+/obj/machinery/flasher/LateInitialize()
+	power_change()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
 

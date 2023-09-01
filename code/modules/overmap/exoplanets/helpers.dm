@@ -160,6 +160,5 @@ GLOBAL_LIST_EMPTY(banned_ruin_ids)
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/effect/landmark/ruin/automatic/clearing/LateInitialize()
-	..()
 	for(var/obj/effect/mineral/M in range(radius, src))
 		qdel(M)

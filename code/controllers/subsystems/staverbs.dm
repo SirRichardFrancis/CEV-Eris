@@ -64,18 +64,6 @@ SUBSYSTEM_DEF(statverbs)
 
 
 // Atom part //
-/atom
-	var/list/statverbs
-
-/atom/Initialize()
-	. = ..()
-	initalize_statverbs()
-
-/atom/Destroy()
-	. = ..()
-	if(statverbs)
-		statverbs.Cut()
-
 /atom/proc/initalize_statverbs()
 	var/list/paths = statverbs
 	statverbs = new

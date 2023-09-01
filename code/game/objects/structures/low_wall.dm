@@ -29,12 +29,14 @@
 	var/connected = TRUE
 	var/wall_color = PLASTEEL_COLOUR
 	var/roundstart = FALSE
-	var/list/connections = list("0", "0", "0", "0")
-	var/list/wall_connections = list("0", "0", "0", "0")
+	var/list/connections
+	var/list/wall_connections
 	var/material/material
 	var/material/reinf_material
 
 	var/construction_stage
+	
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/low_wall
 
 	maxHealth = 450
 	health = 450
@@ -51,13 +53,11 @@
 	name = "One Star low wall"
 
 
-
-
 //Low walls mark the turf they're on as a wall.  This is vital for floor icon updating code
 /obj/structure/low_wall/New(newloc, materialtype, rmaterialtype)
-	.=..(newloc)
+	..(newloc)
 	var/turf/T = loc
-	if (istype(T))
+	if(istype(T))
 		T.is_wall = TRUE
 	if(!materialtype)
 		materialtype = MATERIAL_STEEL
@@ -68,15 +68,17 @@
 	maxHealth = health
 	wall_color = material.icon_colour
 	name = "[material.name] [name]"
+	connections = list("0", "0", "0", "0")
+	wall_connections = list("0", "0", "0", "0")
 
 /obj/structure/low_wall/Destroy()
-	for (var/obj/structure/window/W in loc)
-		if (!QDELETED(W))
+	for(var/obj/structure/window/W in loc)
+		if(!QDELETED(W))
 			W.shatter()
 
 	//If we're on a floor, make it no longer be counted as a wall
 	var/turf/simulated/floor/T = loc
-	if (istype(T))
+	if(istype(T))
 		T.is_wall = FALSE
 
 	connected = FALSE
@@ -86,26 +88,21 @@
 	. = ..()
 
 
-
 /obj/structure/low_wall/Initialize()
-	..()
+	ATOM_INIT_ALL
 	return INITIALIZE_HINT_LATELOAD
 
-/obj/structure/low_wall/LateInitialize(var/list/args)
+
+/obj/structure/low_wall/LateInitialize()
 	// One low wall per turf.
 	for(var/obj/structure/low_wall/T in loc)
 		if(T != src)
 			// There's another wall here that's not us, get rid of it
 			qdel(T)
-			return
+			break
 
-	//if (args)
-	//	update_connections(0)
-	//else
-	//
 	update_connections(1)
 	update_icon()
-
 
 
 /obj/structure/low_wall/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
@@ -207,8 +204,11 @@
 //Icon procs.mostly copied from tables
 /obj/structure/low_wall/update_icon()
 	overlays.Cut()
+	if(shadow_on_cyberspace)
+		shadow_on_cyberspace.overlays.Cut()
 
 	var/image/I
+	var/connection_count = 0
 
 	//Make the wall overlays
 	for(var/i = 1 to 4)
@@ -216,19 +216,36 @@
 		I.color = wall_color
 		overlays += I
 
+		if(connections[i])
+			connection_count++
 
-	for (var/obj/structure/window/W in loc)
-		if (W.is_fulltile())
+	for(var/obj/structure/window/W in loc)
+		if(W.is_fulltile())
 			W.update_icon()
-
-
-
 
 	for(var/i = 1 to 4)
 		I = image(icon, "[icon_state]_over_[wall_connections[i]]", dir = 1<<(i-1))
 		I.color = wall_color
 		I.layer = ABOVE_WINDOW_LAYER
 		overlays += I
+
+		if(wall_connections[i])
+			connection_count++
+
+	if(shadow_on_cyberspace)
+		if(!connection_count)
+			shadow_on_cyberspace.icon = "low"
+			return
+
+		shadow_on_cyberspace.icon = ""
+
+		for(var/i = 1 to 4)
+			I = image('icons/cyberspace/turf.dmi', "over_[wall_connections[i]]", dir = 1<<(i-1))
+			I.layer = ABOVE_WINDOW_LAYER
+			shadow_on_cyberspace.overlays += I
+
+			I = image('icons/cyberspace/turf.dmi', "low_[connections[i]]", dir = 1<<(i-1))
+			shadow_on_cyberspace.overlays += I
 
 
 

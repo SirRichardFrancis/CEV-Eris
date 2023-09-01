@@ -22,7 +22,7 @@ SUBSYSTEM_DEF(research)
 	var/list/design_files_to_init = list()
 	var/list/research_files_to_init = list()
 
-/datum/controller/subsystem/research/Initialize()
+/datum/controller/subsystem/research/SS_initialize()
 	for(var/R in subtypesof(/datum/design))
 		var/datum/design/design = new R
 		design.AssembleDesignInfo()

@@ -325,7 +325,7 @@
 		ghost.icon_state = to_copy.icon_state
 		ghost.dir = to_copy.dir
 		ghost.appearance = to_copy.appearance
-		ghost.mouse_opacity = 0
+		ghost.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 		ghost.density = 0
 		addtimer(CALLBACK(src, PROC_REF(delete_ghost), ghost), 2 SECONDS, TIMER_STOPPABLE)
 

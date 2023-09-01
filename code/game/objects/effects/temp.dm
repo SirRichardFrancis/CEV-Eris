@@ -2,7 +2,7 @@
 /obj/effect/temporary
 	anchored = TRUE
 	unacidable = 1
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	density = FALSE
 	plane = 0
 	layer = 0

@@ -23,7 +23,7 @@
 
 /obj/machinery/pulsar/LateInitialize()
 	scan_for_fuel()
-	. = ..()
+	power_change()
 
 
 /obj/machinery/pulsar/relaymove(mob/user, direction)

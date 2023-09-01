@@ -19,7 +19,7 @@ SUBSYSTEM_DEF(chunks)
 	flags = SS_NO_FIRE
 	var/list/datum/chunk/chunk_list_by_zlevel
 
-/datum/controller/subsystem/chunks/Initialize(timeofday)
+/datum/controller/subsystem/chunks/SS_initialize(timeofday)
 	chunk_list_by_zlevel = new/list(world.maxz)
 	for(var/i = 1, i <= world.maxz,i++)
 		chunk_list_by_zlevel[i] = new/list(CHUNKSPERLEVEL(world.maxx, world.maxy))

@@ -71,6 +71,7 @@
 	anchored = TRUE
 	use_power = NO_POWER_USE
 	req_access = list(access_engine_equip)
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/apc
 	var/need_sound
 	var/area/area
 	var/areastring

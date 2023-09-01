@@ -69,11 +69,3 @@
 	var/turf/T = GetAbove(src)
 	if (T && T.isTransparent)
 		T.update_icon()
-
-/turf/Entered(atom/movable/Obj, atom/OldLoc)
-	. = ..()
-	update_openspace()
-
-/turf/Exited(atom/movable/Obj, atom/OldLoc)
-	. = ..()
-	update_openspace()

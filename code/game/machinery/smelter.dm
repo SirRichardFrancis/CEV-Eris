@@ -38,8 +38,8 @@
 	var/show_rconfig = FALSE
 
 
-/obj/machinery/smelter/Initialize()
-	. = ..()
+/obj/machinery/smelter/LateInitialize()
+	power_change()
 	if(!output_side)
 		output_side = reverse_direction(input_side)
 

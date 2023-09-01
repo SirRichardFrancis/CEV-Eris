@@ -220,18 +220,14 @@
 		occupant.resting = 1
 	. = ..()
 
-/obj/machinery/cryopod/Initialize()
-	. = ..()
-
+/obj/machinery/cryopod/LateInitialize()
+	power_change()
 	find_control_computer()
 
 /obj/machinery/cryopod/update_icon()
-	if(occupant)
-		icon_state = "[initial(icon_state)]_1"
-	else
-		icon_state = "[initial(icon_state)]_0"
+	icon_state = occupant ? "cryopod_1" : "cryopod_0"
 
-/obj/machinery/cryopod/proc/find_control_computer(urgent=0)
+/obj/machinery/cryopod/proc/find_control_computer(urgent=0) // TODO: Issue should be resolved, remove workaround -- KIROV
 	// Workaround for http://www.byond.com/forum/?post=2007448
 	for(var/obj/machinery/computer/cryopod/C in src.loc.loc)
 		control_computer = C
@@ -495,13 +491,8 @@
 
 	return
 
-/obj/machinery/cryopod/relaymove(var/mob/user)
-	..()
-	//set_occupant(null, FALSE)
-	go_out()
-	for(var/obj/item/thing in contents)
-		thing.forceMove(loc)
-		user.equip_to_appropriate_slot(thing)
+/obj/machinery/cryopod/relaymove(mob/user)
+	eject()
 
 
 /obj/machinery/cryopod/proc/go_out()

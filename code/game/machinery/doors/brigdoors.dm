@@ -38,7 +38,7 @@
 
 
 /obj/machinery/door_timer/LateInitialize()
-	..()
+	power_change()
 
 	for(var/obj/machinery/door/window/brigdoor/M in GLOB.all_doors)
 		if (M.id == src.id)

@@ -16,7 +16,7 @@
 	var/spread_range = 7
 
 /obj/item/grenade/frag/prime()
-	set waitfor = 0
+	set waitfor = FALSE
 	..()
 
 	var/turf/O = get_turf(src)

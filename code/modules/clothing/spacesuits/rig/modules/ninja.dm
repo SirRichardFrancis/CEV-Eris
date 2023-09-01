@@ -41,7 +41,7 @@
 
 	H.invisibility = INVISIBILITY_LEVEL_TWO
 	H.alpha = 0
-	H.mouse_opacity = 0
+	H.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 	anim(get_turf(H), H, 'icons/mob/mob.dmi', , "cloak", , H.dir)
 	anim(get_turf(H), H, 'icons/effects/effects.dmi', "electricity", null, 20, null)

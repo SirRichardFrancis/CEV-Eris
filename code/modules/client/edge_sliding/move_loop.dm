@@ -58,7 +58,7 @@
 /client/West()
 
 /client/proc/move_loop()
-	set waitfor = 0
+	set waitfor = FALSE
 	if(src.mloop) return
 	mloop = 1
 	src.Move(get_step(mob.loc, true_dir),true_dir)

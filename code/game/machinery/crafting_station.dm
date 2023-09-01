@@ -19,8 +19,8 @@ var/global/list/crafting_designs
 	var/list/designs = list()
 	categories = list("firearm frames", "firearm grips", "firearm barrels", "pistol mechanisms", "revolver mechanisms", "pump-action mechanisms", "SMG mechanisms", "self-loading mechanisms", ".35 caliber", ".40 caliber", ".20 caliber", ".25 caliber", ".30 caliber", "shotgun shells", "special munitions", "miscellaneous")
 
-/obj/machinery/autolathe/crafting_station/Initialize()
-	. = ..()
+/obj/machinery/autolathe/crafting_station/LateInitialize() //TODO: See if that generates in time -- KIROV
+	..()
 	if(!crafting_designs)
 		for(var/designpath in subtypesof(/datum/design/makeshift))
 			var/datum/computer_file/binary/design/D = new

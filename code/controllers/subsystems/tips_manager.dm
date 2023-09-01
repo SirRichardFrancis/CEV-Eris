@@ -49,7 +49,7 @@ SUBSYSTEM_DEF(tips)
 		if(L.client)
 			L.client.showSmartTip()
 
-/datum/controller/subsystem/tips/Initialize(start_timeofday)
+/datum/controller/subsystem/tips/SS_initialize(start_timeofday)
 	for(var/path in subtypesof(/tipsAndTricks/mobs))
 		var/tipsAndTricks/mobs/T = new path()
 		for(var/mob in T.mobs_list)

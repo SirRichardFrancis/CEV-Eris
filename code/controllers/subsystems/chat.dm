@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(chat)
 	var/list/payload = list()
 
 
-/datum/controller/subsystem/chat/Initialize()
+/datum/controller/subsystem/chat/SS_initialize()
 	. = ..()
 	initialize_text_to_speech()
 

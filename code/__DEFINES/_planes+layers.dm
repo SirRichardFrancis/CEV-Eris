@@ -16,7 +16,7 @@ What can I do with Planesmasters?
 	Make players see a plane which is hidden to normal players - I intend to implement this with the antag HUDs for example.
 	Planesmasters can be used as a neater way to deal with client images or potentially to do some neat things
 How do planes work?
-	A plane can be any integer from -100 to 100. (If you want more, bug lummox.)
+	A plane can be any integer from -10000 to 10000.
 	All planes above 0, the 'base plane', are visible even when your character cannot 'see' them, for example, the HUD.
 	All planes below 0, the 'base plane', are only visible when a character can see them.
 How do I add a plane?
@@ -53,8 +53,8 @@ What is the naming convention for planes or layers?
 
 #define CLICKCATCHER_PLANE -99
 
-#define PLANE_SPACE -95
-#define PLANE_SPACE_PARALLAX -80
+#define SPACE_PLANE -95
+#define PARALLAX_PLANE -80
 
 #define OPENSPACE_PLANE -10
 #define OVER_OPENSPACE_PLANE -8
@@ -74,6 +74,8 @@ What is the naming convention for planes or layers?
 #define LYING_MOB_LAYER 3.8 //0 on bay
 
 #define LYING_HUMAN_PLANE             -1 //-13 on bay// humans that are lying down
+
+#define CYBERSPACE_BACKGROUND_LAYER 0
 
 #define LYING_HUMAN_LAYER 3.8 //0 on bay
 
@@ -162,6 +164,8 @@ What is the naming convention for planes or layers?
 
 #define BYOND_LIGHTING_PLANE 17
 #define BYOND_LIGHTING_LAYER 17
+
+#define CYBERSPACE_PLANE 2077
 
 //HUD layer defines
 

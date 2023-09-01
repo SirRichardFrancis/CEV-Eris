@@ -19,7 +19,7 @@
 
 		var/decl/decl = .
 		if(istype(decl))
-			decl.Initialize()
+			decl.Decl_initialize()
 
 /repository/decls/proc/get_decls(var/list/decl_types)
 	. = list()
@@ -38,7 +38,7 @@
 		. = get_decls(subtypesof(decl_prototype))
 		fetched_decl_subtypes[decl_prototype] = .
 
-/decl/proc/Initialize()
+/decl/proc/Decl_initialize()
 	return
 
 /decl/Destroy()

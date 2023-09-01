@@ -12,6 +12,8 @@
 	thermal_conductivity = WALL_HEAT_TRANSFER_COEFFICIENT
 	heat_capacity = 312500 //a little over 5 cm thick , 312500 for 1 m by 2.5 m by 0.25 m plasteel wall
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/wall
+
 	var/ricochet_id = 0
 	var/health = 0
 	var/maxHealth = 0
@@ -23,7 +25,8 @@
 	var/last_state
 	var/construction_stage
 	var/hitsound = 'sound/weapons/Genhit.ogg'
-	var/list/wall_connections = list("0", "0", "0", "0")
+	var/list/wall_connections
+	var/list/cyber_wall_connections
 
 	/*
 		If set, these vars will be used instead of the icon base taken from the material.
@@ -54,7 +57,10 @@
 		SEND_SIGNAL_OLD(O, COMSIG_TURF_LEVELUPDATE, TRUE)
 
 /turf/simulated/wall/New(newloc, materialtype, rmaterialtype)
-	if (!damage_overlays)
+	wall_connections = list("0", "0", "0", "0")
+	cyber_wall_connections = list("0", "0", "0", "0")
+
+	if(!damage_overlays)
 		damage_overlays = new
 
 		var/overlayCount = 16
@@ -65,7 +71,6 @@
 			img.blend_mode = BLEND_MULTIPLY
 			img.alpha = (i * alpha_inc) - 1
 			damage_overlays.Add(img)
-
 
 	icon_state = "blank"
 	if(!materialtype)
@@ -93,11 +98,9 @@
 
 /turf/simulated/wall/LateInitialize()
 	//If we get here, this wall was mapped in at roundstart
+	// We set propagate to false when updating connections at roundstart
+	// This ensures that each wall will only update itself, once.
 	update_connections(FALSE)
-	/*We set propagate to false when updating connections at roundstart
-	This ensures that each wall will only update itself, once.
-	*/
-
 	update_icon()
 
 

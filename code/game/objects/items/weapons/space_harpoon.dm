@@ -94,8 +94,6 @@
 
 /obj/item/bluespace_harpoon/proc/teleport(turf/source, turf/target)
 	for(var/atom/movable/AM in source)
-		if(istype(AM, /mob/shadow))
-			continue
 		if(!AM.anchored)
 			if(prob(offset_chance))
 				go_to_bluespace(source, entropy_value, TRUE, AM, get_turf(pick(orange(teleport_offset,source))))

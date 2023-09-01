@@ -19,7 +19,7 @@ SUBSYSTEM_DEF(atoms)
 
 	initialized = INITIALIZATION_INSSATOMS
 
-/datum/controller/subsystem/atoms/Initialize(timeofday)
+/datum/controller/subsystem/atoms/SS_initialize(timeofday)
 	initialized = INITIALIZATION_INNEW_MAPLOAD
 	InitializeAtoms()
 	initialized = INITIALIZATION_INNEW_REGULAR

@@ -9,11 +9,6 @@
 	var/tmp/list/datum/lighting_corner/corners
 	var/tmp/has_opaque_atom = FALSE // Not to be confused with opacity, this will be TRUE if there's any opaque atom on the tile.
 
-/turf/New()
-	. = ..()
-
-	if(opacity)
-		has_opaque_atom = TRUE
 
 // Causes any affecting light sources to be queued for a visibility update, for example a door got opened.
 /turf/proc/reconsider_lights()
@@ -53,7 +48,7 @@
 			C.active = TRUE
 
 // Used to get a scaled lumcount.
-/turf/proc/get_lumcount(var/minlum = 0, var/maxlum = 1)
+/turf/proc/get_lumcount(minlum = 0, maxlum = 1)
 	if (!lighting_overlay)
 		return 0.5
 
@@ -70,33 +65,65 @@
 
 // Can't think of a good name, this proc will recalculate the has_opaque_atom variable.
 /turf/proc/recalc_atom_opacity()
+	if(opacity)
+		has_opaque_atom = TRUE
+		return
+	else
+		for(var/atom/A in contents)
+			if(A.opacity)
+				has_opaque_atom = TRUE
+				return
 	has_opaque_atom = FALSE
-	for (var/atom/A in src.contents)
-		if (A.opacity)
-			has_opaque_atom = TRUE
-			return
-
-	// If we reach this point has_opaque_atom is still false.
-	// If we ourselves are opaque this line will consider ourselves.
-	// If we are not then this is still faster than doing an explicit check.
-	has_opaque_atom = src.opacity
 
 // If an opaque movable atom moves around we need to potentially update visibility.
-/turf/Entered(var/atom/movable/Obj, var/atom/OldLoc)
-	. = ..()
+/turf/Entered(atom/movable/Obj, atom/OldLoc)
+	if(movement_disabled)
+		to_chat(usr, SPAN_WARNING("Movement is admin-disabled.")) //This is to identify lag problems
+		return
+
+	..()
+
+	update_openspace()
 
 	if(Obj && Obj.opacity)
 		has_opaque_atom = TRUE // Make sure to do this before reconsider_lights(), incase we're on instant updates. Guaranteed to be on in this case.
 		reconsider_lights()
 
-/turf/Exited(var/atom/movable/Obj, var/atom/newloc)
-	. = ..()
+	if(ismob(Obj))
+		var/mob/M = Obj
+
+		M.update_floating()
+		if(M.check_gravity() || M.incorporeal_move)
+			M.inertia_dir = 0
+		else
+			if(!M.allow_spacemove())
+				inertial_drift(M)
+			else
+				if(M.allow_spacemove() == TRUE)
+					M.update_floating(FALSE)
+					M.inertia_dir = 0
+				else if(M.check_dense_object())
+					M.inertia_dir = 0
+
+	if(Obj.flags & PROXMOVE)
+		var/i = 0
+		for(var/atom/movable/thing in range(1))
+			i++
+			if(i > 100)
+				break
+			Obj.HasProximity(thing, 1)
+			if(thing.flags & PROXMOVE)
+				thing.HasProximity(Obj, 1)
+
+
+/turf/Exited(atom/movable/Obj, atom/newloc)
+	update_openspace()
 
 	if(Obj && Obj.opacity)
 		recalc_atom_opacity() // Make sure to do this before reconsider_lights(), incase we're on instant updates.
 		reconsider_lights()
 
-/turf/change_area(var/area/old_area, var/area/new_area)
+/turf/change_area(area/old_area, area/new_area)
 	if(new_area.dynamic_lighting != old_area.dynamic_lighting)
 		if(new_area.dynamic_lighting)
 			lighting_build_overlay()
@@ -104,11 +131,9 @@
 		else
 			lighting_clear_overlay()
 
-/turf/proc/get_corners(var/dir)
-	if(has_opaque_atom)
-		return null // Since this proc gets used in a for loop, null won't be looped though.
-
-	return corners
+/turf/proc/get_corners(dir)
+	// Since this proc gets used in a for loop, null won't be looped though.
+	return has_opaque_atom ? null : corners
 
 /turf/proc/generate_missing_corners()
 	lighting_corners_initialised = TRUE

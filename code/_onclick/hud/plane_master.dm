@@ -46,12 +46,12 @@
 /*
 /obj/screen/plane_master/parallax
 	name = "parallax plane master"
-	plane = PLANE_SPACE_PARALLAX
+	plane = PARALLAX_PLANE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 */
 /obj/screen/plane_master/parallax_white
 	name = "parallax whitifier plane master"
-	plane = PLANE_SPACE
+	plane = SPACE_PLANE
 
 /obj/screen/plane_master/open_space_plane
 	name = "open space shadow plane"

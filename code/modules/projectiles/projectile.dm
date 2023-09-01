@@ -16,7 +16,7 @@
 	unacidable = TRUE
 	anchored = TRUE //There's a reason this is here, Mport. God fucking damn it -Agouri. Find&Fix by Pete. The reason this is here is to stop the curving of emitter shots.
 	pass_flags = PASSTABLE
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	spawn_blacklisted = TRUE
 	spawn_frequency = 0
 	spawn_tags = null

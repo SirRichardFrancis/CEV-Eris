@@ -55,7 +55,6 @@ see multiz/movement.dm for some info.
 	..()
 
 /turf/simulated/open/LateInitialize()
-	. = ..()
 	below = GetBelow(src)
 	ASSERT(HasBelow(z))
 	update_icon()

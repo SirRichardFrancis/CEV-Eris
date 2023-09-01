@@ -9,24 +9,24 @@
 	var/bet = 0
 	var/jackpot = 0
 	var/plays = 0
-	var/slots = list()
-	var/variants = list("Diamond", "Heart", "Cherry","Bar","Lemon", "Watermelon", "Seven")
-	var/weights = list("Diamond" = 10, "Heart" = 8, "Cherry" = 8,"Bar" = 6,"Lemon" = 4, "Watermelon" = 2, "Seven" = 1)
+	var/list/slots = list()
+	var/list/variants
+	var/list/weights
 	var/icon_type
 	use_power = TRUE
 	idle_power_usage = 10
 
-/obj/machinery/slotmachine/New()
-	..()
-	icon_type = initial(icon_state)
-	power_change()
 
 /obj/machinery/slotmachine/Initialize()
 	. = ..()
 	jackpot = rand(5000,20000);
 	plays = rand(10,50)
 	slots = list("1" = "Seven","2" = "Seven","3" = "Seven")
+	variants = list("Diamond", "Heart", "Cherry","Bar","Lemon", "Watermelon", "Seven")
+	weights = list("Diamond" = 10, "Heart" = 8, "Cherry" = 8,"Bar" = 6,"Lemon" = 4, "Watermelon" = 2, "Seven" = 1)
+	icon_type = icon_state
 	update_icon()
+	power_change()
 
 /obj/machinery/slotmachine/power_change()
 	..()

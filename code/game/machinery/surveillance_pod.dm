@@ -41,7 +41,7 @@
 
 
 /obj/machinery/surveillance_pod/Initialize(mapload)
-	..()
+	. = ..()
 	big_brother = new(src)
 	big_brother.visualnet = cameranet
 	fake_liquid = new/datum/gas_mixture // Pod filled with liqid

@@ -168,12 +168,7 @@
 	power_change()
 
 
-/obj/machinery/vending/Initialize()
-	..()
-	return INITIALIZE_HINT_LATELOAD
-
 /obj/machinery/vending/LateInitialize()
-	..()
 	if(product_slogans)
 		slogan_list += splittext(product_slogans, ";")
 

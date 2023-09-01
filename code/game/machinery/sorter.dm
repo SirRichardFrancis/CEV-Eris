@@ -75,8 +75,8 @@
 	var/show_rconfig = FALSE
 
 
-/obj/machinery/sorter/Initialize()
-	. = ..()
+/obj/machinery/sorter/LateInitialize()
+	power_change()
 	if(!refuse_output_side)
 		refuse_output_side = reverse_direction(input_side)
 
@@ -331,8 +331,10 @@
 	accept_output_side = WEST
 	refuse_output_side = EAST
 
-/obj/machinery/sorter/biomatter/Initialize()
-	. = ..()
+/obj/machinery/sorter/biomatter/LateInitialize()
+	power_change()
+	if(!refuse_output_side)
+		refuse_output_side = reverse_direction(input_side)
 	sort_settings += new /datum/sort_rule(SORT_INCLUDE, SORT_TYPE_MATERIAL, MATERIAL_BIOMATTER, 1)
 
 

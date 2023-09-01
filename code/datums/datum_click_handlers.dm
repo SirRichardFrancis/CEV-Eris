@@ -2,22 +2,16 @@
 	var/handler_name
 	var/one_use_flag = 1//drop client.CH after succes ability use
 	var/client/owner
-	var/icon/mouse_icon
 
 /datum/click_handler/New(client/_owner)
 	owner = _owner
-	if (mouse_icon)
-		owner.mouse_pointer_icon = mouse_icon
 
 //datum/click_handler/Prepare(/client/_owner)
 
 /datum/click_handler/Destroy()
-	..()
-	if (owner)
+	. = ..()
+	if(owner)
 		owner.CH = null
-		owner.mouse_pointer_icon=initial(owner.mouse_pointer_icon)
-	return ..()
-//	owner = null
 
 //Return false from these procs to discard the click afterwards
 /datum/click_handler/proc/Click(var/atom/target, location, control, params)

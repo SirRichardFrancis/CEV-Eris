@@ -13,8 +13,8 @@
 	var/brightness_on = 8		//can't remember what the maxed out value is
 	light_power = 2
 
-/obj/machinery/floodlight/Initialize()
-	. = ..()
+/obj/machinery/floodlight/LateInitialize()
+	power_change()
 	cell = new /obj/item/cell/large(src)
 
 /obj/machinery/floodlight/get_cell()

@@ -52,7 +52,7 @@
 	return ..()
 
 /obj/item/gun/projectile/proc/cock_gun(mob/user)
-	set waitfor = 0
+	set waitfor = FALSE
 	if(cocked_sound)
 		sleep(3)
 		if(user && loc) playsound(src.loc, cocked_sound, 75, 1)

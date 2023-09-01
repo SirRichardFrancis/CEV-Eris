@@ -58,15 +58,13 @@
 	return INITIALIZE_HINT_QDEL
 
 /obj/spawner/LateInitialize()
-	..()
-	if(latejoin)
-		var/list/spawns = spawn_item()
-		if(spawns.len)
-			burrow()
-			if(has_postspawn)
-				post_spawn(spawns)
-			if(biome)
-				biome.price_tag += price_tag
+	var/list/spawns = spawn_item()
+	if(spawns.len)
+		burrow()
+		if(has_postspawn)
+			post_spawn(spawns)
+		if(biome)
+			biome.price_tag += price_tag
 	qdel(src)
 
 /obj/spawner/proc/check_biome_spawner()

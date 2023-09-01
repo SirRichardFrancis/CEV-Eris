@@ -508,7 +508,7 @@ var/list/custom_table_appearance = list(
 
 	var/list/ret = list(NORTHWEST, SOUTHEAST, NORTHEAST, SOUTHWEST)
 
-	for(var/i = 1 to ret.len)
+	for(var/i = 1 to 4)
 		var/dir = ret[i]
 		. = CORNER_NONE
 		if(dir in dirs)

@@ -47,9 +47,9 @@
 
 ///New should not call Initialize
 #define INITIALIZATION_INSSATOMS 0
-///New should call Initialize(TRUE)
+///New should call SS_initialize(TRUE)
 #define INITIALIZATION_INNEW_MAPLOAD 2
-///New should call Initialize(FALSE)
+///New should call SS_initialize(FALSE)
 #define INITIALIZATION_INNEW_REGULAR 1
 
 //! ### Initialization hints

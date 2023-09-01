@@ -92,14 +92,11 @@
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/structure/multiz/ladder/up/LateInitialize()
-	..()
-	//Special initialize behaviour for upward ladders to stop artefacts from mobs going behind them but drawing infront of them)
-
-	//Normally a ladder will hug the back wall of a tile and mobs will go over it
-
-	//If the tile to the north is acessible, change our behaviour to hug the south of a tile and draw over all mobs
+	// Special initialize behaviour for upward ladders to stop artefacts from mobs going behind them but drawing infront of them)
+	// Normally a ladder will hug the back wall of a tile and mobs will go over it
+	// If the tile to the north is acessible, change our behaviour to hug the south of a tile and draw over all mobs
 	var/turf/T = get_step(src, NORTH)
-	if (turf_clear(T))
+	if(turf_clear(T))
 		pixel_y = -4
 		layer = ABOVE_MOB_LAYER
 

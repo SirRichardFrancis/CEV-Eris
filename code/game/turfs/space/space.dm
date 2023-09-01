@@ -4,7 +4,7 @@
 	icon_state = "0"
 	dynamic_lighting = 0
 
-	plane = PLANE_SPACE
+	plane = SPACE_PLANE
 	layer = SPACE_LAYER
 
 	temperature = T20C

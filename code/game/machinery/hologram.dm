@@ -58,7 +58,7 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 	desc = "A floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
 
 /obj/machinery/hologram/holopad/LateInitialize()
-	. = ..()
+	power_change()
 	add_hearing()
 
 /obj/machinery/hologram/holopad/Destroy()
@@ -247,7 +247,7 @@ For the other part of the code, check silicon say.dm. Particularly robot talk.*/
 		hologram.overlays += getHologramIcon(icon(tempicon)) // Add the callers image as an overlay to keep coloration!
 	else
 		hologram.overlays += A.holo_icon // Add the AI's configured holo Icon
-	hologram.mouse_opacity = 0//So you can't click on it.
+	hologram.mouse_opacity = MOUSE_OPACITY_TRANSPARENT//So you can't click on it.
 	hologram.layer = FLY_LAYER//Above all the other objects/mobs. Or the vast majority of them.
 	hologram.anchored = TRUE//So space wind cannot drag it.
 	if(caller_id)

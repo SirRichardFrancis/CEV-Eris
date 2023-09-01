@@ -46,6 +46,8 @@
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 5
 
+	cyberspace_reflection_type = null
+
 /obj/machinery/door/firedoor/New()
 	..()
 

@@ -4,9 +4,9 @@ GLOBAL_VAR_INIT(random_parallax, pick("space0", "space1", "space2", "space3", "s
 	icon = 'icons/parallax.dmi'
 	icon_state = "space0"
 	name = "parallax"
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	blend_mode = BLEND_MULTIPLY
-	plane = PLANE_SPACE_PARALLAX
+	plane = PARALLAX_PLANE
 	anchored = TRUE
 	var/mob/owner
 
@@ -77,10 +77,3 @@ GLOBAL_VAR_INIT(random_parallax, pick("space0", "space1", "space2", "space3", "s
 	. = ..()
 	if(. && parallax)
 		parallax.update()
-
-
-/mob/Login()
-	if(!parallax)
-		parallax = new(src)
-	client.screen += parallax
-	..()

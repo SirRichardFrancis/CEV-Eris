@@ -198,13 +198,13 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 		StartProcessing(10)
 	else
 		to_chat(world, span_boldannounce("The Master Controller is having some issues, we will need to re-initialize EVERYTHING"))
-		Initialize(20, TRUE)
+		SS_initialize(20, TRUE)
 
 
 // Please don't stuff random bullshit here,
-// Make a subsystem, give it the SS_NO_FIRE flag, and do your work in it's Initialize()
-/datum/controller/master/Initialize(delay, init_sss, tgs_prime)
-	set waitfor = 0
+// Make a subsystem, give it the SS_NO_FIRE flag, and do your work in it's SS_initialize()
+/datum/controller/master/SS_initialize(delay, init_sss, tgs_prime)
+	set waitfor = FALSE
 
 	if(delay)
 		sleep(delay)
@@ -243,7 +243,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 			current_initializing_subsystem = subsystem
 
 			rustg_time_reset(SS_INIT_TIMER_KEY)
-			subsystem.Initialize()
+			subsystem.SS_initialize()
 
 			CHECK_TICK
 		current_initializing_subsystem = null
@@ -289,7 +289,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 // Starts the mc, and sticks around to restart it if the loop ever ends.
 /datum/controller/master/proc/StartProcessing(delay)
-	set waitfor = 0
+	set waitfor = FALSE
 	if(delay)
 		sleep(delay)
 	testing("Master starting processing")

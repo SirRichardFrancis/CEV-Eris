@@ -5,7 +5,7 @@
 	alpha = 110
 	layer = FULLSCREEN_LAYER
 	plane = FULLSCREEN_PLANE
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /datum/sanity
 	var/obj/screen/film_grain/grain

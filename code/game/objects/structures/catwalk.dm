@@ -26,7 +26,6 @@
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/structure/catwalk/LateInitialize()
-	..()
 	update_icon()
 	redraw_nearby_catwalks()
 

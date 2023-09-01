@@ -15,8 +15,8 @@
 	var/_wifi_id
 	var/datum/wifi/receiver/button/holosign/wifi_receiver
 
-/obj/machinery/holosign/Initialize()
-	. = ..()
+/obj/machinery/holosign/LateInitialize()
+	power_change()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
 

@@ -28,9 +28,9 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 		if(istype(Failsafe))
 			qdel(Failsafe)
 	Failsafe = src
-	Initialize()
+	SS_initialize()
 
-/datum/controller/failsafe/Initialize()
+/datum/controller/failsafe/SS_initialize()
 	set waitfor = FALSE
 	Failsafe.Loop()
 	if (!Master || defcon == 0) //Master is gone/not responding and Failsafe just exited its loop
@@ -141,7 +141,7 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 	if (. == 1) //We were able to create a new master
 		master_iteration = 0
 		SSticker.Recover(); //Recover the ticket system so the Masters runlevel gets set
-		Master.Initialize(10, FALSE, TRUE) //Need to manually start the MC, normally world.new would do this
+		Master.SS_initialize(10, FALSE, TRUE) //Need to manually start the MC, normally world.new would do this
 		to_chat(GLOB, span_adminnotice("Failsafe recovered MC while in emergency state [defcon_pretty()]"))
 	else
 		log_game("FailSafe: Failsafe in emergency state and was unable to recreate MC while in defcon state [defcon_pretty()].")
@@ -157,7 +157,7 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 	. = Recreate_MC()
 	if (. == 1) //We were able to create a new master
 		SSticker.Recover(); //Recover the ticket system so the Masters runlevel gets set
-		Master.Initialize(10, FALSE, TRUE) //Need to manually start the MC, normally world.new would do this
+		Master.SS_initialize(10, FALSE, TRUE) //Need to manually start the MC, normally world.new would do this
 		to_chat(GLOB, span_adminnotice("MC successfully recreated after recovering all subsystems!"))
 	else
 		message_admins(span_boldannounce("Failed to create new MC!"))
@@ -171,7 +171,7 @@ GLOBAL_REAL(Failsafe, /datum/controller/failsafe)
 	. = Recreate_MC()
 	if (. == 1) //We were able to create a new master
 		SSticker.Recover(); //Recover the ticket system so the Masters runlevel gets set
-		Master.Initialize(10, FALSE, TRUE) //Need to manually start the MC, normally world.new would do this
+		Master.SS_initialize(10, FALSE, TRUE) //Need to manually start the MC, normally world.new would do this
 		to_chat(GLOB, span_adminnotice("MC successfully recreated after deleting and recreating all subsystems!"))
 	else
 		message_admins(span_boldannounce("Failed to create new MC!"))

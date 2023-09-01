@@ -6,7 +6,7 @@ SUBSYSTEM_DEF(chemistry)
 	var/list/chemical_reactions
 	var/list/chemical_reagents
 
-/datum/controller/subsystem/chemistry/Initialize(start_timeofday)
+/datum/controller/subsystem/chemistry/SS_initialize(start_timeofday)
 	chemical_reactions = GLOB.chemical_reactions_list
 	chemical_reagents = GLOB.chemical_reagents_list
 	return ..()

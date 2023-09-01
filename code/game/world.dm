@@ -115,7 +115,7 @@ var/game_id
 	if(NO_INIT_PARAMETER in params)
 		return
 
-	Master.Initialize(10, FALSE)
+	Master.SS_initialize(10, FALSE)
 
 	#ifdef UNIT_TESTS
 	HandleTestRun()

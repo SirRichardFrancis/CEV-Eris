@@ -23,7 +23,7 @@ SUBSYSTEM_DEF(alarm)
 	motion_alarm = new()
 	power_alarm = new()
 
-/datum/controller/subsystem/alarm/Initialize(start_timeofday)
+/datum/controller/subsystem/alarm/SS_initialize(start_timeofday)
 	all_handlers = list(atmosphere_alarm, camera_alarm, fire_alarm, motion_alarm, power_alarm)
 	return ..()
 

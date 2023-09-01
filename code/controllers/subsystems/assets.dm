@@ -22,7 +22,7 @@ SUBSYSTEM_DEF(assets)
 
 
 
-/datum/controller/subsystem/assets/Initialize(timeofday)
+/datum/controller/subsystem/assets/SS_initialize(timeofday)
 	for(var/type in typesof(/datum/asset))
 		var/datum/asset/A = type
 		if (type != initial(A._abstract))

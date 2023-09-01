@@ -11,7 +11,7 @@
 
 
 /obj/item/grenade/explosive/prime()
-    set waitfor = 0
+    set waitfor = FALSE
     ..()
     var/turf/O = get_turf(src)
     if(!O) return

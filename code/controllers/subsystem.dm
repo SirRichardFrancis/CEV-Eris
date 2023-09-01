@@ -255,7 +255,7 @@
 /datum/controller/subsystem/proc/OnConfigLoad()
 
 //used to initialize the subsystem AFTER the map has loaded
-/datum/controller/subsystem/Initialize()
+/datum/controller/subsystem/SS_initialize()
 	initialized = TRUE
 	// SEND_SIGNAL_OLD(src, COMSIG_SUBSYSTEM_POST_INITIALIZE)
 

@@ -11,6 +11,8 @@ GLOBAL_LIST_EMPTY(wedge_icon_cache)
 	explosion_resistance = 10
 	maxHealth = 400
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/door
+
 	var/aiControlDisabled = 0
 	//If 1, AI control is disabled until the AI hacks back in and disables the lock.
 	//If 2, the AI has bypassed the lock.
@@ -679,6 +681,46 @@ There are 9 wires.
 	if(wedged_item)
 		generate_wedge_overlay()
 
+	if(shadow_on_cyberspace)
+		var/static/overlay_bolt_up
+		var/static/overlay_bolt_up_open
+		var/static/overlay_bolt_down
+		var/static/overlay_bolt_down_open
+		var/static/overlay_shock
+		var/static/overlay_shock_open
+		var/static/overlay_id
+		var/static/overlay_id_open
+		var/static/overlay_no_id
+		var/static/overlay_no_id_open
+		if(isnull(overlay_bolt_up))
+			overlay_bolt_up = iconstate2appearance('icons/cyberspace/turf.dmi', "bolt_up")
+			overlay_bolt_up_open = iconstate2appearance('icons/cyberspace/turf.dmi', "bolt_up_open")
+			overlay_bolt_down = iconstate2appearance('icons/cyberspace/turf.dmi', "bolt_down")
+			overlay_bolt_down_open = iconstate2appearance('icons/cyberspace/turf.dmi', "bolt_down_open")
+			overlay_shock = iconstate2appearance('icons/cyberspace/turf.dmi', "shock")
+			overlay_shock_open = iconstate2appearance('icons/cyberspace/turf.dmi', "shock_open")
+			overlay_id = iconstate2appearance('icons/cyberspace/turf.dmi', "id")
+			overlay_id_open = iconstate2appearance('icons/cyberspace/turf.dmi', "id_open")
+			overlay_no_id = iconstate2appearance('icons/cyberspace/turf.dmi', "no_id ")
+			overlay_no_id_open = iconstate2appearance('icons/cyberspace/turf.dmi', "no_id_open")
+
+		shadow_on_cyberspace.icon_state = density ? "door" : "door_open"
+		shadow_on_cyberspace.overlays.Cut()
+
+		if(aiControlDisabled) // Can't get information about door settings from cyberspace
+			return
+
+		if(density)
+			shadow_on_cyberspace.overlays.Add(locked ? overlay_bolt_down : overlay_bolt_up)
+			shadow_on_cyberspace.overlays.Add(aiDisabledIdScanner ? overlay_no_id : overlay_id)
+			if(electrified_until != 0)
+				shadow_on_cyberspace.overlays.Add(overlay_shock)
+		else
+			shadow_on_cyberspace.overlays.Add(locked ? overlay_bolt_down_open : overlay_bolt_up_open)
+			shadow_on_cyberspace.overlays.Add(aiDisabledIdScanner ? overlay_no_id_open : overlay_id_open)
+			if(electrified_until != 0)
+				shadow_on_cyberspace.overlays.Add(overlay_shock_open)
+
 /obj/machinery/door/airlock/do_animate(animation)
 	switch(animation)
 		if("opening")
@@ -1284,7 +1326,7 @@ There are 9 wires.
 
 /obj/machinery/door/airlock/New(var/newloc, var/obj/structure/door_assembly/assembly=null)
 	..()
-
+	set_frequency(frequency)
 	//if assembly is given, create the new door from the assembly
 	if (assembly && istype(assembly))
 		assembly_type = assembly.type
@@ -1319,13 +1361,14 @@ There are 9 wires.
 		wires = new/datum/wires/airlock(src)
 
 /obj/machinery/door/airlock/Initialize()
-	if(src.closeOtherId != null)
-		for (var/obj/machinery/door/airlock/A in world)
-			if(A.closeOtherId == src.closeOtherId && A != src)
-				src.closeOther = A
+	. = ..()
+	if(closeOtherId)
+		for(var/obj/machinery/door/airlock/A in world)
+			if(A.closeOtherId == closeOtherId && A != src)
+				closeOther = A
 				break
 	verbs += /obj/machinery/door/airlock/proc/try_wedge_item
-	. = ..()
+
 
 /obj/machinery/door/airlock/Destroy()
 	qdel(wires)

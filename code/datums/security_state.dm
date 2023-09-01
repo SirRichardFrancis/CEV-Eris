@@ -69,7 +69,7 @@
 	if(high_index > severe_index)
 		high_security_level = severe_security_level
 
-/decl/security_state/Initialize()
+/decl/security_state/Decl_initialize()
 	// Finally switch up to the default starting security level.
 	current_security_level.switching_up_to()
 	. = ..()

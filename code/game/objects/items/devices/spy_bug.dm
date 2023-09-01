@@ -29,7 +29,6 @@
 	. = ..()
 
 /obj/item/device/spy_bug/voice/LateInitialize()
-	. = ..()
 	add_hearing()
 
 /obj/item/device/spy_bug/examine(mob/user)

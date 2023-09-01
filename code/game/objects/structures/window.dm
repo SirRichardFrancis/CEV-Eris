@@ -24,6 +24,8 @@
 
 	atmos_canpass = CANPASS_PROC
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/low_wall_window
+
 /obj/structure/window/can_prevent_fall()
 	return !is_fulltile()
 
@@ -543,6 +545,9 @@ proc/end_grab_onto(mob/living/user, mob/living/target)
 	//A little cludge here, since I don't know how it will work with slim windows. Most likely VERY wrong.
 	//this way it will only update full-tile ones
 	overlays.Cut()
+	if(shadow_on_cyberspace)
+		shadow_on_cyberspace.overlays.Cut()
+
 	if(!is_fulltile())
 		icon_state = "[basestate]"
 		return
@@ -568,11 +573,28 @@ proc/end_grab_onto(mob/living/user, mob/living/target)
 		connections = LW.connections
 
 	icon_state = ""
+	var/image/I
+	var/connection_count = 0
+
+
 	for(var/i = 1 to 4)
-		var/image/I = image(icon, "[basestate][connections[i]]", dir = 1<<(i-1))
+		I = image(icon, "[basestate][connections[i]]", dir = 1<<(i-1))
 		overlays += I
 
-	return
+		if(connections[i])
+			connection_count++
+
+	if(shadow_on_cyberspace)
+		if(!connection_count)
+			shadow_on_cyberspace.icon_state = "window"
+			return
+
+		shadow_on_cyberspace.icon_state = ""
+
+		for(var/i = 1 to 4)
+			I = image('icons/cyberspace/turf.dmi', "window_[connections[i]]", dir = 1<<(i-1))
+			shadow_on_cyberspace.overlays += I
+
 
 /obj/structure/window/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(exposed_temperature > maximal_heat)

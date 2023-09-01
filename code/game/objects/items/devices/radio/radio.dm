@@ -80,7 +80,6 @@ var/global/list/default_medbay_channels = list(
 	return ..()
 
 /obj/item/device/radio/LateInitialize()
-	. = ..()
 	add_hearing()
 
 /obj/item/device/radio/Initialize()

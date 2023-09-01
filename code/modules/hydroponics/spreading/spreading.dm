@@ -27,7 +27,7 @@
 	icon_state = "bush4-1"
 	layer = 3
 	pass_flags = PASSTABLE
-	mouse_opacity = 1
+	mouse_opacity = MOUSE_OPACITY_ICON
 	reagent_flags = DRAINABLE
 
 	var/health = 5

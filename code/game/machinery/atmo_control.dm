@@ -64,9 +64,9 @@
 	frequency = new_frequency
 	radio_connection = SSradio.add_object(src, frequency, RADIO_ATMOSIA)
 
-/obj/machinery/air_sensor/Initialize()
+/obj/machinery/air_sensor/LateInitialize()
 	set_frequency(frequency)
-	. = ..()
+	power_change()
 
 obj/machinery/air_sensor/Destroy()
 	SSradio.remove_object(src,frequency)
@@ -152,10 +152,9 @@ obj/machinery/computer/general_air_control/Destroy()
 	frequency = new_frequency
 	radio_connection = SSradio.add_object(src, frequency, RADIO_ATMOSIA)
 
-/obj/machinery/computer/general_air_control/Initialize()
-	. = ..()
+/obj/machinery/computer/general_air_control/LateInitialize()
+	power_change()
 	set_frequency(frequency)
-
 
 /obj/machinery/computer/general_air_control/large_tank_control
 	icon = 'icons/obj/computer.dmi'

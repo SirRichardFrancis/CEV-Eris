@@ -189,7 +189,7 @@
 	icon = null
 	name = "glasses"
 	screen_loc = "1,1"
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	process_flag = TRUE
 	layer = 17 //The black screen overlay sets layer to 18 to display it, this one has to be just on top.
 

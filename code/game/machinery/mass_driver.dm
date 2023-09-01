@@ -18,8 +18,8 @@
 	var/_wifi_id
 	var/datum/wifi/receiver/button/mass_driver/wifi_receiver
 
-/obj/machinery/mass_driver/Initialize()
-	. = ..()
+/obj/machinery/mass_driver/LateInitialize()
+	power_change()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
 

@@ -136,10 +136,6 @@
 
 	update_icon()
 
-/obj/machinery/door/airlock/New()
-	..()
-
-	set_frequency(frequency)
 
 /obj/machinery/door/airlock/Destroy()
 	if(frequency)

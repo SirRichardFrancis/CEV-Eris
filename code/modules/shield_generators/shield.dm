@@ -38,7 +38,7 @@
 /obj/effect/shield/floor
 	alpha = 32
 	floorOnly= TRUE
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	ignoreExAct = TRUE
 
 /obj/effect/shield/update_icon()

@@ -24,8 +24,8 @@
 
 	var/exit_timer
 
-/obj/machinery/recharge_station/Initialize()
-	. = ..()
+/obj/machinery/recharge_station/LateInitialize()
+	power_change()
 	update_icon()
 
 /obj/machinery/recharge_station/proc/has_cell_power()

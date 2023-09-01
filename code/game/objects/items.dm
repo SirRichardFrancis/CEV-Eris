@@ -102,6 +102,8 @@
 
 
 /obj/item/Initialize()
+	ATOM_INIT_ALL
+
 	if(islist(armor))
 		armor = getArmor(arglist(armor))
 	else if(!armor)
@@ -110,7 +112,8 @@
 		error("Invalid type [armor.type] found in .armor during /obj Initialize()")
 	if(chameleon_type)
 		verbs.Add(/obj/item/proc/set_chameleon_appearance)
-	. = ..()
+
+	return INITIALIZE_HINT_NORMAL
 
 /obj/item/Destroy(force)
 	// This var exists as a weird proxy "owner" ref

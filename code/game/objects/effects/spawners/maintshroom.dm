@@ -4,7 +4,7 @@
 	icon_state = "x2"
 	var/instant = TRUE
 	var/min_light_limit = 0.5
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	rarity_value = 10
 	spawn_tags = SPAWN_TAG_FLORA
 	bad_type = /obj/effect/spawner/maintshroom

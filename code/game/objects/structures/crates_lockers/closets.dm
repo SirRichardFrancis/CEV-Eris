@@ -66,8 +66,6 @@
 	return mapload ? INITIALIZE_HINT_LATELOAD : INITIALIZE_HINT_NORMAL
 
 /obj/structure/closet/LateInitialize()
-	. = ..()
-
 	if(!opened) // if closed, any item at the crate's loc is put in the contents
 		var/obj/item/I
 		for(I in src.loc)

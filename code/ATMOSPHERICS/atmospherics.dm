@@ -33,6 +33,8 @@ Pipelines + Other Objects -> Pipe network
 	var/obj/machinery/atmospherics/node1
 	var/obj/machinery/atmospherics/node2
 
+	cyberspace_reflection_type = null
+
 /obj/machinery/atmospherics/New()
 	if(!icon_manager)
 		icon_manager = new()

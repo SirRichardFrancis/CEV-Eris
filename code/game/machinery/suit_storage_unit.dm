@@ -49,10 +49,11 @@
 	if(MASK_TYPE)
 		MASK = new MASK_TYPE(src)
 
+/obj/machinery/suit_storage_unit/LateInitialize()
+	power_change()
+	update_icon()
 	if(icon_state == "suit_storage_map")
 		icon_state = "suit_storage"
-
-	update_icon()
 
 /obj/machinery/suit_storage_unit/Destroy()
 	QDEL_NULL(door_overlay)

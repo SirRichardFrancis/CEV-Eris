@@ -5,7 +5,7 @@ SUBSYSTEM_DEF(evac)
 	flags = SS_BACKGROUND
 	wait = 2 SECONDS
 
-/datum/controller/subsystem/evac/Initialize(start_timeofday)
+/datum/controller/subsystem/evac/SS_initialize(start_timeofday)
 	evacuation_controller = new /datum/evacuation_controller/starship()
 	evacuation_controller.set_up()
 	return ..()

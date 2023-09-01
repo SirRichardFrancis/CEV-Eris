@@ -210,7 +210,10 @@ var/datum/feed_network/news_network = new /datum/feed_network     //The global n
 		pixel_y = (dir & 3)? (dir ==1 ? -32 : 32) : 0
 
 	GLOB.allCasters += src
-	unit_no = GLOB.allCasters.len
+	unit_no = LAZYLEN(GLOB.allCasters)
+
+/obj/machinery/newscaster/LateInitialize()
+	power_change()
 	update_icon()
 
 /obj/machinery/newscaster/Destroy()

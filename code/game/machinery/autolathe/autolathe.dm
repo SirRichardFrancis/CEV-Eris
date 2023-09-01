@@ -90,8 +90,8 @@
 	var/list/saved_designs = list()
 	var/uses_stat = FALSE
 
-/obj/machinery/autolathe/Initialize()
-	. = ..()
+/obj/machinery/autolathe/LateInitialize()
+	power_change()
 	wires = new(src)
 
 	image_load = new(src)

@@ -41,7 +41,7 @@
 
 	density = TRUE
 	opacity = 0
-	mouse_opacity = 1
+	mouse_opacity = MOUSE_OPACITY_ICON
 	anchored = TRUE
 	layer = ABOVE_ALL_MOB_LAYER
 

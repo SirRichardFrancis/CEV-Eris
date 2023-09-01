@@ -11,7 +11,7 @@ SUBSYSTEM_DEF(economy)
 	var/payday_interval = 30 MINUTES
 	var/next_payday = 30 MINUTES
 
-/datum/controller/subsystem/economy/Initialize()
+/datum/controller/subsystem/economy/SS_initialize()
 	.=..()
 
 /datum/controller/subsystem/economy/fire()

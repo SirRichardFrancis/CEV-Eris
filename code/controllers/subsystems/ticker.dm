@@ -49,7 +49,7 @@ SUBSYSTEM_DEF(ticker)
 
 	var/list/round_start_events
 
-/datum/controller/subsystem/ticker/Initialize(start_timeofday)
+/datum/controller/subsystem/ticker/SS_initialize(start_timeofday)
 	if(!syndicate_code_phrase)
 		syndicate_code_phrase = generate_code_phrase()
 	if(!syndicate_code_response)
@@ -304,7 +304,7 @@ SUBSYSTEM_DEF(ticker)
 	cinematic.icon_state = "station_intact"
 	cinematic.plane = CINEMATIC_PLANE
 	cinematic.layer = CINEMATIC_LAYER
-	cinematic.mouse_opacity = 0
+	cinematic.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	cinematic.screen_loc = "1,0"
 
 	for(var/mob/M in SSmobs.mob_list | SShumans.mob_list)

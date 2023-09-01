@@ -41,7 +41,7 @@ SUBSYSTEM_DEF(migration)
 /*
 	On initialize, the migration system generates a large number of burrows spread across the ship
 */
-/datum/controller/subsystem/migration/Initialize()
+/datum/controller/subsystem/migration/SS_initialize()
 	. = ..()
 	for (var/i = 0; i < roundstart_burrows; i++)
 		var/area/A = random_ship_area(FALSE, FALSE, FALSE)

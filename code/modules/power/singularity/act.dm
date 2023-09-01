@@ -44,7 +44,7 @@
 	return
 
 /obj/item/singularity_pull(S, current_size)
-	set waitfor = 0
+	set waitfor = FALSE
 	if(anchored)
 		return
 	sleep(0) //this is needed or multiple items will be thrown sequentially and not simultaneously

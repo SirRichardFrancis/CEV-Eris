@@ -101,24 +101,6 @@
 		if (old_has_opaque_atom != T.has_opaque_atom)
 			T.reconsider_lights()
 
-// This code makes the light be queued for update when it is moved.
-// Entered() should handle it, however Exited() can do it if it is being moved to nullspace (as there would be no Entered() call in that situation).
-/atom/Entered(atom/movable/Obj, atom/OldLoc) //Implemented here because forceMove() doesn't call Move()
-	. = ..()
-
-	if(Obj && OldLoc != src)
-		for(var/A in Obj.light_sources) // Cycle through the light sources on this atom and tell them to update.
-			var/datum/light_source/L = A
-			L.source_atom.update_light()
-
-/atom/Exited(var/atom/movable/Obj, var/atom/newloc)
-	. = ..()
-
-	if(!newloc && Obj && newloc != src) // Incase the atom is being moved to nullspace, we handle queuing for a lighting update here.
-		for(var/A in Obj.light_sources) // Cycle through the light sources on this atom and tell them to update.
-			var/datum/light_source/L = A
-			L.source_atom.update_light()
-
 /obj/item/equipped()
 	. = ..()
 	update_light()

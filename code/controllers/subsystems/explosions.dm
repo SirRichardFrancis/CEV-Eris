@@ -54,7 +54,7 @@ SUBSYSTEM_DEF(explosions)
 	var/list/throwing_queue = list()
 	var/list/available_hash_lists
 
-/datum/controller/subsystem/explosions/Initialize(timeoftheworld)
+/datum/controller/subsystem/explosions/SS_initialize(timeoftheworld)
 	// Each hashed list is extremly huge , as it stands today each one would be
 	// 0.250~ MB(roughly 2 million bits)
 	// As long as this doesnt go over 12 MB , it should be fine as it still fits in CPU caches

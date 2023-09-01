@@ -28,7 +28,7 @@
 	anchored = TRUE
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "dirt"
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /obj/effect/decal/cleanable/reagents
 	desc = "Someone should clean that up."
@@ -36,7 +36,7 @@
 	density = FALSE
 	anchored = TRUE
 	icon = 'icons/obj/reagentfillings.dmi'
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	random_rotation = FALSE
 	bad_type = /obj/effect/decal/cleanable/reagents
 	spawn_tags = null

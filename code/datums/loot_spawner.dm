@@ -11,7 +11,7 @@
 	//var/list/all_spawn_by_tag = list()
 	//var/list/all_accompanying_obj_by_path = list()
 
-///datum/controller/subsystem/spawn_data/Initialize()
+///datum/controller/subsystem/spawn_data/SS_initialize()
 //	..()
 //	generate_data()
 

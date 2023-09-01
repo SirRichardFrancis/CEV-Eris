@@ -22,41 +22,36 @@
 	return FALSE
 
 /obj/effect/window_lwall_spawn/attack_hand()
-	attack_generic()
+	return
 
 /obj/effect/window_lwall_spawn/attack_ghost()
-	attack_generic()
+	return
 
 /obj/effect/window_lwall_spawn/attack_generic()
-	activate()
+	return
 
 /obj/effect/window_lwall_spawn/Initialize()
 	. = ..()
+	if(!wall_path)
+		CRASH("Warning: [src]([type]) at X:[x], Y:[y], Z:[z] does not have a wall path to spawn!")
 	if(!win_path)
-		return
+		CRASH("Warning: [src]([type]) at X:[x], Y:[y], Z:[z] does not have a window path to spawn!")
+	if(activated)
+		CRASH("Warning: [src]([type]) at X:[x], Y:[y], Z:[z] attempted to activate multiple times!")
+
+	activated = TRUE
+	new wall_path(loc)
+	handle_window_spawn(src)
+
 	if(SSticker.current_state < GAME_STATE_PLAYING)
-		if(activated)
-			return
-		activate()
 		return INITIALIZE_HINT_QDEL
 	else
-		if(activated)
-			return
-		activate()
-		spawn(10)
-			qdel(src)
+		QDEL_IN(src, 10)
 
 
 /obj/effect/window_lwall_spawn/proc/handle_window_spawn(var/obj/structure/window/W)
 	new win_path(loc)
 
-	return
-
-/obj/effect/window_lwall_spawn/proc/activate()
-	new wall_path(loc)
-	handle_window_spawn(src)
-	activated = TRUE
-	return
 
 /obj/effect/window_lwall_spawn/reinforced
 	name = "reinforced window low-wall spawner"

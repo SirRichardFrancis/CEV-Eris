@@ -78,10 +78,10 @@
 		client.perspective = MOB_PERSPECTIVE
 
 	//set macro to normal incase it was overriden (like cyborg currently does)
-	if(client.get_preference_value(/datum/client_preference/stay_in_hotkey_mode) == GLOB.PREF_YES)
-		winset(client, null, "mainwindow.macro=hotkeymode hotkey_toggle.is-checked=true mapwindow.map.focus=true input.background-color=#F0F0F0")
+	if(client.get_preference_value(/datum/client_preference/fullscreen) == GLOB.PREF_YES)
+		winset(client, null, "mainwindow.titlebar=false mainvsplit.pos=0,0")
 	else
-		winset(client, null, "mainwindow.macro=macro hotkey_toggle.is-checked=false input.focus=true input.background-color=#D3B5B5")
+		winset(client, null, "mainwindow.titlebar=true mainvsplit.pos=3,0")
 
 	if(client)
 		if(client.UI)
@@ -94,5 +94,9 @@
 		client.CAN_MOVE_DIAGONALLY = FALSE
 
 	update_client_colour(0)
+
+	if(!parallax)
+		parallax = new(src)
+	client.screen += parallax
 
 	return TRUE

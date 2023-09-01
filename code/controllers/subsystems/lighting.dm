@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(lighting)
 /datum/controller/subsystem/lighting/stat_entry()
 	..("L:[lighting_update_lights.len]|C:[lighting_update_corners.len]|O:[lighting_update_overlays.len]")
 
-/datum/controller/subsystem/lighting/Initialize(timeofday)
+/datum/controller/subsystem/lighting/SS_initialize(timeofday)
 	create_all_lighting_overlays()
 	. = ..()
 

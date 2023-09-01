@@ -4,7 +4,7 @@ SUBSYSTEM_DEF(inventory)
 	flags = SS_NO_FIRE
 	var/global/list/slots
 
-/datum/controller/subsystem/inventory/Initialize(start_timeofday)
+/datum/controller/subsystem/inventory/SS_initialize(start_timeofday)
 	slots = new()
 	for(var/path in subtypesof(/datum/inventory_slot))
 		var/datum/inventory_slot/S = path

@@ -23,7 +23,7 @@ SUBSYSTEM_DEF(event)
 	var/list/all_parallaxes = list()	// For parallax changes due to space weather
 
 //Subsystem procs
-/datum/controller/subsystem/event/Initialize(start_timeofday)
+/datum/controller/subsystem/event/SS_initialize(start_timeofday)
 	if(!all_events)
 		all_events = subtypesof(/datum/event)
 

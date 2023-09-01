@@ -66,7 +66,7 @@
 
 	opacity = 0
 	anchored = TRUE
-	mouse_opacity = 2
+	mouse_opacity = MOUSE_OPACITY_OPAQUE
 
 	var/maxHealth = 20
 	var/health = 1

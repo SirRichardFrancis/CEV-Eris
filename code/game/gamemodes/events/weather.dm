@@ -158,7 +158,7 @@ SUBSYSTEM_DEF(weather)
 		if(W.aesthetic || W.stage != MAIN_STAGE)
 			continue
 
-/datum/controller/subsystem/weather/Initialize(start_timeofday)
+/datum/controller/subsystem/weather/SS_initialize(start_timeofday)
 	for(var/V in subtypesof(/datum/weather))
 		var/datum/weather/W = V
 		var/probability = initial(W.probability)

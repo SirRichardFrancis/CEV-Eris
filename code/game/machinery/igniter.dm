@@ -17,8 +17,8 @@
 	..()
 	update_icon()
 
-/obj/machinery/igniter/Initialize()
-	. = ..()
+/obj/machinery/igniter/LateInitialize()
+	power_change()
 	update_icon()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
@@ -75,8 +75,8 @@
 	var/_wifi_id
 	var/datum/wifi/receiver/button/sparker/wifi_receiver
 
-/obj/machinery/sparker/Initialize()
-	. = ..()
+/obj/machinery/sparker/LateInitialize()
+	power_change()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
 

@@ -1192,3 +1192,12 @@ proc/get_average_color(var/icon, var/icon_state, var/image_dir)
 
 	var/icon/I = getFlatIcon(thing)
 	return icon2html(I, target, sourceonly = sourceonly)
+
+/proc/iconstate2appearance(icon, icon_state)
+	var/static/mutable_appearance/mutable
+	if(!mutable)
+		mutable = new
+	mutable.icon = icon
+	mutable.icon_state = icon_state
+	return mutable.appearance
+

@@ -19,7 +19,7 @@ SUBSYSTEM_DEF(supply)
 	var/movetime = 300
 	var/datum/shuttle/autodock/ferry/supply/shuttle
 
-/datum/controller/subsystem/supply/Initialize(start_timeofday)
+/datum/controller/subsystem/supply/SS_initialize(start_timeofday)
 	ordernum = rand(1, 9000)
 
 	for(var/typepath in subtypesof(/datum/supply_pack))

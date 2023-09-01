@@ -55,6 +55,8 @@
 
 	var/report_danger_level = 1
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/air_alarm
+
 /obj/machinery/alarm/nobreach
 	breach_detection = 0
 
@@ -118,8 +120,8 @@
 	TLV["temperature"] =	list(T0C-26, T0C, T0C+40, T0C+66) // K
 
 
-/obj/machinery/alarm/Initialize()
-	. = ..()
+/obj/machinery/alarm/LateInitialize()
+	power_change()
 	set_frequency(frequency)
 	if(buildstage == 2 && !master_is_operating())
 		elect_master()
@@ -298,22 +300,38 @@
 		return
 
 	var/icon_level = danger_level
-	if (alarm_area.atmosalm)
+	if(alarm_area.atmosalm)
 		icon_level = max(icon_level, 1)	//if there's an atmos alarm but everything is okay locally, no need to go past yellow
 
 	var/new_color = null
 	switch(icon_level)
-		if (0)
+		if(0)
 			icon_state = "alarm0"
 			new_color = COLOR_LIGHTING_GREEN_BRIGHT
-		if (1)
+			if(shadow_on_cyberspace)
+				shadow_on_cyberspace.icon_state = "air_green"
+		if(1)
 			icon_state = "alarm1"
 			new_color = COLOR_LIGHTING_ORANGE_MACHINERY
-		if (2)
+			if(shadow_on_cyberspace)
+				shadow_on_cyberspace.icon_state = "air_yellow"
+		if(2)
 			icon_state = "alarm2"
 			new_color = COLOR_LIGHTING_RED_MACHINERY
+			if(shadow_on_cyberspace)
+				shadow_on_cyberspace.icon_state = "air_red"
 
 	set_light(l_range = 1.5, l_power = 0.2, l_color = new_color)
+
+	if(shadow_on_cyberspace)
+		var/datum/gas_mixture/environment = loc.return_air()
+		if(!environment)
+			return
+
+		var/partial_pressure = R_IDEAL_GAS_EQUATION * environment.temperature / environment.volume
+		if(get_danger_level(environment.gas["plasma"] * partial_pressure, TLV["plasma"]))
+			shadow_on_cyberspace.icon_state = "air_is_fucked"
+
 
 /obj/machinery/alarm/receive_signal(datum/signal/signal)
 	if(stat & (NOPOWER|BROKEN))
@@ -935,6 +953,8 @@ FIRE ALARM
 	var/wiresexposed = 0
 	var/buildstage = 2 // 2 = complete, 1 = no wires,  0 = circuit gone
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/fire_alarm
+
 /obj/machinery/firealarm/update_icon()
 	overlays.Cut()
 
@@ -960,6 +980,8 @@ FIRE ALARM
 		if(area.fire)
 			icon_state = "fire1"
 			set_light(l_range = 1.5, l_power = 0.5, l_color = COLOR_LIGHTING_RED_MACHINERY)
+			if(shadow_on_cyberspace)
+				shadow_on_cyberspace.icon_state = "fire_red"
 		else
 			icon_state = "fire0"
 			var/decl/security_state/security_state = decls_repository.get_decl(GLOB.maps_data.security_state)
@@ -967,6 +989,8 @@ FIRE ALARM
 
 			set_light(sl.light_max_bright, sl.light_inner_range, sl.light_outer_range, 2, sl.light_color_alarm)
 			src.overlays += image('icons/obj/monitors.dmi', sl.overlay_firealarm)
+			if(shadow_on_cyberspace)
+				shadow_on_cyberspace.icon_state = "fire_green"
 
 /obj/machinery/firealarm/fire_act(datum/gas_mixture/air, temperature, volume)
 	if(src.detecting)

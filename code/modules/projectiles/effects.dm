@@ -3,7 +3,7 @@
 	icon_state = "bolt"
 	layer = ABOVE_MOB_LAYER
 	var/lifetime = 3
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /obj/effect/projectile/New(var/turf/location)
 	init_plane()

@@ -8,8 +8,7 @@
 	var/recorded	//the activation message
 
 /obj/item/device/assembly/voice/LateInitialize()
-	. = ..()
-	add_hearing()
+	add_hearing() // IS NEVER CALLED -- KIROV
 
 
 /obj/item/device/assembly/voice/Destroy()

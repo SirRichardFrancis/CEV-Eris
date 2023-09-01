@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(job)
 	/// DOS Attack prevention by locking off file-reads.
 	var/list/queries_by_key = list()
 
-/datum/controller/subsystem/job/Initialize(start_timeofday)
+/datum/controller/subsystem/job/SS_initialize(start_timeofday)
 	if(!occupations.len)
 		SetupOccupations()
 		LoadJobs("config/jobs.txt")

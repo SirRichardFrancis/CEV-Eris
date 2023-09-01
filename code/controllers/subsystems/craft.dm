@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(craft)
 	var/global/list/current_category = list()
 	var/global/list/current_item = list()
 
-/datum/controller/subsystem/craft/Initialize(timeofday)
+/datum/controller/subsystem/craft/SS_initialize(timeofday)
 	categories = list()
 	cat_names = list()
 	for(var/path in subtypesof(/datum/craft_recipe))

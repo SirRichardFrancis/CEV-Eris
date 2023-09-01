@@ -44,13 +44,20 @@
 			return
 
 /turf/Initialize()
+	ATOM_INIT_CHECK
+	ATOM_INIT_PLANE
+
 	turfs += src
 	var/area/A = loc
-	if (!A.ship_area)
-		if (z in GLOB.maps_data.station_levels)
+	if(!A.ship_area)
+		if(z in GLOB.maps_data.station_levels)
 			A.set_ship_area()
 
-	. = ..()
+	if(cyberspace_reflection_type) // Different from ATOM_INIT_CYBERSHADOW define, because calling get_turf() on turf would return an area ¯\_(ツ)_/¯
+		shadow_on_cyberspace = new cyberspace_reflection_type(src)
+		shadow_on_cyberspace.origin = src
+
+	return INITIALIZE_HINT_NORMAL
 
 /turf/Destroy()
 	turfs -= src
@@ -140,50 +147,6 @@
 				return 0
 	return 1 //Nothing found to block so return success!
 
-var/const/enterloopsanity = 100
-/turf/Entered(atom/atom as mob|obj)
-
-	if(movement_disabled)
-		to_chat(usr, SPAN_WARNING("Movement is admin-disabled.")) //This is to identify lag problems
-		return
-	..()
-
-	if(!istype(atom, /atom/movable))
-		return
-
-	var/atom/movable/A = atom
-
-	if(ismob(A))
-		var/mob/M = A
-
-		M.update_floating()
-		if(M.check_gravity() || M.incorporeal_move)
-			M.inertia_dir = 0
-		else
-			if(!M.allow_spacemove())
-				inertial_drift(M)
-			else
-				if(M.allow_spacemove() == TRUE)
-					M.update_floating(FALSE)
-					M.inertia_dir = 0
-				else if(M.check_dense_object())
-					M.inertia_dir = 0
-
-		if(isliving(M))
-			var/mob/living/L = M
-			L.handle_footstep(src)
-
-	var/objects = 0
-	if(A && (A.flags & PROXMOVE))
-		for(var/atom/movable/thing in range(1))
-			if(objects > enterloopsanity) break
-			objects++
-			spawn(0)
-				if(A)
-					A.HasProximity(thing, 1)
-					if ((thing && A) && (thing.flags & PROXMOVE))
-						thing.HasProximity(A, 1)
-	return
 
 /turf/proc/adjacent_fire_act(turf/simulated/floor/source, temperature, volume)
 	return

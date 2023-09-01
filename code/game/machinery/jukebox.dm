@@ -47,8 +47,8 @@
 	. = ..()
 
 // On initialization, copy our tracks from the global list
-/obj/machinery/media/jukebox/Initialize()
-	. = ..()
+/obj/machinery/media/jukebox/LateInitialize() // TODO: See if that inits in time -- KIROV
+	power_change()
 	if(GLOB.all_jukebox_tracks.len < 1)
 		stat |= BROKEN // No tracks configured this round!
 	else

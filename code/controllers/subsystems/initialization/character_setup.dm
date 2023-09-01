@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(character_setup)
 
 	var/datum/category_collection/setup_option_collection/setup_options
 
-/datum/controller/subsystem/character_setup/Initialize()
+/datum/controller/subsystem/character_setup/SS_initialize()
 	setup_options = new
 
 	while(prefs_awaiting_setup.len)

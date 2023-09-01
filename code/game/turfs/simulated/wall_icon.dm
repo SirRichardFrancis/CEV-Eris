@@ -79,12 +79,19 @@
 		return
 
 	overlays.Cut()
+	if(shadow_on_cyberspace)
+		shadow_on_cyberspace.overlays.Cut()
+
 	var/image/I
 	for(var/i = 1 to 4)
 		I = image('icons/turf/wall_masks.dmi', "[icon_base][wall_connections[i]]", dir = GLOB.cardinal[i])
 
 		I.color = base_color
 		overlays += I
+
+		if(shadow_on_cyberspace)
+			I = image('icons/cyberspace/turf.dmi', "wall_[cyber_wall_connections[i]]", dir = GLOB.cardinal[i])
+			shadow_on_cyberspace.overlays += I
 
 	if(icon_base_reinf)
 		if(construction_stage != null && construction_stage < 6)
@@ -114,6 +121,7 @@
 	if(!material)
 		return
 	var/list/dirs = list()
+	var/list/cyber_dirs = list()
 	for(var/turf/simulated/wall/W in RANGE_TURFS(1, src) - src)
 		if(!W.material)
 			continue
@@ -122,18 +130,25 @@
 			W.update_icon()
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
+			cyber_dirs += get_dir(src, W)
 
 	for(var/obj/structure/low_wall/T in orange(src, 1))
-		if (!T.connected)
+		if(!T.connected)
 			continue
 
 		var/T_dir = get_dir(src, T)
 		dirs |= T_dir
+		cyber_dirs |= T_dir
+
 		if(propagate)
 			T.update_connections()
 			T.update_icon()
 
+	for(var/obj/machinery/door/airlock/A in orange(src, 1)) // In cyberspace walls are connected to the doors
+		cyber_dirs |= get_dir(src, A)
+
 	wall_connections = dirs_to_corner_states(dirs)
+	cyber_wall_connections = dirs_to_corner_states(cyber_dirs)
 
 /turf/simulated/wall/proc/can_join_with(var/turf/simulated/wall/W)
 	if(material && W.material && material.icon_base == W.material.icon_base)

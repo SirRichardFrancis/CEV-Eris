@@ -74,7 +74,7 @@ SUBSYSTEM_DEF(air)
 	..(msg)
 
 
-/datum/controller/subsystem/air/Initialize(timeofday)
+/datum/controller/subsystem/air/SS_initialize(timeofday)
 	map_loading = FALSE
 	setup_allturfs()
 	setup_atmos_machinery()

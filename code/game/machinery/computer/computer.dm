@@ -14,9 +14,19 @@
 	var/light_range_on = 1.5
 	var/light_power_on = 2
 
-/obj/machinery/computer/Initialize()
-	. = ..()
+/obj/machinery/computer/Initialize(mapload, d=0)
+	ATOM_INIT_ALL
+
+	if(d)
+		set_dir(d)
+	GLOB.machines += src
 	GLOB.computer_list += src
+	InitCircuit()
+	START_PROCESSING(SSmachines, src)
+
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/computer/LateInitialize()
 	power_change()
 	update_icon()
 

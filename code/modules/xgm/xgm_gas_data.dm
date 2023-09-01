@@ -54,7 +54,7 @@
 	icon_state = "generic"
 	layer = GASFIRE_LAYER
 	appearance_flags = PIXEL_SCALE | RESET_COLOR
-	mouse_opacity = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/gas_id
 
 /obj/effect/gas_overlay/Initialize(mapload, gas)

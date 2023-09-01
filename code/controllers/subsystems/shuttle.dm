@@ -11,7 +11,7 @@ SUBSYSTEM_DEF(shuttle)
 
 	var/tmp/list/working_shuttles
 
-/datum/controller/subsystem/shuttle/Initialize()
+/datum/controller/subsystem/shuttle/SS_initialize()
 	last_landmark_registration_time = world.time
 	initialize_shuttles()
 	. = ..()

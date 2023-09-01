@@ -187,6 +187,8 @@
 	var/firealarmed = 0
 	var/atmosalarmed = 0
 
+	cyberspace_reflection_type = null
+
 // the smaller bulb light fixture
 
 /obj/machinery/light/floor

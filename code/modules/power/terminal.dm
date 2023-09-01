@@ -9,6 +9,7 @@
 	desc = "An underfloor wiring terminal for power equipment."
 	level = BELOW_PLATING_LEVEL
 	layer = WIRE_TERMINAL_LAYER //a bit above wires
+	cyberspace_reflection_type = null
 	var/obj/machinery/power/master = null
 
 

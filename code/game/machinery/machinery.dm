@@ -91,6 +91,8 @@
 
 	price_tag = 100
 
+	cyberspace_reflection_type = /atom/movable/cyber_shadow/machine
+
 	var/stat = 0
 	var/emagged = 0
 	var/use_power = IDLE_POWER_USE
@@ -117,7 +119,8 @@
 
 
 /obj/machinery/Initialize(mapload, d=0)
-	. = ..()
+	ATOM_INIT_ALL
+
 	if(d)
 		set_dir(d)
 	GLOB.machines += src
@@ -127,7 +130,6 @@
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/machinery/LateInitialize()
-	. = ..()
 	power_change()
 
 /obj/machinery/Destroy()

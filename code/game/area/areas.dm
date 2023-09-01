@@ -48,14 +48,15 @@
  * returns INITIALIZE_HINT_LATELOAD
  */
 /area/Initialize()
+	ATOM_INIT_CHECK
+	ATOM_INIT_PLANE // TODO: Probably unnecessary, check and consider removing -- KIROV
+
 	icon_state = ""
 
 	if(!requires_power || !apc)
 		power_light = 0
 		power_equip = 0
 		power_environ = 0
-
-	. = ..()
 
 	return INITIALIZE_HINT_LATELOAD
 
@@ -116,7 +117,7 @@
 	if(!fire)
 		fire = 1	//used for firedoor checks
 		updateicon()
-		mouse_opacity = 0
+		mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 		for(var/obj/machinery/door/firedoor/D in all_doors)
 			D.close()
 
@@ -124,7 +125,7 @@
 	if (fire)
 		fire = 0	//used for firedoor checks
 		updateicon()
-		mouse_opacity = 0
+		mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 		for(var/obj/machinery/door/firedoor/D in all_doors)
 			D.open()
 
@@ -144,13 +145,13 @@
 	if (!( party ))
 		party = 1
 		updateicon()
-		mouse_opacity = 0
+		mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	return
 
 /area/proc/partyreset()
 	if (party)
 		party = 0
-		mouse_opacity = 0
+		mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 		updateicon()
 		for(var/obj/machinery/door/firedoor/D in src)
 			D.open()
