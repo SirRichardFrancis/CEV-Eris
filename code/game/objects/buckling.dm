@@ -39,6 +39,7 @@
 	post_buckle_mob(M)
 	return 1
 
+// INFINITE LOOP HERE --KIROV
 /atom/proc/unbuckle_mob()
 	if(buckled_mob && buckled_mob.buckled == src)
 		. = buckled_mob

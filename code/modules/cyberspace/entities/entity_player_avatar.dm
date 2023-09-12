@@ -24,149 +24,128 @@
 	// TODO: Add visualnet here
 
 	var/mob/original_mob
-	var/atom/movable/neohud/left_twix_stick
-	var/atom/movable/neohud/right_twix_stick
+	var/datum/heohud_holder/cyberspace/HUD_left
+	var/datum/heohud_holder/cyberspace/HUD_right
+
+	var/thread_limit = 8
+	var/processing_power_limit = 200
+	var/processing_power_count = 0
+	var/power_regeneration_speed = 10
+	var/hack_damage_dealt_offset = 0
+	var/hack_damage_taken_offset = 0
+
+	var/list/active_threads
+	var/list/available_programs
+
+	var/last_update // Timestamp of last update_state() call
 
 
-/mob/cyber_avatar/proc/assume_direct_control(mob/user)
-	if(!user.client)
-		return
+/mob/cyber_avatar/Initialize()
+	. = ..()
+	STOP_PROCESSING(SSmobs, src)
 
-	SScyber.runners.Add(src) 
 
-	user.client.create_UI(type)
-	user.teleop = src // Don't mark realspace body as SSD
-	original_mob = user // Note to what mob we should return the player
-	ckey = user.ckey // Transfer player control to this mob
-	client.eye = src
-	client.fit_viewport()
+/mob/cyber_avatar/proc/update_state(delta = 1)
+	last_update = world.time
+	if(processing_power_count < processing_power_limit)
+		processing_power_count += power_regeneration_speed * delta
+		processing_power_count = min(processing_power_count, processing_power_limit)
+		HUD_right.update_power()
 
-//	original_mob_parallax = user.parallax.icon_state
 
+/mob/cyber_avatar/proc/reset_stats()
+	thread_limit = initial(thread_limit)
+	processing_power_limit = initial(processing_power_limit)
+	power_regeneration_speed = initial(power_regeneration_speed)
+	hack_damage_dealt_offset = initial(hack_damage_dealt_offset)
+	hack_damage_taken_offset = initial(hack_damage_taken_offset)
+
+
+/mob/cyber_avatar/proc/get_stats_from_cyberdeck(obj/item/cyberdeck/cyberdeck)
+	processing_power_limit += cyberdeck.processing_power_offset
+	power_regeneration_speed += cyberdeck.power_regeneration_offset
+	hack_damage_dealt_offset += cyberdeck.hack_damage_dealt_offset
+	hack_damage_taken_offset += cyberdeck.hack_damage_taken_offset
+
+	thread_limit = cyberdeck.thread_limit
+
+
+/mob/cyber_avatar/proc/get_stats_from_neuralink(obj/item/organ_module/neuralink/neuralink)
+	processing_power_limit += neuralink.processing_power_offset
+	power_regeneration_speed += neuralink.power_regeneration_offset
+	hack_damage_dealt_offset += neuralink.hack_damage_dealt_offset
+	hack_damage_taken_offset += neuralink.hack_damage_taken_offset
+
+
+// TODO: Get stats from modular computer
+// TODO: Get stats from runner chair/pod
+
+
+/mob/cyber_avatar/proc/init_parallax()
 	if(!parallax)
 		parallax = new /obj/parallax(src)
-	
+
 	SSevent.all_parallaxes -= parallax // We don't need icon to be changed by events
+	parallax.name = "cyberspace"
 	parallax.icon_state = "cyber"
 	parallax.plane = CYBERSPACE_PLANE
 	parallax.layer = CYBERSPACE_BACKGROUND_LAYER
 	parallax.blend_mode = BLEND_DEFAULT
-
+	parallax.mouse_opacity = MOUSE_OPACITY_OPAQUE
 	parallax.maptext_width = 500
 	parallax.maptext_height = 600
 	parallax.maptext_x = 140
 	parallax.maptext_y = 75
 
+
+/mob/cyber_avatar/proc/possess(mob/user)
+	last_update = world.time
+	START_PROCESSING(SScyber, src)
+
+	user.client.destroy_UI()
+	user.teleop = src // Don't mark realspace body as SSD
+
+	original_mob = user // Note to what mob we should return the player
+	ckey = user.ckey // Implicitly moves 'client' between mobs
+	client.eye = src
+	client.fit_viewport()
+
 	var/static/icon/cursor
 	if(!cursor)
-		cursor = icon('icons/cyberspace/cursors/windows_95_middle_finger.dmi')
-
+		cursor = icon('icons/cyberspace/cursors/windows_95.dmi')
 	client.mouse_pointer_icon = cursor
 
-	if(!left_twix_stick)
-		left_twix_stick = new
-		right_twix_stick = new
-		right_twix_stick.screen_loc = "18:-64,1"
-		// For whatever reason, atom peaking off the right side of the view range will get cut off past 32 pixels
-		// Left side experiences nothing like that. But if cut-off part moved further and then pixel-shifted back (-64 after the :), it would be rendered correctly
-		// Edits of skin.dmf have not impacted this in any way. Appears to be a quirk of the renderer
+	if(!HUD_left)
+		HUD_left = new(master = src, is_right_side = FALSE)
 
-	client.screen.Add(left_twix_stick)
-	client.screen.Add(right_twix_stick)
+	if(!HUD_right)
+		HUD_right = new(master = src, is_right_side = TRUE)
+
+	HUD_right.startup_flick()
+
+	client.screen.Add(HUD_left.elements)
+	client.screen.Add(HUD_right.elements)
 	client.screen.Add(parallax)
-	client.screen.Add(new /obj/cyber_plane_master)
+//	client.screen.Add(new /obj/cyber_plane_master)
 
 	winset(client, null, "mapwindow.map.right-click=true") // Disable popup menu on right click
 	// TODO: Account for admins having to do admin stuff, such as accessing variable edit and deleting
 
 
-/mob/cyber_avatar/verb/update_text()
-	set name = "Update text"
-	SScyber.update_parallax_maptext()
-
-
-/mob/cyber_avatar/verb/add_filter()
-	set name = "Add filter"
-
-	var/filter_type = input(usr, "Choose filter type", "") as null|anything in list(
-		"alpha",
-		"angular_blur",
-		"bloom",
-		"displace",
-		"drop_shadow",
-		"blur",
-		"motion_blur",
-		"outline",
-		"radial_blur",
-		"rays",
-		"ripple",
-		"wave")
-
-
-	switch(filter_type)
-		if("alpha")
-			var/x = input(usr, "Horizontal offset of mask", "") as num
-			var/y = input(usr, "Vertical offset of mask", "") as num
-			var/i = input(usr, "Icon to use as mask", "") as icon
-			var/r = input(usr, "Render_target to use as a mask", "") as text
-			filters = filter(type = "alpha", x = x, y = y, icon = i, render_source = r)
-
-		if("angular_blur")
-			var/x = input(usr, "Horizontal center of effect, in pixels, relative to image center", "") as num
-			var/y = input(usr, "Vertical center of effect, in pixels, relative to image center", "") as num
-			var/s = input(usr, "Amount of blur", "") as num
-			filters = filter(type = "angular_blur", x = x, y = y, size = s)
-
-		if("bloom")
-			var/t = input(usr, "Color threshold for bloom", "") as num
-			var/s = input(usr, "Blur radius of bloom effect", "") as num
-			var/o = input(usr, "Growth/outline radius of bloom effect before blur", "") as num
-			var/a = input(usr, "Opacity of effect", "") as num
-			filters = filter(type = "bloom", threshold = t, size = s, offset = o, alpha = a)
-
-		// if("displace")
-		// 	filters = filter(type = "displace", )
-
-		// if("drop_shadow")
-		// 	filters = filter(type = "drop_shadow", )
-
-		// if("blur")
-		// 	filters = filter(type = "blur", )
-
-		// if("motion_blur")
-		// 	filters = filter(type = "motion_blur", )
-
-		// if("outline")
-		// 	filters = filter(type = "outline", )
-
-		// if("radial_blur")
-		// 	filters = filter(type = "radial_blur", )
-
-		// if("rays")
-		// 	filters = filter(type = "rays", )
-
-		// if("ripple")
-		// 	filters = filter(type = "ripple", )
-
-		// if("wave")
-		// 	filters = filter(type = "wave", )
-		else
-			filters = null
-
-
-
-
-
 /mob/cyber_avatar/verb/jack_out()
 	set name = "Jack out"
+	set category = "IC"
 	disconnect()
 
 
 /mob/cyber_avatar/proc/disconnect()
+	STOP_PROCESSING(SScyber, src)
 	winset(client, null, "mapwindow.map.right-click=false")
 
 	client.mouse_pointer_icon = initial(client.mouse_pointer_icon)
 	client.screen.Remove(parallax)
+	client.screen.Remove(HUD_left.elements)
+	client.screen.Remove(HUD_right.elements)
 	client.eye = original_mob
 
 	original_mob.ckey = ckey // Implicitly moves 'client' from src to original_mob
@@ -175,7 +154,6 @@
 	original_mob.teleop = null
 	original_mob = null
 
-	SScyber.runners.Remove(src)
 	qdel(src)
 
 

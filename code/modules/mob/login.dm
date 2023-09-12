@@ -77,12 +77,6 @@
 		client.eye = src
 		client.perspective = MOB_PERSPECTIVE
 
-	//set macro to normal incase it was overriden (like cyborg currently does)
-	if(client.get_preference_value(/datum/client_preference/fullscreen) == GLOB.PREF_YES)
-		winset(client, null, "mainwindow.titlebar=false mainvsplit.pos=0,0")
-	else
-		winset(client, null, "mainwindow.titlebar=true mainvsplit.pos=3,0")
-
 	if(client)
 		if(client.UI)
 			client.UI.show()
@@ -98,5 +92,7 @@
 	if(!parallax)
 		parallax = new(src)
 	client.screen += parallax
+
+	fullscreen_check()
 
 	return TRUE

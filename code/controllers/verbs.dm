@@ -4,7 +4,6 @@
 //		- lighting done
 
 
-ADMIN_VERB_ADD(/client/proc/debug_antagonist_template, R_DEBUG, null)
 /client/proc/debug_antagonist_template(antag_type in GLOB.all_antag_types)
 	set category = "Debug"
 	set name = "Debug Antagonist"

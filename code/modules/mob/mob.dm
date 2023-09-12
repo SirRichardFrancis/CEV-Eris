@@ -258,8 +258,8 @@
 
 /mob/proc/run_examinate(atom/examinify)
 
-	if((is_blind(src) || usr.stat) && !isobserver(src))
-		to_chat(src, "<span class='notice'>Something is there but you can't see it.</span>")
+	if((is_blind(src) || stat) && !isobserver(src))
+		to_chat(src, SPAN_NOTICE("Something is there but you can't see it."))
 		return
 	if(!istype(examinify, /obj/screen))
 		face_atom(examinify)
@@ -675,54 +675,27 @@
 	for(var/mob/M in viewers())
 		M.see(message)
 
-/mob/Stat()
-	..()
-	. = (is_client_active(10 MINUTES))
+/// Adds this list to the output to the stat browser
+/mob/proc/get_status_tab_items()
+	. = list()
+	if(!client)
+		return
+	// var/list/preferences = client_preference_stats_for_usr(src)
+	// for(var/client_preference_description in preferences)
+	// 	var/stat_client_preference/scp = client_preference_stats_[client_preference_description]
+	// 	. += "[scp.client_preference.description]: [scp]"
 
-	if(.)
-		if(statpanel("Status") && SSticker.current_state != GAME_STATE_PREGAME)
-			stat("Storyteller", "[master_storyteller]")
-			stat("Ship Time", stationtime2text())
-			stat("Round Duration", roundduration2text())
+	// if(client.description_holders && client.description_holders["name"])
+	// 	. += "[client.description_holders["icon"]] <font size='5'>[client.description_holders["name"]]</font>" //The name, written in big letters.
+	// 	. += "[client.description_holders["desc"]]" //the default examine text.
+	// 	if(client.description_holders["info"])
+	// 		. += "<font color='#084b8a'><b>[client.description_holders["info"]]</b></font>" //Blue, informative text.
+	// 	if(client.description_holders["fluff"])
+	// 		. += "<font color='#298a08'><b>[client.description_holders["fluff"]]</b></font>" //Yellow, fluff-related text.
+	// 	if(client.description_holders["antag"])
+	// 		. += "<font color='#8a0808'><b>[client.description_holders["antag"]]</b></font>" //Red, malicious antag-related text
 
-		if(client.holder)
-			if(statpanel("Status"))
-				stat("Location:", "([x], [y], [z]) [loc]")
-			if(statpanel("MC"))
-				stat("CPU:","[world.cpu]")
-				stat("Instances:","[world.contents.len]")
-				stat(null)
-				if(Master)
-					Master.stat_entry()
-				else
-					stat("Master Controller:", "ERROR")
-				if(Failsafe)
-					Failsafe.stat_entry()
-				else
-					stat("Failsafe Controller:", "ERROR")
-				if(GLOB)
-					GLOB.stat_entry()
-				else
-					stat("Globals:", "ERROR")
-				if(Master)
-					stat(null)
-					for(var/datum/controller/subsystem/SS in Master.subsystems)
-						SS.stat_entry()
-
-		if(listed_turf && client)
-			if(!TurfAdjacent(listed_turf))
-				listed_turf = null
-			else
-				if(statpanel("Turf"))
-					stat(listed_turf)
-					for(var/atom/A in listed_turf)
-						if(!A.mouse_opacity)
-							continue
-						if(A.invisibility > see_invisible)
-							continue
-						if(is_type_in_list(A, shouldnt_see))
-							continue
-						stat(A)
+// PREFERENCE STUFF HERE, DON'T FORGET TO DEAL WITH -- KIROV
 
 
 // facing verbs
@@ -997,7 +970,7 @@ mob/proc/yank_out_object()
 		visible_message("<span class='warning'><b>[usr] rips [selection] out of [src]'s body.</b></span>","<span class='warning'><b>[usr] rips [selection] out of your body.</b></span>")
 	valid_objects = get_visible_implants()
 	if(valid_objects.len == 1) //Yanking out last object - removing verb.
-		src.verbs -= /mob/proc/yank_out_object
+		remove_verb(src, /mob/proc/yank_out_object)
 
 	if(ishuman(src))
 		var/mob/living/carbon/human/H = src
@@ -1309,13 +1282,11 @@ mob/proc/yank_out_object()
 /client/verb/body_toggle_head()
 	set name = "body-toggle-head"
 	set hidden = TRUE
-	set category = "OOC"
 	toggle_zone_sel(list(BP_HEAD,BP_EYES,BP_MOUTH))
 
 /client/verb/body_r_arm()
 	set name = "body-r-arm"
 	set hidden = TRUE
-	set category = "OOC"
 	toggle_zone_sel(list(BP_R_ARM))
 
 /client/verb/body_l_arm()

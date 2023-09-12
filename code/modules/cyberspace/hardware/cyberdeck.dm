@@ -10,9 +10,16 @@
 	var/list/preinstalled_software
 	var/list/preinstalled_hardware
 
+	var/thread_limit = 8
 	var/processing_power_offset = 0
 	var/power_regeneration_offset = 0
-	var/thread_limit = 8
+
+	var/hack_damage_dealt_offset = 0
+	var/hack_damage_taken_offset = 0
+
+	var/is_broken = FALSE
+
+
 
 
 /obj/item/cyberdeck/cheap
@@ -64,13 +71,10 @@
 	icon_state = "legendary"
 
 
-/obj/item/cyberdeck/proc/dive(mob/user)
-	return
-
 /obj/item/cyberdeck/attack_self(mob/user)
-	to_chat(user, SPAN_NOTICE("Connecting to [station_name] intranet..."))
-	var/mob/cyber_avatar/avatar = new(isturf(loc) ? loc : get_turf(loc))
-	avatar.assume_direct_control(user)
+	SScyber.chip_in(user, src)
+
+
 
 
 

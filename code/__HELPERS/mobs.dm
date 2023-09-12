@@ -422,6 +422,14 @@ Proc for attack log creation, because really why not
 
 	return mind.assigned_job.head_position
 
+/mob/proc/fullscreen_check()
+	if(!client)
+		return
+	if(client.get_preference_value(/datum/client_preference/fullscreen) == GLOB.PREF_YES)
+		winset(client, null, "mainwindow.titlebar=false mainwindow.menu=none mainwindow.is-maximized=true split.pos=0,0")
+	else
+		winset(client, null, "mainwindow.titlebar=true mainwindow.menu=menu split.pos=3,0")
+
 /mob/proc/get_screen_colour()
 
 /mob/proc/update_client_colour(time = 10) //Update the mob's client.color with an animation the specified time in length.

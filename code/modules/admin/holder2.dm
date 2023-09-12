@@ -32,6 +32,7 @@ var/list/admin_datums = list()
 		owner = C
 		owner.holder = src
 		owner.add_admin_verbs()	//TODO
+//		owner.init_verbs()
 		admins |= C
 
 /datum/admins/proc/disassociate()
@@ -39,6 +40,7 @@ var/list/admin_datums = list()
 		admins -= owner
 		owner.remove_admin_verbs()
 		owner.deadmin_holder = owner.holder
+//		owner.init_verbs()
 		owner.holder = null
 
 /datum/admins/proc/reassociate()

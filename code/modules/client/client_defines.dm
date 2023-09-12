@@ -62,6 +62,13 @@
 
 	var/adminhelped = 0
 
+
+	/// List of tabs containing verbs
+	var/list/verb_tabs = list()
+
+	/// hides the byond verb panel as we use our own custom version
+	show_verb_panel = FALSE
+
 		///////////////
 		//SOUND STUFF//
 		///////////////

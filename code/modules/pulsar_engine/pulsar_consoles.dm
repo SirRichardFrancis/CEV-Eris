@@ -159,8 +159,9 @@
 		ship.stop_rad_storm()
 		return
 	}
-	ship.block_events = FALSE
-	ship.try_move(0) //Recalc if the pulsar is in a beam
+	if(ship)
+		ship.block_events = FALSE
+		ship.try_move(0) //Recalc if the pulsar is in a beam
 }
 
 /obj/machinery/power/pulsar_power_bridge //Only holds ref to the console and its area, used to get power from it, or disconnect the ship.

@@ -101,6 +101,7 @@
 		last_activity = world.time
 	if(new_character.client)
 		new_character.client.create_UI(new_character.type)
+		new_character.client.init_verbs()
 
 /datum/mind/proc/store_memory(new_text)
 	memory += "[new_text]<BR>"

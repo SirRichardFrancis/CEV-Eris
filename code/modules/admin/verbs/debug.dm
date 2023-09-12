@@ -1,4 +1,3 @@
-ADMIN_VERB_ADD(/client/proc/Debug2, R_DEBUG, FALSE)
 /client/proc/Debug2()
 	set category = "Debug"
 	set name = "Debug-Game"
@@ -67,33 +66,6 @@ ADMIN_VERB_ADD(/client/proc/Debug2, R_DEBUG, FALSE)
 		M.Animalize()
 
 
-/client/proc/makepAI(turf/T)
-	set category = "Fun"
-	set name = "Make pAI"
-	set desc = "Specify a location to spawn a pAI device, then specify a key to play that pAI"
-
-	var/list/available = list()
-	for(var/mob/C in SSmobs.mob_list)
-		if(C.key)
-			available.Add(C)
-	var/mob/choice = input("Choose a player to play the pAI", "Spawn pAI") in available
-	if(!choice)
-		return 0
-	if(!isghost(choice))
-		var/confirm = input("[choice.key] isn't ghosting right now. Are you sure you want to yank them out of them out of their body and place them in this pAI?", "Spawn pAI Confirmation", "No") in list("Yes", "No")
-		if(confirm != "Yes")
-			return 0
-	var/obj/item/device/paicard/card = new(T)
-	var/mob/living/silicon/pai/pai = new(card)
-	pai.name = sanitizeSafe(input(choice, "Enter your pAI name:", "pAI Name", "Personal AI") as text)
-	pai.real_name = pai.name
-	pai.key = choice.key
-	card.setPersonality(pai)
-	for(var/datum/paiCandidate/candidate in SSpai.pai_candidates)
-		if(candidate.key == choice.key)
-			SSpai.pai_candidates.Remove(candidate)
-
-
 /client/proc/cmd_admin_slimeize(mob/living/M)
 	set category = "Fun"
 	set name = "Make slime"
@@ -151,7 +123,6 @@ ADMIN_VERB_ADD(/client/proc/Debug2, R_DEBUG, FALSE)
 
 
 //TODO: merge the vievars version into this or something maybe mayhaps
-ADMIN_VERB_ADD(/client/proc/cmd_debug_del_all, R_ADMIN|R_DEBUG, FALSE)
 /client/proc/cmd_debug_del_all()
 	set category = "Debug"
 	set name = "Del-All"
@@ -166,7 +137,7 @@ ADMIN_VERB_ADD(/client/proc/cmd_debug_del_all, R_ADMIN|R_DEBUG, FALSE)
 		log_admin("[key_name(src)] has deleted all instances of [hsbitem].")
 		message_admins("[key_name_admin(src)] has deleted all instances of [hsbitem].", 0)
 
-ADMIN_VERB_ADD(/client/proc/cmd_display_del_log, R_ADMIN|R_DEBUG, FALSE)
+
 /client/proc/cmd_display_del_log()
 	set category = "Debug"
 	set name = "Display del() Log"
@@ -196,7 +167,7 @@ ADMIN_VERB_ADD(/client/proc/cmd_display_del_log, R_ADMIN|R_DEBUG, FALSE)
 
 	usr << browse(dellog.Join(), "window=dellog")
 
-ADMIN_VERB_ADD(/client/proc/cmd_debug_make_powernets, R_DEBUG, FALSE)
+
 /client/proc/cmd_debug_make_powernets()
 	set category = "Debug"
 	set name = "Make Powernets"
@@ -343,7 +314,6 @@ ADMIN_VERB_ADD(/client/proc/cmd_debug_make_powernets, R_DEBUG, FALSE)
 		to_chat(world, "* [areatype]")
 
 
-ADMIN_VERB_ADD(/client/proc/cmd_admin_dress, R_FUN, FALSE)
 /client/proc/cmd_admin_dress()
 	set category = "Fun"
 	set name = "Select equipment"
@@ -409,7 +379,6 @@ ADMIN_VERB_ADD(/client/proc/cmd_admin_dress, R_FUN, FALSE)
 			SMES.input_attempt = 1
 
 
-ADMIN_VERB_ADD(/client/proc/cmd_debug_mob_lists, R_DEBUG, FALSE)
 /client/proc/cmd_debug_mob_lists()
 	set category = "Debug"
 	set name = "Debug Mob Lists"
@@ -429,7 +398,7 @@ ADMIN_VERB_ADD(/client/proc/cmd_debug_mob_lists, R_DEBUG, FALSE)
 		if("Clients")
 			to_chat(usr, jointext(clients,","))
 
-ADMIN_VERB_ADD(/client/proc/view_runtimes, R_DEBUG, FALSE)
+
 /client/proc/view_runtimes()
 	set category = "Debug"
 	set name = "View Runtimes"
@@ -437,7 +406,6 @@ ADMIN_VERB_ADD(/client/proc/view_runtimes, R_DEBUG, FALSE)
 	error_cache.showTo(usr)
 
 
-ADMIN_VERB_ADD(/client/proc/spawn_disciple, R_DEBUG, FALSE)
 /client/proc/spawn_disciple()
 	set category = "Debug"
 	set name = "Spawn Disciple"
@@ -452,7 +420,6 @@ ADMIN_VERB_ADD(/client/proc/spawn_disciple, R_DEBUG, FALSE)
 	C.activate()
 
 
-ADMIN_VERB_ADD(/client/proc/delete_npcs, R_DEBUG, FALSE)
 /client/proc/delete_npcs()
 	set category = "Debug"
 	set name = "Delete NPC mobs"

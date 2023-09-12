@@ -44,7 +44,6 @@ INITIALIZE_IMMEDIATE(/obj/effect/statclick)
 	message_admins("Admin [key_name_admin(usr)] is debugging the [target] [class].")
 
 
-ADMIN_VERB_ADD(/client/proc/restart_controller, R_DEBUG, null)
 // Debug verbs.
 /client/proc/restart_controller(controller in list("Master", "Failsafe"))
 	set category = "Debug"
@@ -61,7 +60,7 @@ ADMIN_VERB_ADD(/client/proc/restart_controller, R_DEBUG, null)
 
 	message_admins("Admin [key_name_admin(usr)] has restarted the [controller] controller.")
 
-ADMIN_VERB_ADD(/client/proc/debug_controller, R_DEBUG, null)
+
 /client/proc/debug_controller()
 	set category = "Debug"
 	set name = "Debug Controller"

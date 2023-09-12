@@ -217,10 +217,13 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	// 		else
 	// 			new /datum/admins(autorank, ckey)
 	// if(CONFIG_GET(flag/enable_localhost_rank) && !connecting_admin)
-	var/localhost_addresses = list("127.0.0.1", "::1")
-	if(isnull(address) || (address in localhost_addresses))
-		var/datum/admins/localhost_rank = new("!localhost!", R_HOST, ckey)
-		localhost_rank.associate(src)
+
+// TODO: Uncomment the following part when testing is done --KIROV
+
+	// var/localhost_addresses = list("127.0.0.1", "::1")
+	// if(isnull(address) || (address in localhost_addresses))
+	// 	var/datum/admins/localhost_rank = new("!localhost!", R_HOST, ckey)
+	// 	localhost_rank.associate(src)
 
 	//preferences datum - also holds some persistant data for the client (because we may as well keep these datums to a minimum)
 	prefs = SScharacter_setup.preferences_datums[ckey]
@@ -263,7 +266,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 				return
 
 	// Initialize tgui panel
-	// src << browse(file('html/statbrowser.html'), "window=statbrowser")
+	src << browse(file('html/statbrowser.html'), "window=statbrowser")
 	// addtimer(CALLBACK(src, PROC_REF(check_panel_loaded)), 30 SECONDS)
 	// tgui_panel.initialize()
 	// Starts the chat
@@ -306,7 +309,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 	if(prefs.lastchangelog != changelog_hash) //bolds the changelog button on the interface so we know there are updates.
 		to_chat(src, span_info("You have unread updates in the changelog."))
-		winset(src, "rpane.changelog", "background-color=#eaeaea;font-style=bold")
+//		winset(src, "rpane.changelog", "background-color=#eaeaea;font-style=bold")
 		if(config.aggressive_changelog)
 			src.changelog()
 
@@ -608,18 +611,6 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 	if(prefs)
 		prefs.ShowChoices(usr)
 
-// Byond seemingly calls stat, each tick.
-// Calling things each tick can get expensive real quick.
-// So we slow this down a little.
-// See: http://www.byond.com/docs/ref/info.html#/client/proc/Stat
-/client/Stat()
-	if(!usr)
-		return
-	// Add always-visible stat panel calls here, to define a consistent display order.
-	statpanel("Status")
-
-	. = ..()
-	sleep(1)
 
 /client/proc/create_UI(var/mob_type)
 	destroy_UI()
@@ -753,3 +744,25 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 /client/proc/colour_transition(list/colour_to = null, time = 10) //Call this with no parameters to reset to default.
 	animate(src, color = colour_to, time = time, easing = SINE_EASING)
+
+/// Compiles a full list of verbs and sends it to the browser
+/client/proc/init_verbs()
+	var/list/verblist = list()
+	verb_tabs.Cut()
+	for(var/thing in (verbs + mob?.verbs))
+		var/procpath/verb_to_init = thing
+		if(!verb_to_init)
+			continue
+		if(verb_to_init.hidden)
+			continue
+		if(!istext(verb_to_init.category))
+			continue
+		verb_tabs |= verb_to_init.category
+		verblist[++verblist.len] = list(verb_to_init.category, verb_to_init.name)
+	src << output("[url_encode(json_encode(verb_tabs))];[url_encode(json_encode(verblist))]", "statbrowser:init_verbs")
+
+/client/verb/fix_stat_panel()
+	set name = "Fix Stat Panel"
+	set hidden = TRUE
+
+	init_verbs()

@@ -9,6 +9,7 @@
 	var/processing_power_offset = 0
 	var/power_regeneration_offset = 0
 	var/hack_damage_dealt_offset = 0
+	var/hack_damage_taken_offset = 0
 
 /obj/item/organ_module/neuralink/router
 	name = "Asters Guild \"C-Link\" HCI" // Sprite looks like a D-Link router to me

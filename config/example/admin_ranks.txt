@@ -14,25 +14,21 @@
 # KEYWORDS:
 # +ADMIN = general admin tools, verbs etc
 # +FUN = events, other event-orientated actions. Access to the fun secrets in the secrets panel.
-# +BAN = the ability to ban, jobban and fullban
 # +SERVER = higher-risk admin verbs and abilities, such as those which affect the server configuration.
 # +DEBUG = debug tools used for diagnosing and fixing problems. It's useful to give this to coders so they can investigate problems on a live server.
-# +RIGHTS (or +PERMISSIONS) = allows you to promote and/or demote people.
-# +EVERYTHING (or +HOST or +ALL) = Simply gives you everything without having to type every flag
+# +PERMISSIONS = allows you to promote and/or demote people.
+# +MODERATOR = admin--.
+# +MENTOR = even lower rank than a moderator, imagine that.
+
 
 Admin Observer
 Moderator		+MOD
-Mentor          +MENTOR
+Mentor			+MENTOR
+Developer		+SERVER +DEBUG
 
-Admin Candidate	+ADMIN
-Trial Admin		+@ +BAN
-Badmin			+@ +SERVER +FUN
-Game Admin		+@ +DEBUG +PERMISSIONS
-Game Master		+EVERYTHING
-Head Admin		+EVERYTHING
-Retired Admin	+ADMIN
-
-Host			+EVERYTHING
-
-Developer		+DEBUG +SERVER
-Dev Mod			+@ +MOD
+Trial Admin		+ADMIN
+Badmin			+ADMIN +FUN +SERVER
+Game Admin		+ADMIN +FUN +SERVER +DEBUG
+Game Master		+ADMIN +FUN +SERVER +DEBUG +PERMISSIONS
+Head Admin		+ADMIN +FUN +SERVER +DEBUG +PERMISSIONS
+Host			+ADMIN +FUN +SERVER +DEBUG +PERMISSIONS
