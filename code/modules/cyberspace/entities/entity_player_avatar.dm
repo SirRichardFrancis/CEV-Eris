@@ -28,9 +28,16 @@
 	var/datum/heohud_holder/cyberspace/HUD_right
 
 	var/thread_limit = 8
+
 	var/processing_power_limit = 200
 	var/processing_power_count = 0
-	var/power_regeneration_speed = 10
+	var/processing_power_regen = 7
+	var/processing_power_drain = 0
+
+	var/network_integrity_limit = 100
+	var/network_integrity_count = 100
+	var/network_integrity_regen = 5
+
 	var/hack_damage_dealt_offset = 0
 	var/hack_damage_taken_offset = 0
 
@@ -42,43 +49,64 @@
 
 /mob/cyber_avatar/Initialize()
 	. = ..()
+	active_threads = list()
+	available_programs = list()
 	STOP_PROCESSING(SSmobs, src)
 
 
 /mob/cyber_avatar/proc/update_state(delta = 1)
 	last_update = world.time
-	if(processing_power_count < processing_power_limit)
-		processing_power_count += power_regeneration_speed * delta
-		processing_power_count = min(processing_power_count, processing_power_limit)
-		HUD_right.update_power()
+
+	HUD_right.update_income()
+
+	processing_power_count += processing_power_regen * delta
+	processing_power_count -= processing_power_drain * delta
+	processing_power_count = min(processing_power_count, processing_power_limit)
+	HUD_right.update_power()
+
+	network_integrity_count += network_integrity_regen * delta
+	network_integrity_count = min(network_integrity_count, network_integrity_limit)
+	HUD_right.update_network()
+
+	HUD_right.process_threads()
 
 
 /mob/cyber_avatar/proc/reset_stats()
 	thread_limit = initial(thread_limit)
 	processing_power_limit = initial(processing_power_limit)
-	power_regeneration_speed = initial(power_regeneration_speed)
+	processing_power_regen = initial(processing_power_regen)
 	hack_damage_dealt_offset = initial(hack_damage_dealt_offset)
 	hack_damage_taken_offset = initial(hack_damage_taken_offset)
 
 
 /mob/cyber_avatar/proc/get_stats_from_cyberdeck(obj/item/cyberdeck/cyberdeck)
 	processing_power_limit += cyberdeck.processing_power_offset
-	power_regeneration_speed += cyberdeck.power_regeneration_offset
+	processing_power_regen += cyberdeck.power_regeneration_offset
 	hack_damage_dealt_offset += cyberdeck.hack_damage_dealt_offset
 	hack_damage_taken_offset += cyberdeck.hack_damage_taken_offset
-
 	thread_limit = cyberdeck.thread_limit
 
 
 /mob/cyber_avatar/proc/get_stats_from_neuralink(obj/item/organ_module/neuralink/neuralink)
 	processing_power_limit += neuralink.processing_power_offset
-	power_regeneration_speed += neuralink.power_regeneration_offset
+	processing_power_regen += neuralink.power_regeneration_offset
 	hack_damage_dealt_offset += neuralink.hack_damage_dealt_offset
 	hack_damage_taken_offset += neuralink.hack_damage_taken_offset
 
 
 // TODO: Get stats from modular computer
 // TODO: Get stats from runner chair/pod
+
+
+/mob/cyber_avatar/proc/get_hacks_from_cyberdeck(obj/item/cyberdeck/cyberdeck)
+	for(var/datum/computer_file/cyber/i in cyberdeck.drive.stored_files)
+		available_programs |= i
+
+
+// TODO: Get hacks from modular computer
+// TODO: Get hacks from runner chair/pod
+
+
 
 
 /mob/cyber_avatar/proc/init_parallax()
@@ -116,21 +144,23 @@
 	client.mouse_pointer_icon = cursor
 
 	if(!HUD_left)
-		HUD_left = new(master = src, is_right_side = FALSE)
+		HUD_left = new /datum/heohud_holder(src)
 
 	if(!HUD_right)
-		HUD_right = new(master = src, is_right_side = TRUE)
-
-	HUD_right.startup_flick()
+		HUD_right = new(src)
+		HUD_right.mirror()
+		HUD_right.generate_hack_list()
+		HUD_right.generate_threads()
+		HUD_right.startup_flick()
 
 	client.screen.Add(HUD_left.elements)
 	client.screen.Add(HUD_right.elements)
 	client.screen.Add(parallax)
-//	client.screen.Add(new /obj/cyber_plane_master)
 
 	winset(client, null, "mapwindow.map.right-click=true") // Disable popup menu on right click
 	// TODO: Account for admins having to do admin stuff, such as accessing variable edit and deleting
 
+	parallax.update()
 
 /mob/cyber_avatar/verb/jack_out()
 	set name = "Jack out"
@@ -157,7 +187,7 @@
 	qdel(src)
 
 
-/mob/cyber_avatar/ClickOn(atom/A, params)
+//mob/cyber_avatar/ClickOn(atom/A, params)
 //	var/list/modifiers = params2list(params)
 	// if(modifiers["shift"] && modifiers["ctrl"])
 	// 	CtrlShiftClickOn(A)
@@ -175,12 +205,12 @@
 	// 	CtrlClickOn(A)
 	// 	return
 
-	if(istype(A, /atom/movable/cyber_shadow))
-		var/atom/movable/cyber_shadow/shadow = A
-		if(!shadow.origin)
-			CRASH("Warning: cyberspace reflection [shadow.type] at X:[shadow.x], Y:[shadow.y], Z:[shadow.z] is not linked to realspace turf or object!")
-		shadow.origin.add_hiddenprint(src)
-		shadow.origin.attack_ai(src)
+	// if(istype(A, /atom/movable/cyber_shadow))
+	// 	var/atom/movable/cyber_shadow/shadow = A
+	// 	if(!shadow.origin)
+	// 		CRASH("Warning: cyberspace reflection [shadow.type] at X:[shadow.x], Y:[shadow.y], Z:[shadow.z] is not linked to realspace turf or object!")
+	// 	shadow.origin.add_hiddenprint(src)
+	// 	shadow.origin.attack_ai(src)
 
 
 

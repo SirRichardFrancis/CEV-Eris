@@ -301,7 +301,12 @@ GLOBAL_LIST_INIT(admin_verbs_admin, list(
 /client/proc/admin_ghost()
 	set category = "Admin"
 	set name = "Aghost"
-	if(!holder)	return
+	if(!holder)
+		return
+
+	if(istype(src, /mob/cyber_avatar))
+		winset(src, null, "mapwindow.map.right-click=false")
+
 	if(isghost(mob))
 		//re-enter
 		var/mob/observer/ghost/ghost = mob
@@ -312,8 +317,6 @@ GLOBAL_LIST_INIT(admin_verbs_admin, list(
 		else
 			to_chat(ghost, "<font color='red'>Error:  Aghost:  Can't reenter corpse, mentors that use adminHUD while aghosting are not permitted to enter their corpse again</font>")
 			return
-
-
 
 	else if(isnewplayer(mob))
 		to_chat(src, "<font color='red'>Error: Aghost: Can't admin-ghost whilst in the lobby. Join or Observe first.</font>")

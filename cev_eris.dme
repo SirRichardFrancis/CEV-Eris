@@ -1670,7 +1670,6 @@
 #include "code\modules\core_implant\cruciform\rituals\machinery.dm"
 #include "code\modules\core_implant\cruciform\rituals\priest.dm"
 #include "code\modules\cyberspace\_defines.dm"
-#include "code\modules\cyberspace\cyber_data_holder.dm"
 #include "code\modules\cyberspace\cyberhud.dm"
 #include "code\modules\cyberspace\cyberspace_subsystem.dm"
 #include "code\modules\cyberspace\entities\entity_common.dm"

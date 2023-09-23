@@ -15,9 +15,6 @@
 	movement_handlers = list()
 
 	anchored = TRUE	//  don't get pushed around
-/*
-/mob/new_player/New()
-	mob_list += src*/
 
 /mob/new_player/say(var/message, var/datum/language/speaking = null, var/verb="says", var/alt_name="")
 	if (client)

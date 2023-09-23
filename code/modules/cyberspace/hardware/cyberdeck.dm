@@ -1,4 +1,3 @@
-
 /obj/item/cyberdeck
 	name = "cyberdeck"
 	desc = "Your average consumer-grade deck."
@@ -19,8 +18,38 @@
 
 	var/is_broken = FALSE
 
+	var/obj/item/computer_hardware/hard_drive/cyberdeck/drive
+	var/drive_capacity = 128
 
 
+/obj/item/cyberdeck/Initialize()
+	ATOM_INIT_ALL
+	drive = new(src)
+	drive.max_capacity = drive_capacity
+	return INITIALIZE_HINT_NORMAL
+
+
+/obj/item/computer_hardware/hard_drive/cyberdeck
+	name = "cyberdeck data storage"
+	desc = "You shouldn't be seeing this. Tell an admin."
+	icon_state = "hdd_normal"
+	max_capacity = 128
+	spawn_blacklisted = TRUE
+	var/obj/item/cyberdeck/cyberdeck
+
+
+/obj/item/computer_hardware/hard_drive/cyberdeck/New(loc, ...)
+	..()
+	cyberdeck = loc
+	if(cyberdeck)
+		if(istype(cyberdeck))
+			for(var/i in cyberdeck.preinstalled_software)
+				store_file(new i)
+
+
+/obj/item/computer_hardware/hard_drive/cyberdeck/Initialize()
+	ATOM_INIT_CHECK
+	return INITIALIZE_HINT_NORMAL
 
 /obj/item/cyberdeck/cheap
 	name = "cheap cyberdeck"
@@ -31,6 +60,10 @@
 	name = "restored cheap cyberdeck"
 	desc = "Blue duct tape always does the trick. Almost as bad as a new one."
 	icon_state = "cheaper"
+	thread_limit = 20
+	preinstalled_software = list(
+		/datum/computer_file/cyber
+	)
 
 /obj/item/cyberdeck/router
 	name = "upgraded cheap cyberdeck"

@@ -11,8 +11,21 @@ PROCESSING_SUBSYSTEM_DEF(cyber)
 
 	process_proc = /mob/cyber_avatar/proc/update_state
 
+
 	var/list/source_files // .dm file paths from cev_eris.dme
 	var/avatar_update_delay = 1 SECOND
+
+	// Following lists store 'screen_loc' variables for certain cyberspace HUD elements
+	// Doesn't look all that pretty and it's simple enough to calculate these instead
+	// But doing math inside strings would be both less effective and more confusing to future coders -- KIROV
+	var/list/threads_screen_locs_left // Thread loading indicator
+	var/list/threads_screen_locs_right
+
+	var/list/threads_hack_screen_locs_left // Program thread runs
+	var/list/threads_hack_screen_locs_right
+
+	var/list/hacks_screen_locs_left // Program roster
+	var/list/hacks_screen_locs_right
 
 
 /datum/controller/subsystem/processing/cyber/SS_initialize()
@@ -28,6 +41,152 @@ PROCESSING_SUBSYSTEM_DEF(cyber)
 		entry = replacetext(entry, "#include \"", "")
 		entry = copytext(entry, 1, LAZYLEN(entry)) // Remove " at the end
 		source_files[index] = entry
+
+	// If you don't know what these numbers mean - see 'Note on screen_loc' and other comments in cyberhud.dm
+	threads_screen_locs_left = list(
+		// Main threads, left-side row, from top to bottom
+		"-2:4,1:259", // 1
+		"-2:4,1:247", // 2
+		"-2:4,1:235", // 3
+		"-2:4,1:223", // 4
+		"-2:4,1:211", // 5
+		"-2:4,1:199", // 6
+		"-2:4,1:187", // 7
+		"-2:4,1:175", // 8
+		// Right-side row of main threads
+		"-2:86,1:259", // 9
+		"-2:86,1:247", // 10
+		"-2:86,1:235", // 11
+		"-2:86,1:223", // 12
+		"-2:86,1:211", // 13
+		"-2:86,1:198", // 14
+		"-2:86,1:186", // 15
+		"-2:86,1:174", // 16
+		// Expansion slot, left side
+		"-2:4,1:299", // 17
+		"-2:4,1:287", // 18
+		// Expansion slot, right side
+		"-2:86,1:299", // 19
+		"-2:86,1:287", // 20
+		// Extra threads from the Covenant, left to right
+		"-2:4,1:311", // 21
+		"-2:86,1:311") // 22
+
+	// Same as above, but for the right side of the screen
+	threads_screen_locs_right = list(
+		// Main threads, left-side row, from top to bottom
+		"18:-60,1:259", // 1
+		"18:-60,1:247", // 2
+		"18:-60,1:235", // 3
+		"18:-60,1:223", // 4
+		"18:-60,1:211", // 5
+		"18:-60,1:199", // 6
+		"18:-60,1:187", // 7
+		"18:-60,1:175", // 8
+		// Right-side row of main threads
+		"18:22,1:259", // 9
+		"18:22,1:247", // 10
+		"18:22,1:235", // 11
+		"18:22,1:223", // 12
+		"18:22,1:211", // 13
+		"18:22,1:198", // 14
+		"18:22,1:186", // 15
+		"18:22,1:174", // 16
+		// Expansion slot, left side
+		"18:-60,1:299", // 17
+		"18:-60,1:287", // 18
+		// Expansion slot, right side
+		"18:22,1:299", // 19
+		"18:22,1:287", // 20
+		// Extra threads from the Covenant, left to right
+		"18:-60,1:311", // 21
+		"18:22,1:311") // 22
+
+	threads_hack_screen_locs_left = list(
+		// Main threads, left-side row, from top to bottom
+		"-2:11,1:261", // 1
+		"-2:11,1:249", // 2
+		"-2:11,1:237", // 3
+		"-2:11,1:225", // 4
+		"-2:11,1:213", // 5
+		"-2:11,1:200", // 6
+		"-2:11,1:189", // 7
+		"-2:11,1:177", // 8
+		// Right-side row of main threads
+		"-2:51,1:261", // 9
+		"-2:51,1:249", // 10
+		"-2:51,1:237", // 11
+		"-2:51,1:225", // 12
+		"-2:51,1:213", // 13
+		"-2:51,1:201", // 14
+		"-2:51,1:189", // 15
+		"-2:51,1:177", // 16
+		// Expansion slot, left side
+		"-2:11,1:301", // 17
+		"-2:11,1:289", // 18
+		// Expansion slot, right side
+		"-2:51,1:301", // 19
+		"-2:51,1:289", // 20
+		// Extra threads from the Covenant, left to right
+		"-2:11,1:313", // 21
+		"-2:51,1:313") // 22
+
+	threads_hack_screen_locs_right = list(
+		// Main threads, left-side row, from top to bottom
+		"18:-53,1:261", // 1
+		"18:-53,1:249", // 2
+		"18:-53,1:237", // 3
+		"18:-53,1:225", // 4
+		"18:-53,1:213", // 5
+		"18:-53,1:201", // 6
+		"18:-53,1:189", // 7
+		"18:-53,1:177", // 8
+		// Right-side row of main threads
+		"18:-13,1:261", // 9
+		"18:-13,1:249", // 10
+		"18:-13,1:237", // 11
+		"18:-13,1:225", // 12
+		"18:-13,1:213", // 13
+		"18:-13,1:201", // 14
+		"18:-13,1:189", // 15
+		"18:-13,1:177", // 16
+		// Expansion slot, left side
+		"18:-53,1:301", // 17
+		"18:-53,1:289", // 18
+		// Expansion slot, right side
+		"18:-13,1:301", // 19
+		"18:-13,1:289", // 20
+		// Extra threads from the Covenant, left to right
+		"18:-53,1:313", // 21
+		"18:-13,1:313") // 22
+
+	hacks_screen_locs_left = list(
+		"-2,1:148", // 1
+		"-2,1:137", // 2
+		"-2,1:126", // 3
+		"-2,1:115", // 4
+		"-2,1:104", // 5
+		"-2,1:93", // 6
+		"-2,1:82", // 7
+		"-2,1:71", // 8
+		"-2,1:60", // 9
+		"-2,1:49", // 10
+		"-2,1:38", // 11
+		"-2,1:27") // 12
+
+	hacks_screen_locs_right = list(
+		"18:-64,1:148", // 1
+		"18:-64,1:137", // 2
+		"18:-64,1:126", // 3
+		"18:-64,1:115", // 4
+		"18:-64,1:104", // 5
+		"18:-64,1:93", // 6
+		"18:-64,1:82", // 7
+		"18:-64,1:71", // 8
+		"18:-64,1:60", // 9
+		"18:-64,1:49", // 10
+		"18:-64,1:38", // 11
+		"18:-64,1:27") // 12
 
 
 /datum/controller/subsystem/processing/cyber/fire(resumed)
@@ -120,8 +279,12 @@ PROCESSING_SUBSYSTEM_DEF(cyber)
 	to_chat(user, SPAN_NOTICE("Connecting to [station_name]..."))
 
 	var/mob/cyber_avatar/avatar = new(entry_point)
+	if(cyberdeck)
+		avatar.get_stats_from_cyberdeck(cyberdeck)
+		avatar.get_hacks_from_cyberdeck(cyberdeck)
 	avatar.init_parallax()
 	avatar.possess(user)
+	avatar.update_state()
 
 
 
