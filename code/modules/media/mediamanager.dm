@@ -37,6 +37,12 @@
 // Update when moving between areas.
 // TODO - While this direct override might technically be faster, probably better code to use observer or hooks ~Leshana
 /area/Entered(A)
+	// TODO: Change circumstances under which this is called, now it is spammed constantly by all kinds of random shit --KIROV
+
+	if(istype(A, /mob/cyber_avatar))
+		var/mob/cyber_avatar/avatar = A
+		if(avatar.lastarea != src)
+			avatar.on_area_change(src)
 	// Note, we cannot call ..() first, because it would update lastarea.
 	if(!isliving(A))
 		return ..()
@@ -98,10 +104,6 @@
 // Each area may have at most one media source that plays songs into that area.
 // We keep track of that source so any mob entering the area can lookup what to play.
 //
-/area
-	// For now, only one media source per area allowed
-	// Possible Future: turn into a list, then only play the first one that's playing.
-	var/obj/machinery/media/media_source = null
 
 //
 // ### Media Manager Datum

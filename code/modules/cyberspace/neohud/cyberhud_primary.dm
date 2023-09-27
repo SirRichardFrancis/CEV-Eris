@@ -1,21 +1,11 @@
-
-/datum/heohud_holder
-	var/mob/owner
-	var/list/elements
-	var/is_mirrored // Is on the right side of the screen?
-	var/atom/movable/neohud/background
-/datum/heohud_holder/cyberspace
+/datum/heohud_holder/cyberspace_primary
 	var/mob/cyber_avatar/cyber_owner
 
 	// Gauge indicating how full processing power reserve is
-	var/atom/movable/neohud/cyberspace/power/power_indicator
+	var/atom/movable/neohud_element/cyberspace/power/power_indicator
 
 	// Basically a health bar
-	var/atom/movable/neohud/cyberspace/network/network_indicator
-
-	// screen_loc for background, power_indicator and network_indicator, which have same sprite dimensions
-	var/main_screen_loc_left = "-2,1"
-	var/main_screen_loc_right = "18:-64,1"
+	var/atom/movable/neohud_element/cyberspace/network/network_indicator
 
 	// Holds related value's fullness(current_value/maximum_value) percentage increment after which indicator should move to next icon_state
 	// E.g. if indicator got 18 icon states, it will increment icon state's number for each 5.5% of related value's fullness percentage
@@ -23,29 +13,29 @@
 	var/network_indicator_percent_step
 
 	// How much processing power is accumulated
-	var/atom/movable/neohud/cyberspace/number/power_hundreeds
+	var/atom/movable/neohud_element/cyberspace/number/power_hundreeds
 	var/power_hundreeds_screen_loc_left = "-2:36,1:420" // Null this if HUD skin not meant to have numerical power indicator 
 	var/power_hundreeds_screen_loc_right = "18:-28,1:420"
-	var/atom/movable/neohud/cyberspace/number/power_tens
+	var/atom/movable/neohud_element/cyberspace/number/power_tens
 	var/power_tens_screen_loc_left = "-2:46,1:420"
 	var/power_tens_screen_loc_right = "18:-18,1:420"
-	var/atom/movable/neohud/cyberspace/number/power_ones
+	var/atom/movable/neohud_element/cyberspace/number/power_ones
 	var/power_ones_screen_loc_left = "-2:56,1:420"
 	var/power_ones_screen_loc_right = "18:-8,1:420"
 
 	// How much processing power reserve replenish with each SScyber's tick
-	var/atom/movable/neohud/cyberspace/number/income_tens
+	var/atom/movable/neohud_element/cyberspace/number/income_tens
 	var/income_tens_screen_loc_left = "-2:46,1:411" // Null for no income indicator
 	var/income_tens_screen_loc_right = "18:-18,1:411"
-	var/atom/movable/neohud/cyberspace/number/income_ones
+	var/atom/movable/neohud_element/cyberspace/number/income_ones
 	var/income_ones_screen_loc_left = "-2:51,1:411"
 	var/income_ones_screen_loc_right = "18:-13,1:411"
 
 	// Same as above, but for the expense of processing power
-	var/atom/movable/neohud/cyberspace/number/drain_tens
+	var/atom/movable/neohud_element/cyberspace/number/drain_tens
 	var/drain_tens_screen_loc_left = "-2:46,1:434" // Null for income and drain indicators being merged into one
 	var/drain_tens_screen_loc_right = "18:-18,1:434"
-	var/atom/movable/neohud/cyberspace/number/drain_ones
+	var/atom/movable/neohud_element/cyberspace/number/drain_ones
 	var/drain_ones_screen_loc_left = "-2:51,1:434"
 	var/drain_ones_screen_loc_right = "18:-13,1:434"
 
@@ -68,13 +58,7 @@
 	var/list/busy_threads // Indexes of threads that require processing
 
 
-/datum/heohud_holder/New(master)
-	owner = master
-	background = new
-	elements = list(background)
-	
-
-/datum/heohud_holder/cyberspace/New(master)
+/datum/heohud_holder/cyberspace_primary/New(mob/master)
 	cyber_owner = master
 	owner = cyber_owner.original_mob // TODO: Account for a case when there is no original_mob
 
@@ -85,7 +69,7 @@
 	busy_threads = list()
 	
 
-	background = new /atom/movable/neohud/cyberspace
+	background = new /atom/movable/neohud_element/cyberspace
 	background.screen_loc = main_screen_loc_left
 	elements = list(background)
 
@@ -144,7 +128,7 @@
 		is_mirrored = TRUE
 
 
-/datum/heohud_holder/cyberspace/mirror()
+/datum/heohud_holder/cyberspace_primary/mirror()
 	if(is_mirrored)
 		is_mirrored = FALSE
 		background.screen_loc = main_screen_loc_left
@@ -165,12 +149,12 @@
 			atom.screen_loc = SScyber.threads_hack_screen_locs_left[i]
 
 		for(var/i in 1 to LAZYLEN(thread_indicators))
-			var/atom/movable/neohud/cyberspace/thread_indicator/indicator = thread_indicators[i]
+			var/atom/movable/neohud_element/cyberspace/thread_indicator/indicator = thread_indicators[i]
 			indicator.screen_loc = SScyber.threads_screen_locs_left[i]
 			indicator.icon_state = "left_error"
 
 		for(var/i in 1 to LAZYLEN(hacks_roster))
-			var/atom/movable/neohud/cyberspace/hack/hack_ui_element = hacks_roster[i]
+			var/atom/movable/neohud_element/cyberspace/hack/hack_ui_element = hacks_roster[i]
 			hack_ui_element.screen_loc = SScyber.hacks_screen_locs_left[i]
 	else
 		is_mirrored = TRUE
@@ -192,21 +176,21 @@
 			atom.screen_loc =SScyber.threads_hack_screen_locs_right[i]
 
 		for(var/i in 1 to LAZYLEN(thread_indicators))
-			var/atom/movable/neohud/cyberspace/thread_indicator/indicator = thread_indicators[i]
+			var/atom/movable/neohud_element/cyberspace/thread_indicator/indicator = thread_indicators[i]
 			indicator.screen_loc = SScyber.threads_screen_locs_right[i]
 			indicator.icon_state = "right_error"
 
 		for(var/i in 1 to LAZYLEN(hacks_roster))
-			var/atom/movable/neohud/cyberspace/hack/hack_ui_element = hacks_roster[i]
+			var/atom/movable/neohud_element/cyberspace/hack/hack_ui_element = hacks_roster[i]
 			hack_ui_element.screen_loc = SScyber.hacks_screen_locs_right[i]
 
 
-/datum/heohud_holder/cyberspace/proc/startup_flick()
+/datum/heohud_holder/cyberspace_primary/proc/startup_flick()
 //	flick("power_animation", power_indicator)
 	flick("network_animation", network_indicator)
 
 
-/datum/heohud_holder/cyberspace/proc/update_power()
+/datum/heohud_holder/cyberspace_primary/proc/update_power()
 	if(cyber_owner.processing_power_count < 1)
 		power_indicator.icon_state = "power_0"
 	else if(cyber_owner.processing_power_count == cyber_owner.processing_power_limit)
@@ -240,7 +224,7 @@
 			power_ones.icon_state = "0"
 
 
-/datum/heohud_holder/cyberspace/proc/update_network()
+/datum/heohud_holder/cyberspace_primary/proc/update_network()
 	if(cyber_owner.network_integrity_count < 1)
 		network_indicator.icon_state = "network_0"
 		return
@@ -259,7 +243,7 @@
 		network_indicator.icon_state = "network_[round(network_fullness_percent / network_indicator_percent_step)]"
 
 
-/datum/heohud_holder/cyberspace/proc/update_income()
+/datum/heohud_holder/cyberspace_primary/proc/update_income()
 	if(!income_tens) // No indicators, nothing to update
 		return
 
@@ -290,9 +274,9 @@
 			income_ones.icon_state = "green_[copytext(net_gain, 1, 2)]"
 
 
-/datum/heohud_holder/cyberspace/proc/update_thread(thread_number)
-	var/atom/movable/neohud/cyberspace/thread_hack/hack_ui_element = thread_hacks[thread_number]
-	var/atom/movable/neohud/cyberspace/thread_indicator/indicator = thread_indicators[thread_number]
+/datum/heohud_holder/cyberspace_primary/proc/update_thread(thread_number)
+	var/atom/movable/neohud_element/cyberspace/thread_hack/hack_ui_element = thread_hacks[thread_number]
+	var/atom/movable/neohud_element/cyberspace/thread_indicator/indicator = thread_indicators[thread_number]
 	if(!hack_ui_element.payload_is_idling)
 		if(hack_ui_element.payload_step_current < hack_ui_element.payload_step_total)
 			hack_ui_element.payload_step_current++
@@ -312,27 +296,27 @@
 			indicator.icon_state = indicator.is_right_side ? "right_error" : "left_error"
 
 
-/datum/heohud_holder/cyberspace/proc/process_threads() // TODO: Account for delta
+/datum/heohud_holder/cyberspace_primary/proc/process_threads() // TODO: Account for delta
 	for(var/i in busy_threads)
 		update_thread(i)
 
 
-/datum/heohud_holder/cyberspace/proc/generate_threads()
+/datum/heohud_holder/cyberspace_primary/proc/generate_threads()
 	for(var/i in 1 to cyber_owner.thread_limit)
-		var/atom/movable/neohud/cyberspace/thread_hack/hack = new
+		var/atom/movable/neohud_element/cyberspace/thread_hack/hack = new
 		hack.screen_loc = is_mirrored ? SScyber.threads_hack_screen_locs_right[i] : SScyber.threads_hack_screen_locs_left[i]
 		hack.icon_state = "IDLE"
 		thread_hacks += hack
 		elements += hack
 
-		var/atom/movable/neohud/cyberspace/thread_indicator/indicator = new(src)
+		var/atom/movable/neohud_element/cyberspace/thread_indicator/indicator = new(src)
 		indicator.screen_loc = is_mirrored ? SScyber.threads_screen_locs_right[i] : SScyber.threads_screen_locs_left[i]
 		indicator.icon_state = is_mirrored ? "right_load_0" : "left_load_0"
 		thread_indicators += indicator
 		elements += indicator
 
 
-/datum/heohud_holder/cyberspace/proc/generate_hack_list()
+/datum/heohud_holder/cyberspace_primary/proc/generate_hack_list()
 	if(LAZYLEN(hacks_roster))
 		elements -= hacks_roster
 		for(var/i in hacks_roster)
@@ -348,7 +332,7 @@
 			continue
 		hack_slot_count++
 		hacks_datums += hack_datum
-		var/atom/movable/neohud/cyberspace/hack/hack_ui_element = new(src)
+		var/atom/movable/neohud_element/cyberspace/hack/hack_ui_element = new(src)
 		hack_ui_element.name = hack_datum.filename
 		hack_ui_element.icon_state = hack_datum.filename
 		hack_ui_element.screen_loc = is_mirrored ? SScyber.hacks_screen_locs_right[hack_slot_count] : SScyber.hacks_screen_locs_left[hack_slot_count]
@@ -356,7 +340,7 @@
 		hacks_roster += hack_ui_element
 
 
-/datum/heohud_holder/cyberspace/proc/run_program(activated_hud_element, target_thread_index)
+/datum/heohud_holder/cyberspace_primary/proc/run_program(activated_hud_element, target_thread_index)
 	if(!activated_hud_element)
 		return FALSE // TODO: CRASH() call here
 
@@ -368,7 +352,7 @@
 	if(hack_datum.boot_cost > cyber_owner.processing_power_count)
 		return FALSE
 
-	var/atom/movable/neohud/cyberspace/thread_hack/hack_ui_element
+	var/atom/movable/neohud_element/cyberspace/thread_hack/hack_ui_element
 
 	if(target_thread_index)
 		hack_ui_element = thread_hacks[target_thread_index]
@@ -398,127 +382,8 @@
 		return TRUE
 	return FALSE
 
-
-
-
 // TODO: Get hacks from modular computer
 // TODO: Get hacks from runner chair/pod
-
-
-
-// /datum/computer_file/cyber
-// 	filename = "KERANG"
-// 	filetype = "HACK"
-// 	size = 4
-
-// 	var/boot_cost = 10	// How much processing power required to execute this program?
-// 	var/idle_cost = 2	// If this program have loaded and stays in the thread, how much processing power it expends each SScyber tick?
-// 	var/loading_time = 5 // Number of SScyber ticks (1 second) required for this program to load after paying boot_cost
-// 	// "boot_cost = idle_cost * loading_time" is baseline, but some programs might be cheaper or more expensive to keep idle 
-
-// 	var/activation_trigger = HACK_TRIGGER_SELECTION // What makes this program to fire after loading?
-// 	var/program_type = HACK_TYPE_UTILITY // Intended purpose of the program. HACK_TYPE_FOCUS comes with special behavior
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/atom/movable/neohud
-	name = ""
-	icon = 'icons/cyberspace/HUD/default.dmi'
-	icon_state = "empty"
-	screen_loc = "-2,1"
-	var/icon_states_max = 0
-
-/atom/movable/neohud/cyberspace
-	icon = 'icons/cyberspace/HUD/default.dmi'
-	icon_state = "background"
-
-/atom/movable/neohud/cyberspace/power
-	icon_state = "power_0"
-	icon_states_max = 18
-
-/atom/movable/neohud/cyberspace/network
-	icon_state = "network_0"
-	icon_states_max = 34
-
-/atom/movable/neohud/cyberspace/number
-	icon = 'icons/cyberspace/HUD/default_font.dmi'
-	icon_state = "0"
-
-/atom/movable/neohud/cyberspace/thread_indicator
-	icon = 'icons/cyberspace/HUD/default_thread_stat.dmi'
-	icon_state = "right_error"
-	icon_states_max = 10
-	var/is_right_side = FALSE
-
-/atom/movable/neohud/cyberspace/thread_indicator/New(loc, index)
-	..()
-	switch(index)
-		if(1 to 8, 17, 18, 20)
-			is_right_side = FALSE
-		else
-			is_right_side = TRUE
-	
-
-/atom/movable/neohud/cyberspace/thread_hack
-	name = "thread"
-	icon = 'icons/cyberspace/HUD/default_thread_program.dmi'
-	icon_state = ""
-	icon_states_max = 10
-	var/payload // Index of related /datum/computer_file/cyber in 'hacks' list on /datum/heohud_holder/cyberspace
-	var/payload_step_total
-	var/payload_step_current
-	var/payload_step_ratio // payload_step_total / 10
-	var/payload_is_idling
-
-/atom/movable/neohud/cyberspace/hack
-	icon = 'icons/cyberspace/HUD/default_program.dmi'
-	icon_state = ""
-	var/datum/heohud_holder/cyberspace/holder
-
-
-/atom/movable/neohud/cyberspace/hack/New(loc, ...)
-	..()
-	if(!loc)
-		CRASH("New() is called by [usr] on /atom/movable/neohud/cyberspace/hack without arguments, which are required.")
-	if(!istype(loc, /datum/heohud_holder/cyberspace))
-		CRASH("New() is called by [usr] on /atom/movable/neohud/cyberspace/hack with improper arguments, passed instance of [loc] instead of /datum/heohud_holder/cyberspace.")
-	holder = loc
-
-
-/atom/movable/neohud/cyberspace/hack/Destroy()
-	..()
-	if(!QDELETED(holder))
-		holder.hacks_roster -= src
-		holder.elements -= src
-		holder = null
-
-/atom/movable/neohud/cyberspace/hack/Click(location, control, params)
-	holder.run_program(src)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

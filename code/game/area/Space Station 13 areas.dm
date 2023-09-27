@@ -9,47 +9,7 @@
 	requires_power = 0 				(defaults to 1)
 
 NOTE: there are two lists of areas in the end of this file: centcom and station itself. Please maintain these lists valid. --rastaf0
-
 */
-
-/area
-	var/fire
-	var/atmos = 1
-	var/atmosalm = 0
-	var/poweralm = 1
-	var/party
-	level = null
-	name = "Unknown"
-	icon = 'icons/turf/areas.dmi'
-	icon_state = "unknown"
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	var/lightswitch = 1
-
-	var/eject
-	var/is_maintenance = FALSE
-	var/debug = 0
-	var/requires_power = 1
-	var/always_unpowered = 0	//this gets overriden to 1 for space in area/New()
-
-	var/power_equip = 1
-	var/power_light = 1
-	var/power_environ = 1
-	var/area_light_color		//Used by lights to create different light on different departments and locations
-
-	var/has_gravity = 1
-	var/cached_gravity = 1		//stores updated has_gravity even if it's blocked
-	var/atom/gravity_blocker	//ref to antigrav
-	var/obj/machinery/power/apc/apc
-	var/no_air
-	var/list/all_doors = list()		//Added by Strumpetplaya - Alarm Change - Contains a list of doors adjacent to this area
-	var/air_doors_activated = 0
-	var/list/ambience = list('sound/ambience/ambigen1.ogg','sound/ambience/ambigen3.ogg','sound/ambience/ambigen4.ogg','sound/ambience/ambigen5.ogg','sound/ambience/ambigen6.ogg','sound/ambience/ambigen7.ogg','sound/ambience/ambigen8.ogg','sound/ambience/ambigen9.ogg','sound/ambience/ambigen10.ogg','sound/ambience/ambigen11.ogg','sound/ambience/ambigen12.ogg','sound/ambience/ambigen14.ogg')
-	var/list/forced_ambience
-	var/sound_env = STANDARD_STATION
-	var/turf/base_turf //The base turf type of the area, which can be used to override the z-level's base turf
-	var/holomap_color // Color of this area on station holomap
-	var/vessel = "CEV Eris" //The ship or station this area is on. This is so far just for the benefit of shield generators
-	//Consoles can only control shields on the same vessel as them
 
 /*Adding a wizard area teleport list because motherfucking lag -- Urist*/
 /*I am far too lazy to make it a proper list of areas so I'll just make it run the usual telepot routine at the start of the game*/

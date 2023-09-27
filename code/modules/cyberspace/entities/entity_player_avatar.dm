@@ -19,13 +19,14 @@
 	sight = SEE_TURFS|SEE_MOBS|SEE_OBJS|SEE_SELF
 	see_in_dark = 7
 
-	movement_handlers = list(/datum/movement_handler/mob/incorporeal)
 	// TODO: Create unique movement handler
 	// TODO: Add visualnet here
 
+	var/selected_entity // Locked on a target, could be other avatar or something else in cyberspace
+
 	var/mob/original_mob
-	var/datum/heohud_holder/cyberspace/HUD_left
-	var/datum/heohud_holder/cyberspace/HUD_right
+	var/datum/heohud_holder/cyberspace_primary/HUD_primary
+	var/datum/heohud_holder/cyberspace_secondary/HUD_secondary
 
 	var/thread_limit = 8
 
@@ -51,24 +52,33 @@
 	. = ..()
 	active_threads = list()
 	available_programs = list()
+	movement_handlers = list(/datum/movement_handler/mob/incorporeal)
 	STOP_PROCESSING(SSmobs, src)
+
+
+/mob/cyber_avatar/proc/on_area_change(area/new_area)
+	lastarea = new_area
+	HUD_secondary.on_area_change(new_area)
+
+
+
 
 
 /mob/cyber_avatar/proc/update_state(delta = 1)
 	last_update = world.time
 
-	HUD_right.update_income()
+	HUD_primary.update_income()
 
 	processing_power_count += processing_power_regen * delta
 	processing_power_count -= processing_power_drain * delta
 	processing_power_count = min(processing_power_count, processing_power_limit)
-	HUD_right.update_power()
+	HUD_primary.update_power()
 
 	network_integrity_count += network_integrity_regen * delta
 	network_integrity_count = min(network_integrity_count, network_integrity_limit)
-	HUD_right.update_network()
+	HUD_primary.update_network()
 
-	HUD_right.process_threads()
+	HUD_primary.process_threads()
 
 
 /mob/cyber_avatar/proc/reset_stats()
@@ -143,18 +153,18 @@
 		cursor = icon('icons/cyberspace/cursors/windows_95.dmi')
 	client.mouse_pointer_icon = cursor
 
-	if(!HUD_left)
-		HUD_left = new /datum/heohud_holder(src)
+	if(!HUD_secondary)
+		HUD_secondary = new /datum/heohud_holder(src)
 
-	if(!HUD_right)
-		HUD_right = new(src)
-		HUD_right.mirror()
-		HUD_right.generate_hack_list()
-		HUD_right.generate_threads()
-		HUD_right.startup_flick()
+	if(!HUD_primary)
+		HUD_primary = new(src)
+		HUD_primary.mirror()
+		HUD_primary.generate_hack_list()
+		HUD_primary.generate_threads()
+		HUD_primary.startup_flick()
 
-	client.screen.Add(HUD_left.elements)
-	client.screen.Add(HUD_right.elements)
+	client.screen.Add(HUD_secondary.elements)
+	client.screen.Add(HUD_primary.elements)
 	client.screen.Add(parallax)
 
 	winset(client, null, "mapwindow.map.right-click=true") // Disable popup menu on right click
@@ -174,8 +184,8 @@
 
 	client.mouse_pointer_icon = initial(client.mouse_pointer_icon)
 	client.screen.Remove(parallax)
-	client.screen.Remove(HUD_left.elements)
-	client.screen.Remove(HUD_right.elements)
+	client.screen.Remove(HUD_secondary.elements)
+	client.screen.Remove(HUD_primary.elements)
 	client.eye = original_mob
 
 	original_mob.ckey = ckey // Implicitly moves 'client' from src to original_mob

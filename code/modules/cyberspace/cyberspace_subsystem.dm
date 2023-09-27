@@ -250,16 +250,17 @@ PROCESSING_SUBSYSTEM_DEF(cyber)
 
 
 /datum/controller/subsystem/processing/cyber/proc/chip_in(mob/user, medium)
-	if(!user)
-		CRASH("Chip_in() proc called without 'user' argument by [usr].")
-	if(!user.client)
-		CRASH("Chip_in() proc called by [usr] on a mob([user]) that does not have a 'client'.")
-	if(!medium)
-		CRASH("Chip_in() proc called by [usr] on a mob([user]), but no means of entering cyberspace is provided.")
+	ASSERT(user) // CRASH("Chip_in() proc called without 'user' argument by [usr].")
+	ASSERT(user.client) // CRASH("Chip_in() proc called by [usr] on a mob([user]) that does not have a 'client'.")
+	ASSERT(medium) // CRASH("Chip_in() proc called by [usr] on a mob([user]), but no means of entering cyberspace is provided.")
 
 	// TODO: Check if cyberspace is globally disabled
 
 	// TODO: Check if user's health is satisfactory
+
+	var/turf/entry_point = isturf(user.loc) ? user.loc : get_turf(user.loc)
+
+	// TODO: Check if entering cyberspace from this location is blocked
 
 	var/obj/item/cyberdeck/cyberdeck
 
@@ -271,10 +272,6 @@ PROCESSING_SUBSYSTEM_DEF(cyber)
 		// TODO: Check for brain implant
 
 	// TODO: Check for other ways of entering cyberspace, a runner chair and a modular computer
-
-	var/turf/entry_point = isturf(user.loc) ? user.loc : get_turf(user.loc)
-
-	// TODO: Check if entering cyberspace from this location is blocked
 
 	to_chat(user, SPAN_NOTICE("Connecting to [station_name]..."))
 

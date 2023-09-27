@@ -27,7 +27,7 @@
 	return temp
 
 
-/datum/computer_file/cyber/proc/finished_loading(mob/cyber_avatar/avatar)
+/datum/computer_file/cyber/proc/finished_loading(mob/cyber_avatar/user)
 	return "placeholder"
 
 
