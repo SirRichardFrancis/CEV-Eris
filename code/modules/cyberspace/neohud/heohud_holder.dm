@@ -22,7 +22,7 @@
 
 	if(isnum(input))
 		input = num2text(input)
-	
+
 	ASSERT(istext(input))
 
 	if(LAZYLEN(input) > desired_length)

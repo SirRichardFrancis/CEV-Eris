@@ -221,7 +221,8 @@
 		else
 			power_hundreeds.icon_state = "0"
 			power_tens.icon_state = "0"
-			power_ones.icon_state = "0"
+
+		// TODO: Use num2iconstate() here
 
 
 /datum/heohud_holder/cyberspace_primary/proc/update_network()
