@@ -15,6 +15,19 @@
 	elements = list(background)
 
 
+/datum/heohud_holder/proc/mirror() // Move HUD panel to opposite side of the screen
+	if(is_mirrored)
+		background.screen_loc = "-2,1"
+		is_mirrored = FALSE
+	else
+		background.screen_loc = "18:-64,1"
+		is_mirrored = TRUE
+
+
+/datum/heohud_holder/proc/run_program(activated_hud_element, target_thread_index)
+	return
+
+
 /proc/num2iconstate(input, desired_length = 3)
 	. = list()
 

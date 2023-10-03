@@ -20,13 +20,34 @@
 
 
 /datum/heohud_holder/cyberspace_secondary/proc/on_area_change(area/new_area)
-	if(cyber_owner.selected_entity)
-		return
+	return
 
-	if(target_type)
-		target_type.icon_state = "type_area"
-		target_stat.icon_state = "stat_neutral"
-		target_relation.icon_state = "relation_area_wild"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

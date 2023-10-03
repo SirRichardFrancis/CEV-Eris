@@ -67,14 +67,13 @@
 	thread_hacks = list()
 	hacks_roster = list()
 	busy_threads = list()
-	
 
 	background = new /atom/movable/neohud_element/cyberspace
 	background.screen_loc = main_screen_loc_left
 	elements = list(background)
 
 	power_indicator = new
-	power_indicator.icon_state = "power_[rand(0, power_indicator.icon_states_max)]"
+	power_indicator.icon_state = "power_[rand(0, power_indicator.icon_states_max)]" // TOOD: Remove this, call stat updates instead
 	power_indicator.screen_loc = main_screen_loc_left
 	power_indicator_percent_step = round((100 / power_indicator.icon_states_max), 0.1)
 	elements += power_indicator
@@ -116,16 +115,6 @@
 			drain_ones = new
 			drain_ones.screen_loc = drain_ones_screen_loc_left
 			elements += drain_ones
-
-
-
-/datum/heohud_holder/proc/mirror() // Move HUD panel to opposite side of the screen
-	if(is_mirrored)
-		background.screen_loc = "-2,1"
-		is_mirrored = FALSE
-	else
-		background.screen_loc = "18:-64,1"
-		is_mirrored = TRUE
 
 
 /datum/heohud_holder/cyberspace_primary/mirror()
@@ -341,7 +330,7 @@
 		hacks_roster += hack_ui_element
 
 
-/datum/heohud_holder/cyberspace_primary/proc/run_program(activated_hud_element, target_thread_index)
+/datum/heohud_holder/cyberspace_primary/run_program(activated_hud_element, target_thread_index)
 	if(!activated_hud_element)
 		return FALSE // TODO: CRASH() call here
 
@@ -369,8 +358,8 @@
 				break
 
 	if(hack_ui_element)
-		var/thread = thread_hacks.Find(hack_ui_element)
-		busy_threads += thread
+		var/thread_index = thread_hacks.Find(hack_ui_element)
+		busy_threads += thread_index
 		cyber_owner.processing_power_count -= hack_datum.boot_cost
 		hack_ui_element.icon_state = hack_datum.filename
 		hack_ui_element.payload = hack_datum
@@ -379,7 +368,7 @@
 		hack_ui_element.payload_step_ratio = hack_ui_element.icon_states_max / hack_ui_element.payload_step_total
 		hack_ui_element.payload_is_idling = FALSE
 		update_power()
-		update_thread(thread)
+		update_thread(thread_index)
 		return TRUE
 	return FALSE
 
