@@ -211,3 +211,5 @@ While it would be entirely possible to check the mob's move handlers list for th
 	bad_type = /mob
 
 	//var/list/additional_vision_handlers = list() //Basically a list of atoms from which additional vision data is retrieved
+
+	var/list/update_on_move = list() // Call entered_with_container() on atoms inside when the mob moves

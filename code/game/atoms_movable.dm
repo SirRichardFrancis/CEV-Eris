@@ -78,11 +78,11 @@
 	return checking
 
 
-/atom/movable/proc/forceMove(atom/destination, var/special_event, glide_size_override=0)
+/atom/movable/proc/forceMove(atom/destination, special_event, glide_size_override)
 	if(loc == destination)
 		return FALSE
 
-	if (glide_size_override)
+	if(glide_size_override)
 		set_glide_size(glide_size_override)
 
 	var/is_origin_turf = isturf(loc)
@@ -143,6 +143,8 @@
 		if(!is_origin_turf || (get_z(loc) != get_z(origin)) )
 			update_plane()
 	*/
+
+	GLOB.moved_event.raise_event(src, origin, null)
 
 	return TRUE
 

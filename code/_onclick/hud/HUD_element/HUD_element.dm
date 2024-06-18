@@ -104,6 +104,7 @@ element identifiers are used to manage different hud parts for clients, f.e. the
 	return QDEL_HINT_QUEUE
 
 /HUD_element/Click(location,control,params)
+	var/test_proc = _clickProc
 	if (_clickProc)
 		if(_holder)
 			call(_holder, _clickProc)(arglist(_procArguments))

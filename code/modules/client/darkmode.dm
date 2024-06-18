@@ -26,7 +26,7 @@ Thanks to spacemaniac and mcdonald for help with the JS side of this.
 	winset(src, "mainwindow", "background-color = [COLOR_DARKMODE_DARKBACKGROUND];background-color = none")
 	winset(src, "split", "background-color = [COLOR_DARKMODE_DARKBACKGROUND];background-color = none")
 	winset(src, "Welcome", "background-color = [COLOR_DARKMODE_DARKBACKGROUND];background-color = none")
-	winset(src, "statwindow", "background-color = [COLOR_DARKMODE_BACKGROUND];background-color = none")
+	winset(src, "statwindow", "background-color = [COLOR_DARKMODE_DARKBACKGROUND];background-color = none")
 	winset(src, "statwindow", "text-color = [COLOR_DARKMODE_TEXT];text-color = #000000")
 	winset(src, "input", "background-color = [COLOR_DARKMODE_BACKGROUND];background-color = none")
 	winset(src, "input", "text-color = [COLOR_DARKMODE_TEXT];text-color = #000000")
