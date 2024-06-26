@@ -1770,6 +1770,7 @@
 #include "code\modules\hydroponics\trays\tray_reagents.dm"
 #include "code\modules\hydroponics\trays\tray_soil.dm"
 #include "code\modules\hydroponics\trays\tray_update_icons.dm"
+#include "code\modules\kirovhud\human_hud.dm"
 #include "code\modules\library\lib_items.dm"
 #include "code\modules\library\lib_machines.dm"
 #include "code\modules\library\lib_readme.dm"

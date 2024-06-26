@@ -777,6 +777,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 /client/verb/enable_fullscreen()
 	set hidden = TRUE
+	winset(usr, "mainwindow", "can-resize=false")
 	winset(usr, "mainwindow", "titlebar=false")
 	winset(usr, "mainwindow", "menu=")
 	winset(usr, "mainwindow", "is-maximized=false")
@@ -785,6 +786,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 
 /client/verb/disable_fullscreen()
 	set hidden = TRUE
+	winset(usr, "mainwindow", "can-resize=true")
 	winset(usr, "mainwindow", "titlebar=true")
 	winset(usr, "mainwindow", "menu=menu")
 	winset(usr, "mainwindow", "is-maximized=false")

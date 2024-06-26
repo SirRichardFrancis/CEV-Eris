@@ -29,3 +29,4 @@
 
 	GLOB.lobbyScreen.play_music(client)
 	GLOB.lobbyScreen.show_titlescreen(client)
+	ui_interact(src)
