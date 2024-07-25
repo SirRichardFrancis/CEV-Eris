@@ -5,7 +5,7 @@
 	var/spawning = 0//Referenced when you want to delete the new_player later on in the code.
 	var/totalPlayers = 0		 //Player counts for the Lobby tab
 	var/totalPlayersReady = 0
-	var/datum/browser/panel
+//	var/datum/browser/panel
 	universal_speak = 1
 
 	invisibility = 101
@@ -23,53 +23,53 @@
 	if (client)
 		client.ooc(message)
 
-/mob/new_player/verb/new_player_panel()
-	set src = usr
-	new_player_panel_proc()
+// /mob/new_player/verb/new_player_panel()
+// 	set src = usr
+// 	new_player_panel_proc()
 
 
-/mob/new_player/proc/new_player_panel_proc()
-	var/output = "<div align='center'><B>New Player Options</B>"
-	output +="<hr>"
-	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A></p>"
+// /mob/new_player/proc/new_player_panel_proc()
+// 	var/output = "<div align='center'><B>New Player Options</B>"
+// 	output +="<hr>"
+// 	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A></p>"
 
-	if(SSticker.current_state <= GAME_STATE_PREGAME)
-		if(ready)
-			output += "<p>\[ <span class='linkOn'><b>Ready</b></span> | <a href='byond://?src=\ref[src];ready=0'>Not Ready</a> \]</p>"
-		else
-			output += "<p>\[ <a href='byond://?src=\ref[src];ready=1'>Ready</a> | <span class='linkOn'><b>Not Ready</b></span> \]</p>"
+// 	if(SSticker.current_state <= GAME_STATE_PREGAME)
+// 		if(ready)
+// 			output += "<p>\[ <span class='linkOn'><b>Ready</b></span> | <a href='byond://?src=\ref[src];ready=0'>Not Ready</a> \]</p>"
+// 		else
+// 			output += "<p>\[ <a href='byond://?src=\ref[src];ready=1'>Ready</a> | <span class='linkOn'><b>Not Ready</b></span> \]</p>"
 
-	else
-		output += "<a href='byond://?src=\ref[src];manifest=1'>View the Crew Manifest</A><br><br>"
-		output += "<p><a href='byond://?src=\ref[src];late_join=1'>Join Game!</A></p>"
+// 	else
+// 		output += "<a href='byond://?src=\ref[src];manifest=1'>View the Crew Manifest</A><br><br>"
+// 		output += "<p><a href='byond://?src=\ref[src];late_join=1'>Join Game!</A></p>"
 
-	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
+// 	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
 
-	if(!IsGuestKey(src.key))
-		establish_db_connection()
-		if(dbcon.IsConnected())
-			var/isadmin = FALSE
-			if(src.client && src.client.holder)
-				isadmin = TRUE
-			// TODO: reimplement database interaction
-			var/DBQuery/query = dbcon.NewQuery("SELECT id FROM erro_poll_question WHERE [(isadmin ? "" : "adminonly = false AND")] Now() BETWEEN starttime AND endtime AND id NOT IN (SELECT pollid FROM erro_poll_vote WHERE ckey = \"[ckey]\") AND id NOT IN (SELECT pollid FROM erro_poll_textreply WHERE ckey = \"[ckey]\")")
-			query.Execute()
-			var/newpoll = FALSE
-			while(query.NextRow())
-				newpoll = TRUE
-				break
+// 	if(!IsGuestKey(src.key))
+// 		establish_db_connection()
+// 		if(dbcon.IsConnected())
+// 			var/isadmin = FALSE
+// 			if(src.client && src.client.holder)
+// 				isadmin = TRUE
+// 			// TODO: reimplement database interaction
+// 			var/DBQuery/query = dbcon.NewQuery("SELECT id FROM erro_poll_question WHERE [(isadmin ? "" : "adminonly = false AND")] Now() BETWEEN starttime AND endtime AND id NOT IN (SELECT pollid FROM erro_poll_vote WHERE ckey = \"[ckey]\") AND id NOT IN (SELECT pollid FROM erro_poll_textreply WHERE ckey = \"[ckey]\")")
+// 			query.Execute()
+// 			var/newpoll = FALSE
+// 			while(query.NextRow())
+// 				newpoll = TRUE
+// 				break
 
-			if(newpoll)
-				output += "<p><b><a href='byond://?src=\ref[src];showpoll=1'>Show Player Polls</A> (NEW!)</b></p>"
-			else
-				output += "<p><a href='byond://?src=\ref[src];showpoll=1'>Show Player Polls</A></p>"
+// 			if(newpoll)
+// 				output += "<p><b><a href='byond://?src=\ref[src];showpoll=1'>Show Player Polls</A> (NEW!)</b></p>"
+// 			else
+// 				output += "<p><a href='byond://?src=\ref[src];showpoll=1'>Show Player Polls</A></p>"
 
-	output += "</div>"
+// 	output += "</div>"
 
-	panel = new(src, "Welcome","Welcome", 210, 280, src)
-	panel.set_window_options("can_close=0")
-	panel.set_content(output)
-	panel.open()
+// 	panel = new(src, "Welcome","Welcome", 210, 280, src)
+// 	panel.set_window_options("can_close=0")
+// 	panel.set_content(output)
+// 	panel.open()
 
 /mob/new_player/get_status_tab_items()
 	. = ..()
@@ -127,9 +127,9 @@
 		else
 			ready = 0
 
-	if(href_list["refresh"])
-		panel.close()
-		new_player_panel_proc()
+//	if(href_list["refresh"])
+//		panel.close()
+//		new_player_panel_proc()
 
 	if(href_list["observe"])
 
@@ -231,8 +231,8 @@
 	if(!ready && href_list["preference"])
 		if(client)
 			client.prefs.process_link(src, href_list)
-	else if(!href_list["late_join"])
-		new_player_panel()
+//	else if(!href_list["late_join"])
+//		new_player_panel()
 
 	if(href_list["showpoll"])
 		handle_player_polling()
@@ -434,7 +434,7 @@
 
 /mob/new_player/proc/close_spawn_windows()
 	src << browse(null, "window=latechoices") //closes late choices window
-	panel.close()
+//	panel.close()
 
 /mob/new_player/proc/is_species_whitelisted(datum/species/S)
 	if(!S) return 1

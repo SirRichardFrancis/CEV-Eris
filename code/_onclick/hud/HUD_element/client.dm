@@ -1,6 +1,3 @@
-/client
-	var/list/HUD_elements //stores all elements shown to client, association list with index being element identifier
-
 /client/proc/hide_HUD_element(var/identifier)
 	if (!HUD_elements)
 		return

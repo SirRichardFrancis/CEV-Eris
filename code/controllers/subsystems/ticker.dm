@@ -261,8 +261,8 @@ SUBSYSTEM_DEF(ticker)
 	to_chat(world, "<FONT color='blue'><B>Enjoy the game!</B></FONT>")
 	SEND_SOUND(world, sound('sound/AI/welcome.ogg')) // Skie
 
-	for(var/mob/new_player/N in SSmobs.mob_list)
-		N.new_player_panel_proc()
+//	for(var/mob/new_player/N in SSmobs.mob_list)
+//		N.new_player_panel_proc()
 
 	CHECK_TICK
 	setup_codespeak()

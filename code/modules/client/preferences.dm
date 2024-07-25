@@ -60,9 +60,9 @@
 		load_and_update_character()
 
 	sanitize_preferences()
-	if(client && istype(client.mob, /mob/new_player))
-		var/mob/new_player/np = client.mob
-		np.new_player_panel(TRUE)
+	// if(client && istype(client.mob, /mob/new_player))
+	// 	var/mob/new_player/np = client.mob
+	// 	np.new_player_panel(TRUE)
 
 /datum/preferences/proc/load_and_update_character(var/slot)
 	load_character(slot)
@@ -163,6 +163,8 @@
 	return 1
 
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, is_preview_copy = FALSE)
+	if(!player_setup)
+		return
 	// Sanitizing rather than saving as someone might still be editing when copy_to occurs.
 	player_setup.sanitize_setup()
 	character.set_species(species)

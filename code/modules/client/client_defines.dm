@@ -110,6 +110,7 @@
 	var/datum/tooltip/tooltips
 
 	var/datum/interface/UI	//interface for current mob
+	var/list/HUD_elements //stores all elements shown to client, association list with index being element identifier
 
 	var/lastping = 0
 	var/avgping = 0

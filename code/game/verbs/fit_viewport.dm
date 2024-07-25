@@ -8,21 +8,33 @@
 	var/aspect_ratio = view_size[1] / view_size[2]
 
 	// Calculate desired pixel width using window size and aspect ratio
-	var/sizes = params2list(winget(src, "mainwindow.split;mapwindow", "size"))
+	var/sizes = params2list(winget(src, "mainwindow.split;mapwindow;gamewindow.game", "size"))
 	var/map_size = splittext(sizes["mapwindow.size"], "x")
 	var/height = text2num(map_size[2])
 	var/desired_width = round(height * aspect_ratio)
+	// Initial width is for 15x15 tiles map, account for 3x15 tile HUD also
+	var/hud_width = (desired_width / 15) * 3
+	desired_width += hud_width
+
 	if (text2num(map_size[1]) == desired_width)
 		// Nothing to do
 		return
 
-	var/split_size = splittext(sizes["mainwindow.split.size"], "x")
-	var/split_width = text2num(split_size[1])
+	var/right_split_size = splittext(sizes["mainwindow.split.size"], "x")
+	var/right_split_width = text2num(right_split_size[1])
 
 	// Calculate and apply a best estimate
 	// +4 pixels are for the width of the splitter's handle
-	var/pct = 100 * (desired_width + 4) / split_width
-	winset(src, "mainwindow.split", "splitter=[pct]")
+	var/map_to_chat_ratio = 100 * (desired_width + 4) / right_split_width
+	winset(src, "mainwindow.split", "splitter=[map_to_chat_ratio]")
+
+
+	var/left_split_size = splittext(sizes["gamewindow.game.size"], "x")
+	var/left_split_width = text2num(left_split_size[1])
+	var/hud_to_map_ratio = 100 * (hud_width + 4) / left_split_width
+	winset(src, "gamewindow.game", "splitter=[hud_to_map_ratio]")
+//	if(mob.left_panel)
+//		mob.left_panel.window_size = list(left_split_width, view_size[2])
 
 	// Apply an ever-lowering offset until we finish or fail
 	var/delta
@@ -36,10 +48,10 @@
 			return
 		else if (isnull(delta))
 			// calculate a probable delta value based on the difference
-			delta = 100 * (desired_width - got_width) / split_width
+			delta = 100 * (desired_width - got_width) / right_split_width
 		else if ((delta > 0 && got_width > desired_width) || (delta < 0 && got_width < desired_width))
 			// if we overshot, halve the delta and reverse direction
 			delta = -delta/2
 
-		pct += delta
-		winset(src, "mainwindow.mainvsplit", "splitter=[pct]")
+		map_to_chat_ratio += delta
+		winset(src, "mainwindow.mainvsplit", "splitter=[map_to_chat_ratio]")

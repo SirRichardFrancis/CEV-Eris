@@ -24,7 +24,6 @@
 	if(T)
 		var/obj/effect/energy_net/net = new net_type(T)
 		net.layer = M.layer+1
-		M.captured = 1
 		net.affecting = M
 		T.visible_message("[M] was caught in an energy net!")
 		qdel(src)
@@ -62,7 +61,6 @@
 	if(affecting)
 		var/mob/living/carbon/M = affecting
 		M.anchored = initial(affecting.anchored)
-		M.captured = 0
 		to_chat(M, "You are free of the net!")
 
 	STOP_PROCESSING(SSobj, src)

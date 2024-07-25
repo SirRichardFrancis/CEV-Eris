@@ -25,7 +25,8 @@
 	sight |= SEE_TURFS
 	GLOB.player_list |= src
 
-	new_player_panel()
+//	new_player_panel()
+	ui_interact(left_panel)
 
 	GLOB.lobbyScreen.play_music(client)
 	GLOB.lobbyScreen.show_titlescreen(client)

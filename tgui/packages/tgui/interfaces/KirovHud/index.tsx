@@ -1,14 +1,14 @@
-import { exhaustiveCheck } from '../../../common/exhaustive';
 import { useBackend } from '../../backend';
-import {
-  GamePreferencesSelectedPage,
-  PreferencesMenuData,
-  Window,
-} from './data';
-import { CharacterPreferenceWindow } from './CharacterPreferenceWindow';
-import { GamePreferenceWindow } from './GamePreferenceWindow';
+import { NewPlayerHud } from './NewPlayerHud';
+import { NewPlayerHudData } from './data';
 
-export const PreferencesMenu = (props, context) => {
+export const KirovHud = (props: any, context: any) => {
+  const { act, data } = useBackend<NewPlayerHudData>(context);
+  return <NewPlayerHud />;
+};
+
+/*
+export const KirovHud = (props, context) => {
   const { data } = useBackend<PreferencesMenuData>(context);
 
   const window = data.window;
@@ -28,3 +28,4 @@ export const PreferencesMenu = (props, context) => {
       exhaustiveCheck(window);
   }
 };
+*/

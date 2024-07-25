@@ -1,4 +1,4 @@
-import { dragStartHandler } from 'tgui/drag';
+import { dragStartHandler } from '../../tgui/drag';
 import { DragzoneProps } from '../types';
 
 /** Creates a draggable edge. Props Req: Location */

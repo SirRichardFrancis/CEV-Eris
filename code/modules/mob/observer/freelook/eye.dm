@@ -69,8 +69,6 @@
 		if(!isturf(owner.loc) || !owner.client)
 			return
 		return loc
-/mob
-	var/mob/observer/eye/eyeobj
 
 /mob/proc/EyeMove(direct)
 	if(!eyeobj)
