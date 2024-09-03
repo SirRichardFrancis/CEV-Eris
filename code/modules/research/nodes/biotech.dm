@@ -28,9 +28,7 @@
 	required_tech_levels = list()
 	cost = 200
 
-	unlocks_designs = list(	/datum/design/research/circuit/med_data,
-							/datum/design/research/circuit/operating
-						)
+	unlocks_designs = list(/datum/design/research/circuit/operating)
 /*
 /datum/technology/virology
 	name = "Virology"

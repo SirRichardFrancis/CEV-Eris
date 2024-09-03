@@ -49,6 +49,7 @@
     "jest-circus": "^27.0.6",
     "jsdom": "^16.7.0",
     "mini-css-extract-plugin": "^1.6.2",
+    "parse-json": "^8.1.0",
     "prettier": "^3.3.2",
     "sass": "^1.37.5",
     "sass-loader": "^11.1.1",

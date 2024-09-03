@@ -12,6 +12,7 @@ SUBSYSTEM_DEF(job)
 
 	var/list/occupations = list()			//List of all jobs
 	var/list/occupations_by_name = list()	//Dict of all jobs, keys are titles
+	var/list/occupations_by_short_name = list()
 	var/list/unassigned = list()			//Players who need jobs
 	var/list/job_debug = list()				//Debug info
 	var/list/job_mannequins = list()				//Cache of icons for job info window
@@ -22,6 +23,16 @@ SUBSYSTEM_DEF(job)
 	var/list/job_to_playtime_requirement = list()
 	/// DOS Attack prevention by locking off file-reads.
 	var/list/queries_by_key = list()
+
+	var/list/manifest_brief // List
+	var/list/manifest_exhaustive
+	var/list/manifest_by_department // Array
+	var/manifest_update_timestamp = 0
+	var/manifest_update_delay = 1 SECOND
+	// Not terribly related, but convenient count here, because we're updating the manifest already
+	var/total_player_count = 0
+	var/ready_player_count = 0
+
 
 /datum/controller/subsystem/job/Initialize(start_timeofday)
 	if(!occupations.len)
@@ -241,12 +252,14 @@ SUBSYSTEM_DEF(job)
 /datum/controller/subsystem/job/proc/SetupOccupations(faction = "CEV Eris")
 	occupations.Cut()
 	occupations_by_name.Cut()
+	occupations_by_short_name.Cut()
 	for(var/J in subtypesof(/datum/job))
 		var/datum/job/job = new J()
 		if(job.faction != faction)
 			continue
 		occupations += job
 		occupations_by_name[job.title] = job
+		occupations_by_short_name[job.title_short] = job
 
 	if(!occupations.len)
 		to_chat(world, SPAN_WARNING("Error setting up jobs, no job datums found!"))
@@ -261,6 +274,8 @@ SUBSYSTEM_DEF(job)
 	return TRUE
 
 /datum/controller/subsystem/job/proc/GetJob(rank)
+	if(!occupations_by_name[rank])
+		return occupations_by_short_name[rank]
 	return rank && occupations_by_name[rank]
 
 /datum/controller/subsystem/job/proc/AssignRole(mob/new_player/player, rank, latejoin = FALSE)
@@ -799,11 +814,190 @@ SUBSYSTEM_DEF(job)
 
 	return SP
 
-
-
 /datum/controller/subsystem/job/proc/ShouldCreateRecords(var/title)
 	if(!title) return 0
 	var/datum/job/job = GetJob(title)
 	if(!job || job == ASSISTANT_TITLE)
 		return FALSE
 	return job.create_record
+
+
+/datum/controller/subsystem/job/proc/get_manifest(is_exhaustive_required)
+	if(manifest_update_timestamp < (world.time + manifest_update_delay))
+		manifest_update_timestamp = world.time
+		manifest_by_department = list()
+		manifest_brief = list()
+		if(SSticker.current_state < GAME_STATE_PLAYING)
+			create_manifest_by_department_pregame()
+		else
+			create_manifest_by_department_playing()
+
+		manifest_brief = sort_manifest(manifest_by_department)
+		if(is_exhaustive_required)
+			update_exhaustive_manifest()
+
+	return is_exhaustive_required ? manifest_exhaustive : manifest_brief
+
+// Before round has started we only count players with "ready" status
+/datum/controller/subsystem/job/proc/create_manifest_by_department_pregame()
+	// If player didn't set clear job priority - sort them in meme department
+	var/static/default_department
+	if(!default_department)
+		default_department = pick(list(
+			"Tunnel Snakes",
+			"Special Anomalistic Unit",
+			"LummoxJR's Morons",
+			"Roach Ranchers",
+		))
+
+	total_player_count = 0
+	ready_player_count = 0
+	for(var/mob/new_player/new_player in GLOB.player_list)
+		total_player_count++
+		if(!new_player.ready || !new_player.client || !new_player.client.prefs)
+			continue
+
+		ready_player_count++
+		var/name = new_player.client.prefs.real_name
+		if(!name) // Name is not set, random one supposed to be assigned at roundstart
+			var/character_gender = new_player.client.prefs.gender
+			name = (character_gender == FEMALE) ? "Jane Eris" : "John Eris"
+
+		var/rank = "Roach Food"
+		var/department = default_department
+		var/datum/job/job_datum
+		// Player chose to be a vagabond, that takes priority over all other settings,
+		// and is in a low priority job list for some reason
+		if(ASSISTANT_TITLE in new_player.client.prefs.job_low)
+			rank = ASSISTANT_TITLE
+			department = DEPARTMENT_CIVILIAN
+		// Only take top priority job into account, no use divining what lower priority job player could get
+		else if(new_player.client.prefs.job_high)
+			job_datum = GetJob(new_player.client.prefs.job_high)
+			if(job_datum)
+				rank = job_datum.title_short
+				if(job_datum.department)
+					department = job_datum.department
+
+		var/manifest_entry = list(list(
+			"name" = name,
+			"rank" = rank,
+			"department" = department,
+			"status" = "Ready"))
+		if(!manifest_by_department[department])
+			manifest_by_department[department] = list()
+		manifest_by_department[department] += manifest_entry
+
+
+// After the round start only display crew records
+/datum/controller/subsystem/job/proc/create_manifest_by_department_playing()
+	// TODO: Migrate crew records from global to this subsystem --KIROV
+	for(var/datum/computer_file/report/crew_record/crew_record in GLOB.all_crew_records)
+		var/name = crew_record.get_name()
+		var/rank = crew_record.get_job()
+		var/department = crew_record.get_department()
+		var/status = crew_record.get_status()
+		var/manifest_entry = list(
+			"name" = name,
+			"rank" = rank,
+			"department" = department,
+			"status" = status)
+		if(!manifest_by_department[department])
+			manifest_by_department[department] = list()
+		manifest_by_department[department] += list(manifest_entry)
+
+/datum/controller/subsystem/job/proc/sort_manifest(list/unsorted_manifest)
+	var/static/list/department_order
+	if(!department_order)
+		department_order = list(
+			DEPARTMENT_COMMAND,
+			DEPARTMENT_SECURITY,
+			DEPARTMENT_GUILD,
+			DEPARTMENT_SCIENCE,
+			DEPARTMENT_MEDICAL,
+			DEPARTMENT_CHURCH,
+			DEPARTMENT_ENGINEERING,
+			DEPARTMENT_CIVILIAN,
+			DEPARTMENT_SILICON)
+
+	var/list/sorted_manifest = list()
+	for(var/department_key in department_order)
+		if(!unsorted_manifest[department_key])
+			continue
+		for(var/manifest_entry in unsorted_manifest[department_key])
+			sorted_manifest += list(manifest_entry)
+			unsorted_manifest[department_key] -= list(manifest_entry)
+
+	for(var/meme_department in unsorted_manifest)
+		for(var/manifest_entry in unsorted_manifest[meme_department])
+			sorted_manifest += list(manifest_entry)
+			unsorted_manifest[meme_department] -= list(manifest_entry)
+
+	return sorted_manifest
+
+
+// Manifest with unfilled positions listed
+/datum/controller/subsystem/job/proc/update_exhaustive_manifest()
+	// Compile a list of every available job, discounting vagabond
+	var/static/list/empty_manifest
+	if(!empty_manifest)
+		empty_manifest = new()
+		for(var/datum/job/job_datum in occupations)
+			var/slots_left = job_datum.total_positions
+			while(slots_left > 0)
+				slots_left--
+				var/manifest_entry = list(
+					"name" = null,
+					"rank" = job_datum.title_short,
+					"department" = job_datum.department,
+					"status" = null)
+				empty_manifest += list(manifest_entry)
+
+	// 'manifest_exhaustive = empty_manifest.Copy()' is not enough,
+	// every entry must be copied explicitly, because BYOND
+	// Also they are wrapped in extra lists, because on adding lists
+	// together BYOND "unwraps" the right-side list
+	manifest_exhaustive = list()
+	for(var/list/manifest_entry in empty_manifest)
+		manifest_exhaustive += list(manifest_entry.Copy())
+
+	// Match crew records with list of possible jobs
+	for(var/occupied_job_slot in manifest_brief)
+		var/is_entry_matched = FALSE
+		for(var/vacant_job_slot in manifest_exhaustive)
+			if(vacant_job_slot["rank"] == occupied_job_slot["rank"])
+				if(!vacant_job_slot["name"])
+					vacant_job_slot["name"] = occupied_job_slot["name"]
+					vacant_job_slot["status"] = occupied_job_slot["status"]
+					is_entry_matched = TRUE
+					break
+
+		// Players must have created a record with custom job name/title
+		if(!is_entry_matched)
+			is_entry_matched = TRUE
+			var/manifest_entry = list(
+				"name" = occupied_job_slot["name"],
+				"rank" = occupied_job_slot["rank"],
+				"department" = occupied_job_slot["department"],
+				"status" = occupied_job_slot["status"])
+
+			// Inserting new record in the right place
+			var/department_match = FALSE
+			var/job_slot_index = 0
+			for(var/job_slot in manifest_exhaustive)
+				job_slot_index++
+				// Looking for our department
+				if(job_slot["department"] == manifest_entry["department"])
+					department_match = TRUE
+				// Departments do not match anymore, insert our record after the last match
+				else if(department_match)
+					department_match = FALSE
+					manifest_exhaustive.Insert(job_slot_index-1, list(manifest_entry))
+
+			// Ours is the last department in the list or something custom
+			if(department_match)
+				manifest_exhaustive += list(manifest_entry)
+
+
+
+

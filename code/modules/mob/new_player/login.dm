@@ -1,6 +1,3 @@
-/mob/new_player
-	var/client/my_client // Need to keep track of this ourselves, since by the time Logout() is called the client has already been nulled
-
 /mob/new_player/Login()
 	if(!client)
 		return

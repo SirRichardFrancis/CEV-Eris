@@ -1,5 +1,6 @@
 /datum/job/chief_engineer
 	title = "Technomancer Exultant"
+	title_short = "Exultant"
 	flag = EXULTANT
 	head_position = 1
 	department = DEPARTMENT_ENGINEERING
@@ -57,6 +58,7 @@ Your second loyalty is to your clan. Ensure they are paid, fed and safe. Don't r
 
 /datum/job/technomancer
 	title = "Technomancer"
+	title_short = "Technomancer"
 	flag = TECHNOMANCER
 	department = DEPARTMENT_ENGINEERING
 	department_flag = ENGINEERING

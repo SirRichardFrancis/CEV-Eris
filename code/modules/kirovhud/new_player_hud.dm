@@ -4,9 +4,16 @@
 // /mob/ui_assets(mob/user)
 
 /mob/new_player/ui_data(mob/user)
+	var/is_round_started = (SSticker.current_state > GAME_STATE_SETTING_UP)
+	var/list/crew_manifest = SSjob.get_manifest(is_exhaustive_required = is_round_started)
 	var/list/data = list(
+		"mob_type" = "new_player",
 		"is_player_ready" = ready,
-		"is_round_started" = (SSticker.current_state > GAME_STATE_PREGAME),
+		"is_round_started" = is_round_started,
+		"roundstart_timer" = "[SSticker.pregame_timeleft][round_progressing ? "" : " (DELAYED)"]",
+		"crew_manifest" = crew_manifest,
+		"ready_player_count" = SSjob.ready_player_count,
+		"total_player_count" = SSjob.total_player_count,
 	)
 	return data
 
@@ -103,4 +110,8 @@
 					return TRUE
 
 			LateChoices()
+
+		if("Join_as")
+			SSjob.UpdatePlayableJobs(client.ckey)
+			AttemptLateSpawn(params["player_rank"], client.prefs.spawnpoint)
 			return TRUE

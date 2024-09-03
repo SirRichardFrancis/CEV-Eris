@@ -1,5 +1,6 @@
 /datum/job/cmo
 	title = "Moebius Biolab Officer"
+	title_short = "Biolab Officer"
 	flag = MBO
 	head_position = 1
 	department = DEPARTMENT_MEDICAL
@@ -61,6 +62,7 @@ Your second loyalty is to your career with Moebius corp, and to your coworkers i
 
 /datum/job/doctor
 	title = "Moebius Doctor"
+	title_short = "Doctor"
 	flag = DOCTOR
 	department = DEPARTMENT_MEDICAL
 	department_flag = MEDICAL
@@ -122,6 +124,7 @@ Your second loyalty is to your career with Moebius corp, and to your coworkers i
 
 /datum/job/chemist
 	title = "Moebius Chemist"
+	title_short = "Chemist"
 	flag = CHEMIST
 	department = DEPARTMENT_MEDICAL
 	department_flag = MEDICAL
@@ -174,6 +177,7 @@ Your second loyalty is to your career with Moebius corp, and to your coworkers i
 
 /datum/job/paramedic
 	title = "Moebius Paramedic"
+	title_short = "Paramedic"
 	flag = PARAMEDIC
 	department = DEPARTMENT_MEDICAL
 	department_flag = MEDICAL
@@ -243,6 +247,7 @@ Remember that you are a noncombatant. Any weapons you carry should be used for b
 
 /datum/job/bioengineer
 	title = "Moebius Bio-Engineer"
+	title_short = "Bio-Engineer"
 	flag = BIOENGINEER
 	department = DEPARTMENT_MEDICAL
 	department_flag = MEDICAL

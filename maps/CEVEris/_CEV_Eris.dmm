@@ -44459,10 +44459,7 @@
 /turf/floor/wood,
 /area/eris/command/fo)
 "ceu" = (
-/obj/structure/filingcabinet/security{
-	desc = "A large cabinet with hard copy security records.";
-	name = "Security Records"
-	},
+/obj/structure/filingcabinet,
 /turf/floor/wood,
 /area/eris/command/fo)
 "cev" = (
@@ -45160,10 +45157,6 @@
 /area/eris/rnd/server)
 "cfR" = (
 /obj/structure/table/rack,
-/obj/item/electronics/circuitboard/secure_data{
-	pixel_x = -2;
-	pixel_y = 2
-	},
 /turf/floor/tiled/steel/gray_platform,
 /area/eris/storage/tech)
 "cfS" = (
@@ -45280,10 +45273,6 @@
 /area/eris/command/meeting_room)
 "cgd" = (
 /obj/structure/table/rack,
-/obj/item/electronics/circuitboard/med_data{
-	pixel_x = 3;
-	pixel_y = -3
-	},
 /obj/spawner/junkfood,
 /turf/floor/tiled/steel/gray_platform,
 /area/eris/storage/tech)

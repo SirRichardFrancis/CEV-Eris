@@ -1,5 +1,6 @@
 /datum/job/rd
 	title = "Moebius Expedition Overseer"
+	title_short = "Expedition Overseer"
 	flag = MEO
 	head_position = 1
 	department = DEPARTMENT_SCIENCE
@@ -61,6 +62,7 @@ Your second loyalty is to moebius corp. In order to ensure it can continue its m
 
 /datum/job/scientist
 	title = "Moebius Scientist"
+	title_short = "Scientist"
 	flag = SCIENTIST
 	department = DEPARTMENT_SCIENCE
 	department_flag = SCIENCE
@@ -120,6 +122,7 @@ Your second loyalty is to moebius corp. In order to ensure it can continue its m
 
 /datum/job/roboticist
 	title = "Moebius Roboticist"
+	title_short = "Roboticist"
 	flag = ROBOTICIST
 	department = DEPARTMENT_SCIENCE
 	department_flag = SCIENCE
@@ -170,6 +173,7 @@ Lastly, though they're not commonly used, you have the facilities to construct m
 
 /datum/job/psychiatrist
 	title = "Moebius Psychiatrist"
+	title_short = "Psychiatrist"
 	flag = PSYCHIATRIST
 	department = DEPARTMENT_SCIENCE
 	department_flag = SCIENCE

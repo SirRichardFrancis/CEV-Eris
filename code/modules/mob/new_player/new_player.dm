@@ -5,6 +5,7 @@
 	var/spawning = 0//Referenced when you want to delete the new_player later on in the code.
 	var/totalPlayers = 0		 //Player counts for the Lobby tab
 	var/totalPlayersReady = 0
+	var/client/my_client // Need to keep track of this ourselves, since by the time Logout() is called the client has already been nulled
 //	var/datum/browser/panel
 	universal_speak = 1
 
@@ -70,30 +71,6 @@
 // 	panel.set_window_options("can_close=0")
 // 	panel.set_content(output)
 // 	panel.open()
-
-/mob/new_player/get_status_tab_items()
-	. = ..()
-	if(SSticker.current_state == GAME_STATE_PREGAME)
-		. += list(list("Time To Start: [SSticker.pregame_timeleft][round_progressing ? "" : " (DELAYED)"]"))
-		. += list(list("Players: [totalPlayers]"))
-		. += list(list("Players Ready: [totalPlayersReady]"))
-		totalPlayers = 0
-		totalPlayersReady = 0
-		// This list shouldn't be compiled separately for each player
-		// TODO: Move this under 'global_data' in statpanel subsystem --KIROV
-		for(var/mob/new_player/player in GLOB.player_list)
-			totalPlayers++
-			if(player.ready)
-				totalPlayersReady++
-				var/job_of_choice = "Unknown"
-				// Player chose to be a vagabond, that takes priority over all other settings,
-				// and is in a low priority job list for some reason
-				if(ASSISTANT_TITLE in player.client.prefs.job_low)
-					job_of_choice = ASSISTANT_TITLE
-				// Only take top priority job into account, no use divining what lower priority job player could get
-				else if(player.client.prefs.job_high)
-					job_of_choice = player.client.prefs.job_high
-				. += list(list("[player.client.prefs.real_name] : [job_of_choice]"))
 
 /mob/new_player/Topic(href, href_list[])
 	if(src != usr || !client)

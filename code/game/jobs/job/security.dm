@@ -1,5 +1,6 @@
 /datum/job/ihc
 	title = "Ironhammer Commander"
+	title_short = "Lieutenant"
 	flag = IHC
 	head_position = 1
 	department = DEPARTMENT_SECURITY
@@ -62,6 +63,7 @@
 
 /datum/job/gunserg
 	title = "Ironhammer Gunnery Sergeant"
+	title_short = "Sergeant"
 	flag = GUNSERG
 	department = DEPARTMENT_SECURITY
 	department_flag = IRONHAMMER
@@ -116,6 +118,7 @@
 
 /datum/job/inspector
 	title = "Ironhammer Inspector"
+	title_short = "Inspector"
 	flag = INSPECTOR
 	department = DEPARTMENT_SECURITY
 	department_flag = IRONHAMMER
@@ -174,6 +177,7 @@
 
 /datum/job/medspec
 	title = "Ironhammer Medical Specialist"
+	title_short = "Medical Specialist"
 	flag = MEDSPEC
 	department = DEPARTMENT_SECURITY
 	department_flag = IRONHAMMER
@@ -227,6 +231,7 @@
 
 /datum/job/ihoper
 	title = "Ironhammer Operative"
+	title_short = "Operative"
 	flag = IHOPER
 	department = DEPARTMENT_SECURITY
 	department_flag = IRONHAMMER

@@ -2,6 +2,7 @@ var/datum/announcement/minor/captain_announcement = new(do_newscast = 1)
 
 /datum/job/captain
 	title = "Captain"
+	title_short = "Captain"
 	flag = CAPTAIN
 	department = DEPARTMENT_COMMAND
 	head_position = TRUE
@@ -71,6 +72,7 @@ Your second loyalty is to your command officers. The heads of each faction. List
 
 /datum/job/hop
 	title = "First Officer"
+	title_short = "First Officer"
 	flag = FIRSTOFFICER
 	department = DEPARTMENT_COMMAND
 	head_position = TRUE

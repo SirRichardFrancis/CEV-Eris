@@ -1,5 +1,6 @@
 /datum/job/chaplain
 	title = "NeoTheology Preacher"
+	title_short = "Preacher"
 	flag = CHAPLAIN
 	head_position = 1
 	department = DEPARTMENT_CHURCH
@@ -70,6 +71,7 @@
 
 /datum/job/acolyte
 	title = "NeoTheology Acolyte"
+	title_short = "Acolyte"
 	flag = ACOLYTE
 	department = DEPARTMENT_CHURCH
 	department_flag = CHURCH
@@ -114,6 +116,7 @@
 
 /datum/job/hydro
 	title = "NeoTheology Agrolyte"
+	title_short = "Agrolyte"
 	flag = BOTANIST
 	department = DEPARTMENT_CHURCH
 	department_flag = CHURCH
@@ -161,6 +164,7 @@
 
 /datum/job/janitor
 	title = "NeoTheology Custodian"
+	title_short = "Custodian"
 	flag = JANITOR
 	department = DEPARTMENT_CHURCH
 	department_flag = CHURCH

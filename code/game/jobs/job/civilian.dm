@@ -4,6 +4,7 @@
 
 /datum/job/clubmanager
 	title = "Club Manager"
+	title_short = "Club Manager"
 	flag = CLUBMANAGER
 	department = DEPARTMENT_CIVILIAN
 	department_flag = SERVICE
@@ -41,6 +42,7 @@
 
 /datum/job/clubworker
 	title = "Club Worker"
+	title_short = "Club Worker"
 	flag = CLUBWORKER
 	department = DEPARTMENT_CIVILIAN
 	department_flag = SERVICE
@@ -81,6 +83,7 @@
 
 /datum/job/artist
 	title = "Club Artist"
+	title_short = "Club Artist"
 	flag = ARTIST
 	department = DEPARTMENT_CIVILIAN
 	department_flag = SERVICE

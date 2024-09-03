@@ -1,10 +1,21 @@
 import { useBackend } from '../../backend';
 import { NewPlayerHud } from './NewPlayerHud';
-import { NewPlayerHudData } from './data';
+import { HumanHud } from './HumanHud';
+import { PlaceholderHud } from './PlaceholderHud';
+import { MobHudData, MobType } from './data';
 
 export const KirovHud = (props: any, context: any) => {
-  const { act, data } = useBackend<NewPlayerHudData>(context);
-  return <NewPlayerHud />;
+  const { act, data } = useBackend<MobHudData>(context);
+  const { mob_type } = data;
+
+  switch (mob_type) {
+    case MobType.NewPlayer:
+      return <NewPlayerHud />;
+    case MobType.Human:
+      return <HumanHud />;
+    default:
+      return <PlaceholderHud />;
+  }
 };
 
 /*

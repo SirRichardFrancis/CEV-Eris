@@ -8,7 +8,11 @@
 /mob/ui_state(mob/user)
 	return GLOB.always_state
 
-
+/mob/ui_data(mob/user)
+	var/list/data = list(
+		"mob_type" = "unknown",
+	)
+	return data
 
 
 

@@ -1,5 +1,6 @@
 /datum/job/ai
 	title = "AI"
+	title_short = "AI"
 	flag = AI
 	department_flag = COMMAND
 	department = DEPARTMENT_COMMAND
@@ -32,6 +33,7 @@
 
 /datum/job/cyborg
 	title = "Robot"
+	title_short = "Robot"
 	flag = CYBORG
 	department_flag = MISC
 	faction = "CEV Eris"

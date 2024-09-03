@@ -1,6 +1,7 @@
 //Cargo
 /datum/job/merchant
 	title = "Guild Merchant"
+	title_short = "Merchant"
 	flag = MERCHANT
 	department = DEPARTMENT_GUILD
 	head_position = TRUE
@@ -67,6 +68,7 @@ Your second loyalty is to the guild. Ensure it retains good relations with priva
 
 /datum/job/cargo_tech
 	title = "Guild Technician"
+	title_short = "Technician"
 	flag = GUILDTECH
 	department = DEPARTMENT_GUILD
 	department_flag = GUILD
@@ -120,6 +122,7 @@ Your main duties are to keep the local guild branch operational and profitable. 
 
 /datum/job/mining
 	title = "Guild Miner"
+	title_short = "Miner"
 	flag = MINER
 	department = DEPARTMENT_GUILD
 	department_flag = GUILD

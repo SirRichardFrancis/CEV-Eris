@@ -12,10 +12,23 @@ export enum GameState {
   GameStateFinished = 4,
 }
 
+export enum MobType {
+  Unknown = 'unknown',
+  NewPlayer = 'new_player',
+  Human = 'human',
+}
+
+export type MobHudData = {
+  mob_type: string;
+};
+
 export type NewPlayerHudData = {
-  game_state: number;
   is_player_ready: boolean;
   is_round_started: boolean;
+  roundstart_timer: string;
+  total_player_count: number;
+  ready_player_count: number;
+  crew_manifest: string[][];
 };
 
 export type CrewManifestReadyData = {

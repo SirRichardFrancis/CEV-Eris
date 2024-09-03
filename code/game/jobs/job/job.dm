@@ -2,6 +2,7 @@
 
 	//The name of the job
 	var/title = "NOPE"
+	var/title_short = "NOPE"
 	var/list/access = list()				// Useful for servers which either have fewer players, so each person needs to fill more than one role, or servers which like to give more access, so players can't hide forever in their super secure departments (I'm looking at you, chemistry!)
 	var/list/cruciform_access = list()		// Assign this access into cruciform if target has it
 	var/security_clearance = CLEARANCE_NONE	// Cruciform-specific access type, used by Neotheology doors
