@@ -29,7 +29,7 @@
 		icon_state = "floorbot[on]e"
 	..()
 
-/mob/living/bot/floorbot/attack_hand(var/mob/user)
+/mob/living/bot/floorbot/attack_hand(mob/user)
 	user.set_machine(src)
 	var/dat
 	dat += "<TT><B>Automatic Station Floor Repairer v1.0</B></TT><BR><BR>"
@@ -52,7 +52,7 @@
 	onclose(user, "autorepair")
 	return
 
-/mob/living/bot/floorbot/emag_act(var/remaining_charges, var/mob/user)
+/mob/living/bot/floorbot/emag_act(remaining_charges, mob/user)
 	. = ..()
 	if(!emagged)
 		emagged = 1
@@ -68,7 +68,7 @@
 	add_fingerprint(usr)
 	switch(href_list["operation"])
 		if("start")
-			if (on)
+			if(on)
 				turn_off()
 			else
 				turn_on()
@@ -184,7 +184,7 @@
 		path -= path[1]
 
 
-/mob/living/bot/floorbot/UnarmedAttack(var/atom/A, var/proximity)
+/mob/living/bot/floorbot/UnarmedAttack(atom/A, proximity)
 	if(!..())
 		return
 
@@ -339,7 +339,7 @@
 	s.start()
 	qdel(src)
 
-/mob/living/bot/floorbot/proc/addTiles(var/am)
+/mob/living/bot/floorbot/proc/addTiles(am)
 	amount += am
 	if(amount < 0)
 		amount = 0
@@ -348,7 +348,7 @@
 
 /* Assembly */
 
-/obj/item/storage/toolbox/mechanical/attackby(var/obj/item/stack/tile/floor/T, mob/user as mob)
+/obj/item/storage/toolbox/mechanical/attackby(obj/item/stack/tile/floor/T, mob/user)
 	if(!istype(T, /obj/item/stack/tile/floor))
 		..()
 		return
@@ -360,12 +360,11 @@
 		var/obj/item/toolbox_tiles/B = new /obj/item/toolbox_tiles
 		user.put_in_hands(B)
 		to_chat(user, SPAN_NOTICE("You add the tiles into the empty toolbox. They protrude from the top."))
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		user.drop_from_inventory(src)
 		qdel(src)
 	else
 		to_chat(user, SPAN_WARNING("You need 10 floor tiles for a floorbot."))
-	return
 
 /obj/item/toolbox_tiles
 	desc = "A toolbox with tiles sticking out the top."
@@ -379,7 +378,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	var/created_name = "Floorbot"
 
-/obj/item/toolbox_tiles/attackby(var/obj/item/W, mob/user as mob)
+/obj/item/toolbox_tiles/attackby(obj/item/W, mob/user)
 	..()
 	if(isproxsensor(W))
 		qdel(W)
@@ -387,10 +386,10 @@
 		B.created_name = created_name
 		user.put_in_hands(B)
 		to_chat(user, SPAN_NOTICE("You add the sensor to the toolbox and tiles!"))
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		user.drop_from_inventory(src)
 		qdel(src)
-	else if (istype(W, /obj/item/pen))
+	else if(istype(W, /obj/item/pen))
 		var/t = sanitizeSafe(input(user, "Enter new robot name", name, created_name), MAX_NAME_LEN)
 		if(!t)
 			return
@@ -410,7 +409,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	var/created_name = "Floorbot"
 
-/obj/item/toolbox_tiles_sensor/attackby(var/obj/item/W, mob/user as mob)
+/obj/item/toolbox_tiles_sensor/attackby(obj/item/W, mob/user)
 	..()
 	if(istype(W, /obj/item/robot_parts/l_arm) || istype(W, /obj/item/robot_parts/r_arm))
 		qdel(W)
@@ -418,7 +417,7 @@
 		var/mob/living/bot/floorbot/A = new /mob/living/bot/floorbot(T)
 		A.name = created_name
 		to_chat(user, SPAN_NOTICE("You add the robot arm to the odd looking toolbox assembly! Boop beep!"))
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		user.drop_from_inventory(src)
 		qdel(src)
 	else if(istype(W, /obj/item/pen))

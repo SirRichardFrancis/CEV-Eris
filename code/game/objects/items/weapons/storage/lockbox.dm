@@ -17,7 +17,7 @@
 
 
 	attackby(obj/item/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/card/id))
+		if(istype(W, /obj/item/card/id))
 			if(src.broken)
 				to_chat(user, SPAN_WARNING("It appears to be broken."))
 				return
@@ -38,8 +38,8 @@
 				var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
 				spark_system.set_up(5, 0, src.loc)
 				spark_system.start()
-				playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
-				playsound(src.loc, "sparks", 50, 1)
+				playsound(loc, 'sound/weapons/blade1.ogg', 50, 1)
+				playsound(loc, "sparks", 50, 1)
 		if(!locked)
 			..()
 		else

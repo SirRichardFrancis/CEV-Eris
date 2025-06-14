@@ -14,12 +14,12 @@ GLOBAL_LIST_INIT(antag_item_targets,list(
 		"a Moebius expedition overseer's jumpsuit" = /obj/item/clothing/under/rank/expedition_overseer,
 		"a exultant's jumpsuit" = /obj/item/clothing/under/rank/exultant,
 		"a Moebius biolab officer's jumpsuit" = /obj/item/clothing/under/rank/moebius_biolab_officer,
-		"a Ironhammer commander's jumpsuit" = /obj/item/clothing/under/rank/ih_commander,
+		"a IronHammer commander's jumpsuit" = /obj/item/clothing/under/rank/ih_commander,
 		"a First Officer's jumpsuit" = /obj/item/clothing/under/rank/first_officer,
 		"the hypospray" = /obj/item/reagent_containers/hypospray,
 		"the captain's pinpointer" = /obj/item/pinpointer,
 		"an ablative armor vest" = /obj/item/clothing/suit/armor/laserproof/full,
-		"an Ironhammer hardsuit control module" = /obj/item/rig/combat/ironhammer
+		"an IronHammer hardsuit control module" = /obj/item/rig/combat/ironhammer
 	))
 GLOBAL_LIST_INIT(excel_item_targets,list(
 		"a Miller revolver" = /obj/item/gun/projectile/revolver,
@@ -339,7 +339,7 @@ GLOBAL_LIST_INIT(excel_item_targets,list(
 		to_chat(user, SPAN_NOTICE("Mandate completed: [name] ([reward] energy)"))
 
 	excelsior_energy += reward
-	for (var/obj/machinery/complant_teleporter/t in excelsior_teleporters)
+	for(var/obj/machinery/complant_teleporter/t in excelsior_teleporters)
 		t.update_nano_data()
 
 /datum/antag_contract/excel/appropriate
@@ -390,11 +390,11 @@ GLOBAL_LIST_INIT(excel_item_targets,list(
 		if(!istype(H) || H.stat == DEAD || !IS_SHIP_LEVEL(H.z))
 			continue
 
-		if (targets_command)
+		if(targets_command)
 			if(!(candidate_mind.assigned_role in list(JOBS_COMMAND + JOBS_SECURITY)))
 				continue
 
-		if (cruciform_check)
+		if(cruciform_check)
 			var/cruciform = H.get_core_implant(/obj/item/implant/core_implant/cruciform)
 			if(cruciform)
 				continue

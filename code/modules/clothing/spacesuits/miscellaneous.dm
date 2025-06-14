@@ -34,7 +34,7 @@
 	accompanying_object = /obj/item/clothing/head/space/emergency
 	slowdown = HEAVY_SLOWDOWN
 
-//Neotheology spacesuits
+//NeoTheology spacesuits
 /obj/item/clothing/head/space/medicus
 	name = "NT Medicus Helmet"
 	icon_state = "nt_habithat_visor"
@@ -88,7 +88,7 @@
 	. = ..()
 
 /obj/item/clothing/suit/space/medicus/attack_hand(mob/user)
-	if ((is_worn() || is_held()) && !pockets.handle_attack_hand(user))
+	if((is_worn() || is_held()) && !pockets.handle_attack_hand(user))
 		return TRUE
 	..(user)
 

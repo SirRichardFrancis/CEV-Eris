@@ -58,7 +58,7 @@
 
 /obj/machinery/cellshower/proc/spray()
 	visible_message("<span class='warning'>[src] clicks and distributes some pain.")
-	playsound(src.loc, 'sound/effects/spray2.ogg', 50, 1)
+	playsound(loc, 'sound/effects/spray2.ogg', 50, 1)
 	var/obj/machinery/cellshower/targetshower = locate(x, y, z - 1)
 	for(var/turf/T in RANGE_TURFS(1, targetshower))
 		if(T.density)
@@ -83,7 +83,7 @@
 	for(var/mob/living/carbon/C in src.loc)
 		wash(C)
 		check_heat(C)
-	for (var/atom/movable/G in src.loc)
+	for(var/atom/movable/G in src.loc)
 		G.clean_blood()
 
 /obj/effect/shower/Destroy()
@@ -154,9 +154,9 @@
 					washears = !(H.head.flags_inv & HIDEEARS)
 
 				if(H.wear_mask)
-					if (washears)
+					if(washears)
 						washears = !(H.wear_mask.flags_inv & HIDEEARS)
-					if (washglasses)
+					if(washglasses)
 						washglasses = !(H.wear_mask.flags_inv & HIDEEYES)
 
 				if(H.head)

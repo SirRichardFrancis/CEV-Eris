@@ -54,7 +54,7 @@
 		user.visible_message("[user] turned \the [src] on.", \
 			"You turn on \the [src].", \
 			"You hear heavy droning.")
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	playsound(loc, 'sound/machines/machine_switch.ogg', 100, 1)
 	update_icon()
 
@@ -212,27 +212,27 @@
 
 			else if(!state)
 				state = TRUE
-				playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+				playsound(loc, 'sound/items/Ratchet.ogg', 75, 1)
 				to_chat(user, "You secure the external reinforcing bolts to the floor.")
 				src.anchored = TRUE
 				return
 
 			else
 				state = FALSE
-				playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+				playsound(loc, 'sound/items/Ratchet.ogg', 75, 1)
 				to_chat(user, "You undo the external reinforcing bolts.")
 				src.anchored = FALSE
 				return
 
 	if(istype(I, /obj/item/card/id) || istype(I, /obj/item/modular_computer))
-		if (src.allowed(user))
+		if(src.allowed(user))
 			src.locked = !src.locked
 			to_chat(user, "Controls are now [src.locked ? "locked." : "unlocked."]")
 		else
 			to_chat(user, "\red Access denied.")
 
 	else
-		src.add_fingerprint(user)
+		add_fingerprint(user)
 		visible_message("\red The [src.name] has been hit with \the [I.name] by [user.name]!")
 
 
@@ -342,7 +342,7 @@
 	if(istype(mover) && mover.checkpass(PASSGLASS))
 		return prob(20)
 	else
-		if (istype(mover, /obj/item/projectile))
+		if(istype(mover, /obj/item/projectile))
 			return prob(10)
 		else
 			return !src.density

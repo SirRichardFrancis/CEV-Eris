@@ -17,9 +17,9 @@
 /obj/item/paper_bundle/attackby(obj/item/W as obj, mob/user as mob)
 	..()
 
-	if (istype(W, /obj/item/paper/carbon))
+	if(istype(W, /obj/item/paper/carbon))
 		var/obj/item/paper/carbon/C = W
-		if (!C.iscopy && !C.copied)
+		if(!C.iscopy && !C.copied)
 			to_chat(user, SPAN_NOTICE("Take off the carbon copy first."))
 			add_fingerprint(user)
 			return
@@ -151,13 +151,13 @@
 				insert_sheet_at(usr, page+1, in_hand)
 			else if(page != pages.len)
 				page++
-				playsound(src.loc, "pageturn", 50, 1)
+				playsound(loc, "pageturn", 50, 1)
 		if(href_list["prev_page"])
 			if(in_hand && (istype(in_hand, /obj/item/paper) || istype(in_hand, /obj/item/photo)))
 				insert_sheet_at(usr, page, in_hand)
 			else if(page > 1)
 				page--
-				playsound(src.loc, "pageturn", 50, 1)
+				playsound(loc, "pageturn", 50, 1)
 		if(href_list["remove"])
 			var/obj/item/W = pages[page]
 			usr.put_in_hands(W)
@@ -179,7 +179,7 @@
 			update_icon()
 	else
 		to_chat(usr, SPAN_NOTICE("You need to hold it in hands!"))
-	if (ismob(src.loc) ||ismob(src.loc.loc))
+	if(ismob(src.loc) ||ismob(src.loc.loc))
 		src.attack_self(usr)
 		updateUsrDialog()
 

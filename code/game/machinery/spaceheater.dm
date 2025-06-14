@@ -85,7 +85,7 @@
 	return
 
 /obj/machinery/space_heater/attack_hand(mob/user as mob)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	interact(user)
 
 /obj/machinery/space_heater/interact(mob/user as mob)
@@ -119,9 +119,9 @@
 
 
 /obj/machinery/space_heater/Topic(href, href_list)
-	if (usr.stat)
+	if(usr.stat)
 		return
-	if ((in_range(src, usr) && istype(src.loc, /turf)) || (issilicon(usr)))
+	if((in_range(src, usr) && istype(src.loc, /turf)) || (issilicon(usr)))
 		usr.set_machine(src)
 
 		switch(href_list["op"])

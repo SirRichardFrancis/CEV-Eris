@@ -246,7 +246,7 @@
 
 /obj/item/storage/fancy/cigarettes/robusto
 	name = "\improper Red Robusto packet"
-	desc = "A packet of six Red Robusto Cigarettes. Old Nanotrasen cigs, some say they make you more robust..."
+	desc = "A packet of six Red Robusto Cigarettes. Old NanoTrasen cigs, some say they make you more robust..."
 	icon_state = "robusto_packet"
 	item_state = "robusto_packet"
 	spawn_tags = SPAWN_TAG_CIGARETTE_MAINTS
@@ -449,7 +449,7 @@ obj/item/storage/fancy/cigar/attackby(obj/item/W, mob/user)
 	var/total_contents = src.contents.len - itemremoved
 	src.icon_state = "vialbox[total_contents]"
 	src.cut_overlays()
-	if (!broken)
+	if(!broken)
 		overlays += image(icon, src, "led[locked]")
 		if(locked)
 			overlays += image(icon, src, "cover")

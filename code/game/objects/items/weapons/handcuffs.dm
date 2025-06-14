@@ -21,12 +21,11 @@
 	var/cuff_sound = 'sound/weapons/handcuffs.ogg'
 	var/cuff_type = "handcuffs"
 
-/obj/item/handcuffs/attack(var/mob/living/carbon/C, var/mob/living/user)
-
+/obj/item/handcuffs/attack(mob/living/carbon/C, mob/living/user)
 	if(!user.IsAdvancedToolUser())
 		return
 
-/*	if ((CLUMSY in user.mutations) && prob(50))
+/*	if((CLUMSY in user.mutations) && prob(50))
 		to_chat(user, SPAN_WARNING("Uh ... how do those things work?!"))
 		place_handcuffs(user, user)
 		return
@@ -35,13 +34,13 @@
 		to_chat(user,SPAN_WARNING("\The [C] is already handcuffed."))
 		return
 
-	if (C == user) //cool shit bro
+	if(C == user) //cool shit bro
 		place_handcuffs(user, user)
 		return
 
 	var/cuff_delay = 4 SECONDS
-	for (var/obj/item/grab/G in C.grabbed_by)
-		if (G.loc == user)
+	for(var/obj/item/grab/G in C.grabbed_by)
+		if(G.loc == user)
 			if(G.state >= GRAB_PASSIVE)
 				cuff_delay -= 1 SECONDS //3
 			if(G.state >= GRAB_AGGRESSIVE)
@@ -55,9 +54,8 @@
 		return
 	place_handcuffs(C, user, cuff_delay)
 
-/obj/item/handcuffs/proc/place_handcuffs(var/mob/living/carbon/target, var/mob/user, var/delay)
-	playsound(src.loc, cuff_sound, 30, 1, -2)
-
+/obj/item/handcuffs/proc/place_handcuffs(mob/living/carbon/target, mob/user, delay)
+	playsound(loc, cuff_sound, 30, 1, -2)
 	var/mob/living/carbon/human/H = target
 	if(!istype(H))
 		return 0
@@ -101,19 +99,27 @@
 	. += breakouttime / 20
 
 var/last_chew = 0
-/mob/living/carbon/human/RestrainedClickOn(var/atom/A)
-	if (A != src) return ..()
-	if (last_chew + 26 > world.time) return
+/mob/living/carbon/human/RestrainedClickOn(atom/A)
+	if(A != src)
+		return ..()
+	if(last_chew + 26 > world.time)
+		return
 
 	var/mob/living/carbon/human/H = A
-	if (!H.handcuffed) return
-	if (H.a_intent != I_HURT) return
-	if (H.targeted_organ != BP_MOUTH) return
-	if (H.wear_mask) return
-	if (istype(H.wear_suit, /obj/item/clothing/suit/straight_jacket)) return
+	if(!H.handcuffed)
+		return
+	if(H.a_intent != I_HURT)
+		return
+	if(H.targeted_organ != BP_MOUTH)
+		return
+	if(H.wear_mask)
+		return
+	if(istype(H.wear_suit, /obj/item/clothing/suit/straight_jacket))
+		return
 
 	var/obj/item/organ/external/O = H.organs_by_name[H.hand ? BP_L_ARM : BP_R_ARM]
-	if (!O) return
+	if(!O)
+		return
 
 	var/s = SPAN_WARNING("[H.name] chews on \his [O.name]!")
 	H.visible_message(s, SPAN_WARNING("You chew on your [O.name]!"))
@@ -168,11 +174,11 @@ var/last_chew = 0
 /obj/item/handcuffs/cable/white
 	color = "#FFFFFF"
 
-/obj/item/handcuffs/cable/attackby(var/obj/item/I, mob/user as mob)
+/obj/item/handcuffs/cable/attackby(obj/item/I, mob/user)
 	..()
 	if(istype(I, /obj/item/stack/rods))
 		var/obj/item/stack/rods/R = I
-		if (R.use(1))
+		if(R.use(1))
 			var/obj/item/material/wirerod/W = new(get_turf(user))
 			user.put_in_hands(W)
 			to_chat(user, SPAN_NOTICE("You wrap the cable restraint around the top of the rod."))
@@ -184,7 +190,7 @@ var/last_chew = 0
 	spawn_tags = null
 
 /obj/item/handcuffs/cyborg/afterattack(atom/A, mob/user, proximity)
-	if (istype(A,/obj/item/handcuffs))
+	if(istype(A,/obj/item/handcuffs))
 		qdel(A)
 
 /obj/item/handcuffs/cable/tape

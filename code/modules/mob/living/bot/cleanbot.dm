@@ -111,7 +111,7 @@
 						patrol_path = list()
 						target = D
 						found_spot = handle_target()
-						if (found_spot)
+						if(found_spot)
 							break search_loop
 						else
 							target_in_view = TRUE
@@ -250,7 +250,7 @@
 			patrol_path = null
 		if("freq")
 			var/freq = text2num(input("Select frequency for  navigation beacons", "Frequnecy", num2text(beacon_freq / 10))) * 10
-			if (freq > 0)
+			if(freq > 0)
 				beacon_freq = freq
 		if("screw")
 			screwloose = !screwloose
@@ -326,7 +326,7 @@
 		var/mob/living/bot/cleanbot/A = new /mob/living/bot/cleanbot(T)
 		A.name = created_name
 		to_chat(user, SPAN_NOTICE("You add the robot arm to the bucket and sensor assembly. Beep boop!"))
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		user.drop_from_inventory(src)
 		qdel(src)
 

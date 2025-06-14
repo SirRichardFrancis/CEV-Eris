@@ -1,0 +1,80 @@
+name: Run Linters
+
+on:
+  workflow_call:
+
+jobs:
+  linters:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore SpacemanDMM cache
+        uses: actions/cache@v4
+        with:
+          path: ~/SpacemanDMM
+          key: ${{ runner.os }}-spacemandmm-${{ hashFiles('dependencies.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-spacemandmm-
+      - name: Setup Node
+        uses: ./.github/actions/setup_node
+        with:
+          restore-yarn-cache: true
+      - name: Restore Bootstrap cache
+        uses: actions/cache@v4
+        with:
+          path: tools/bootstrap/.cache
+          key: ${{ runner.os }}-bootstrap-${{ hashFiles('tools/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-bootstrap-
+      - name: Restore Rust cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-rust-${{ hashFiles('tools/ci/ci_dependencies.sh')}}
+          restore-keys: |
+            ${{ runner.os }}-rust-
+
+      - name: Install Tools
+        run: |
+          pip3 install setuptools
+          bash tools/ci/install_spaceman_dmm.sh dreamchecker
+          bash tools/ci/install_ripgrep.sh
+          tools/bootstrap/python -c ''
+      - name: Give Linters A Go
+        id: linter-setup
+        run: ":"
+      - name: Run Grep Checks
+        if: steps.linter-setup.conclusion == 'success' && !cancelled()
+        run: bash tools/ci/check_grep.sh
+      # - name: Check Define Sanity
+      #   if: steps.linter-setup.conclusion == 'success' && !cancelled()
+      #   run: tools/bootstrap/python -m define_sanity.check
+      # - name: Run DreamChecker
+      #   if: steps.linter-setup.conclusion == 'success' && !cancelled()
+      #   shell: bash
+      #   run: ~/dreamchecker 2>&1 | bash tools/ci/annotate_dm.sh
+      - name: Check File Directories
+        if: steps.linter-setup.conclusion == 'success' && !cancelled()
+        run: bash tools/ci/check_filedirs.sh cev_eris.dme
+      # - name: Check Changelogs
+      #   if: steps.linter-setup.conclusion == 'success' && !cancelled()
+      #   run: bash tools/ci/check_changelogs.sh
+      # - name: Check Miscellaneous Files
+      #   if: steps.linter-setup.conclusion == 'success' && !cancelled()
+      #   run: bash tools/ci/check_misc.sh
+      # - name: Run TGUI Checks
+      #   if: steps.linter-setup.conclusion == 'success' && !cancelled()
+      #   run: tools/build/build --ci lint tgui-test
+
+
+
+
+
+
+
+
+
+
+

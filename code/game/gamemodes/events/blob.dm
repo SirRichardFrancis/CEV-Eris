@@ -12,16 +12,13 @@
 /datum/storyevent/blob
 	id = "blob"
 	name = "Blob"
-
-
 	event_type = /datum/event/blob
 	event_pools = list(EVENT_LEVEL_MAJOR = POOL_THRESHOLD_MAJOR*1.35)
 	tags = list(TAG_COMBAT, TAG_DESTRUCTIVE, TAG_NEGATIVE)
 //============================================
 
 /datum/event/blob
-	announceWhen	= 12
-
+	announceWhen = 12
 	var/obj/effect/blob/core/Blob
 
 /datum/event/blob/announce()
@@ -90,14 +87,14 @@
 	var/coredist = 1
 	var/dist_time_scaling = 1.5
 
-/obj/effect/blob/New(loc, var/obj/effect/blob/_parent)
-	if (_parent)
+/obj/effect/blob/New(loc, obj/effect/blob/_parent)
+	if(_parent)
 		parent = _parent
 		core = parent.core
 		coredist = max(1,get_dist(src, core))
 
 		//Accounting for zlevel distance
-		if (src.z != core.z)
+		if(src.z != core.z)
 			coredist += (abs(z - core.z)*3)
 
 		health += (maxHealth*0.5) - coredist
@@ -119,9 +116,9 @@
 	wake_neighbors()
 	return ..()
 
-/obj/effect/blob/CanPass(var/atom/mover)
+/obj/effect/blob/CanPass(atom/mover)
 	//No letting projectiles through
-	if (istype(mover, /obj/item/projectile))
+	if(istype(mover, /obj/item/projectile))
 		return FALSE
 
 	//But mobs can walk over the nondense ones.
@@ -131,14 +128,14 @@
 	blob_neighbors = list()
 	non_blob_neighbors = list()
 	var/list/turfs = cardinal_turfs(src)
-	for (var/t in turfs)
+	for(var/t in turfs)
 
 		var/turf/T = t
 		var/turf/U = get_connecting_turf(T, loc)//This handles Zlevel stuff
 		//If the target turf connects to another across Zlevels, U will hold the destination
 		var/obj/effect/blob/B = (locate(/obj/effect/blob/) in U)
 		//We check for existing blobs in the destination
-		if (B)
+		if(B)
 			blob_neighbors.Add(B)
 		else
 			//But we add the origin to our neighbors if there isnt a blob
@@ -151,40 +148,39 @@
 	Basic blob processing. Every tick we will update our neighbors, try to expand, etc
 **************************************************/
 /obj/effect/blob/Process()
-
 	//Shouldn't happen, but maybe a process tick was still queued up when we stopped
-	if (!active)
+	if(!active)
 		return PROCESS_KILL
 
 	//Heal ourselves
 	regen()
 
 
-	if (world.time >= next_expansion)
+	if(world.time >= next_expansion)
 		//Update our neighbors. This may cause us to stop processing
 		update_neighbors()
 
 
 
 		//Okay if we're still active then we maybe have some expanding to do
-		if (health >= maxHealth && non_blob_neighbors.len)
+		if(health >= maxHealth && non_blob_neighbors.len)
 			//We will attempt to expand into only one of the possible nearby tiles
 			expand(pick(non_blob_neighbors))
 
 
 		//Maybe there are mobs in our tile we still need to melt
-		if (!attack_mobs())
+		if(!attack_mobs())
 			//If not, try to go to sleep
 			set_idle()
 
 		//Another active check here
-		if (!active)
+		if(!active)
 			return PROCESS_KILL
 
 		set_expand_time()
 
 /obj/effect/blob/proc/regen()
-	if (!(QDELETED(core)))
+	if(!(QDELETED(core)))
 		health = min(health + health_regen, maxHealth)
 	else
 		core = null
@@ -198,14 +194,11 @@
 	However, the farther away each segment is from the core, the longer it must rest between expansions
 */
 /obj/effect/blob/proc/set_expand_time()
-	if (!(QDELETED(core)))
+	if(!(QDELETED(core)))
 		next_expansion = world.time + ((1 SECONDS) * (dist_time_scaling ** coredist))
 	else
 		//If the core is gone, no more expansion
 		next_expansion = INFINITY
-
-
-
 
 /*
 	TO minimise performance costs at massive sizes, blobs will go to sleep once they're no longer at the
@@ -213,23 +206,23 @@
 	If a blob finds itself surrounded on all sides by other blobs, and it is at full health, it has nothing to do
 */
 /obj/effect/blob/proc/set_idle()
-	if (!active)
+	if(!active)
 		return
 
-	if (blob_neighbors.len == 4) //We must have a full list of blobneighbors
-		if (health >= maxHealth) //We must be at full health
-			if (!(QDELETED(core)))//We must have a living core
-				if (!attackable_mobs_in_turf())
+	if(blob_neighbors.len == 4) //We must have a full list of blobneighbors
+		if(health >= maxHealth) //We must be at full health
+			if(!(QDELETED(core)))//We must have a living core
+				if(!attackable_mobs_in_turf())
 					STOP_PROCESSING(SSobj, src)
 					active = FALSE
 
 
 /obj/effect/blob/proc/attackable_mobs_in_turf()
-	for (var/mob/living/L in loc)
-		if (L.stat != DEAD)
+	for(var/mob/living/L in loc)
+		if(L.stat != DEAD)
 			return TRUE
 
-	for (var/mob/living/exosuit/M in loc)
+	for(var/mob/living/exosuit/M in loc)
 		return TRUE
 
 	return FALSE
@@ -239,7 +232,7 @@
 	This will happen when any neighboring blob is killed
 */
 /obj/effect/blob/proc/set_awake()
-	if (active)
+	if(active)
 		return
 
 	START_PROCESSING(SSobj, src)
@@ -252,7 +245,7 @@
 
 	//Spawn it off so this part will trigger after we're qdeleted
 	spawn()
-		for (var/obj/effect/blob/B in blob_neighbors)
+		for(var/obj/effect/blob/B in blob_neighbors)
 			B.set_awake()
 
 /obj/effect/blob/explosion_act(target_power, explosion_handler/handle)
@@ -272,11 +265,11 @@
 	//Blob gradually fades out as it's damaged.
 	alpha = 255 * healthpercent
 
-/obj/effect/blob/proc/take_damage(var/damage)
-	if (damage > 0)
+/obj/effect/blob/proc/take_damage(damage)
+	if(damage > 0)
 		health -= damage
 
-		if (damage >= 5)
+		if(damage >= 5)
 			//Threshold reduces sound spam
 			playsound(loc, 'sound/effects/attackblob.ogg', 50, 1)
 		if(health < 0)
@@ -287,17 +280,12 @@
 			wake_neighbors()
 
 
-
-
-
-
-
 /*********************************
 	EXPANDING!
 **********************************/
 //Changes by Nanako, 14th october 2018
 //Blob now deals vastly reduced damage to walls and windows, but vastly increased damage to doors
-/obj/effect/blob/proc/expand(var/turf/T)
+/obj/effect/blob/proc/expand(turf/T)
 	if(!T.is_simulated)
 		return
 	if(istype(T, /turf/space) || (istype(T, /turf/mineral) && T.density))
@@ -351,7 +339,7 @@
 
 	//We'll occasionally spawn shield tiles instead of normal blobs
 	var/obj/effect/blob/child
-	if (prob(6))
+	if(prob(6))
 		child = new /obj/effect/blob/shield(loc, src)
 	else
 		child = new expandType(loc, src)
@@ -363,21 +351,21 @@
 
 //This silly special case override is needed to make blobs work with portals.
 //Code is copied from /atoms_movable.dm, but a spawn call is removed, making it completely synchronous
-/obj/effect/blob/Bump(var/atom/A, yes)
-	if (A && yes)
+/obj/effect/blob/Bump(atom/A, yes)
+	if(A && yes)
 		A.last_bumped = world.time
 		A.Bumped(src)
 
 
 //Once created, the new blob moves to its destination turf
-/obj/effect/blob/proc/handle_move(var/turf/origin, var/turf/destination)
+/obj/effect/blob/proc/handle_move(turf/origin, turf/destination)
 	//First of all lets ensure we still exist.
 	//We may have been deleted by another blob doing postmove cleanup
-	if (QDELETED(src))
+	if(QDELETED(src))
 		return
 
 	//And lets make sure we haven't already moved
-	if (loc != origin)
+	if(loc != origin)
 		return
 
 	//We un-anchor ourselves, so that we're exposed to effects like gravity and teleporting
@@ -391,14 +379,14 @@
 	In the case of a portal, or falling through an openspace, or moving along stairs, Move may return false
 	but we've still gone somewhere. We will only consider it a failure if we're still where we started
 	*/
-	if (loc == origin)
+	if(loc == origin)
 		//That failed, okay this time we're not asking
 		forceMove(destination)
 		//forceMove won't work properly with portals, so we only do it as a backup option
 
 
 	//Ok now we should definitely be somewhere
-	if (loc == origin)
+	if(loc == origin)
 		//Welp, we give up.
 		//This shouldn't be possible, but if it somehow happens then this blob is toast
 		qdel(src)
@@ -413,8 +401,8 @@
 
 //Now we clean up our arrival tile
 /obj/effect/blob/proc/handle_postmove()
-	for (var/obj/effect/blob/Bl in loc)
-		if (Bl != src)
+	for(var/obj/effect/blob/Bl in loc)
+		if(Bl != src)
 			qdel(Bl) //Lets make sure we don't get doubleblobs
 
 /*******************
@@ -422,10 +410,10 @@
 ********************/
 //Blobs will do horrible things to any mobs they share a tile with
 //Returns true if any mob was damaged, false if not
-/obj/effect/blob/proc/attack_mobs(var/turf/T)
-	if (!T)
+/obj/effect/blob/proc/attack_mobs(turf/T)
+	if(!T)
 		T = loc
-	for (var/mob/living/L in T)
+	for(var/mob/living/L in T)
 		if(L.stat == DEAD)
 			continue
 		L.visible_message(SPAN_DANGER("The blob attacks \the [L]!"), SPAN_DANGER("The blob attacks you!"))
@@ -434,7 +422,7 @@
 
 		//In addition to the flat damage above, we will also splash a small amount of acid on the target
 		//This allows them to wear acidproof gear to resist it
-		if (iscarbon(L))
+		if(iscarbon(L))
 			var/datum/reagents/R = new /datum/reagents(4, null)
 			R.add_reagent("sacid", RAND_DECIMAL(0.8,4))
 			R.trans_to(L, R.total_volume)
@@ -458,7 +446,7 @@
 ********************/
 
 //Bullets which hit a blob will keep going on through if they kill it
-/obj/effect/blob/bullet_act(var/obj/item/projectile/Proj)
+/obj/effect/blob/bullet_act(obj/item/projectile/Proj)
 	if(!Proj)
 		return
 
@@ -474,12 +462,12 @@
 			taken_damage= (Proj.damage_types[i]  / fire_resist)
 			Proj.damage_types[i] -= absorbed_damage
 	take_damage(taken_damage)
-	if (Proj.get_total_damage() <= 0)
+	if(Proj.get_total_damage() <= 0)
 		return 0
 	else
 		return PROJECTILE_CONTINUE
 
-/obj/effect/blob/attackby(var/obj/item/W, var/mob/user)
+/obj/effect/blob/attackby(obj/item/W, mob/user)
 	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 	if(W.force && !(W.flags & NOBLUDGEON))
 		user.do_attack_animation(src, TRUE)
@@ -529,10 +517,10 @@
 
 //When the core dies, wake up all our sub-blobs so they can slowly die too
 /obj/effect/blob/core/Destroy()
-	for (var/obj/effect/blob/B in world)
-		if (B == src)
+	for(var/obj/effect/blob/B in world)
+		if(B == src)
 			continue
-		if (B.core == src)
+		if(B.core == src)
 			B.core = null
 			B.set_awake()
 	return ..()

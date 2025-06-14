@@ -224,7 +224,7 @@
 			to_chat(user, SPAN_WARNING("You momentarily forget how to use \the [src]."))
 			return 1
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	return ..()
 
@@ -282,7 +282,7 @@
 
 /obj/machinery/proc/ping(text="\The [src] pings.")
 	state(text, "blue")
-	playsound(src.loc, 'sound/machines/ping.ogg', 50, 0)
+	playsound(loc, 'sound/machines/ping.ogg', 50, 0)
 
 /obj/machinery/proc/shock(mob/user, prb)
 	if(inoperable())

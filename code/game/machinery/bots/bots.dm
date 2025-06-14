@@ -29,7 +29,7 @@
 	qdel(src)
 
 /obj/machinery/bot/proc/healthcheck()
-	if (src.health <= 0)
+	if(src.health <= 0)
 		src.explode()
 
 /obj/machinery/bot/emag_act(var/remaining_charges, var/user)
@@ -103,7 +103,7 @@
 		turn_off()
 	spawn(severity * 300)
 		stat &= ~EMPED
-		if (was_on)
+		if(was_on)
 			turn_on()
 
 
@@ -118,7 +118,7 @@
 	if(user.species.can_shred(user))
 		src.health -= rand(15,30)*brute_dam_coeff
 		src.visible_message(SPAN_DANGER("[user] has slashed [src]!"))
-		playsound(src.loc, 'sound/weapons/slice.ogg', 25, 1, -1)
+		playsound(loc, 'sound/weapons/slice.ogg', 25, 1, -1)
 		if(prob(10))
 			new /obj/effect/decal/cleanable/blood/oil(src.loc)
 		healthcheck()

@@ -109,7 +109,7 @@
 
 /obj/item/device/lightreplacer/proc/Use(var/mob/user)
 
-	playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+	playsound(loc, 'sound/machines/click.ogg', 50, 1)
 	AddUses(-1)
 	return 1
 
@@ -170,14 +170,14 @@
 
 /obj/item/device/lightreplacer/emag_act(var/remaining_charges, var/mob/user)
 	emagged = !emagged
-	playsound(src.loc, "sparks", 100, 1)
+	playsound(loc, "sparks", 100, 1)
 	update_icon()
 	return 1
 
 //Can you use it?
 
 /obj/item/device/lightreplacer/proc/CanUse(var/mob/living/user)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	//Not sure what else to check for. Maybe if clumsy?
 	if(uses > 0)
 		return 1

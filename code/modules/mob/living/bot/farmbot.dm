@@ -33,7 +33,7 @@
 	if(!tank)
 		tank = new /obj/structure/reagent_dispensers/watertank(src)
 
-/mob/living/bot/farmbot/attack_hand(var/mob/user as mob)
+/mob/living/bot/farmbot/attack_hand(mob/user)
 	. = ..()
 	if(.)
 		return
@@ -41,7 +41,7 @@
 	dat += "<TT><B>Automatic Hyrdoponic Assisting Unit v1.0</B></TT><BR><BR>"
 	dat += "Status: <A href='?src=\ref[src];power=1'>[on ? "On" : "Off"]</A><BR>"
 	dat += "Water Tank: "
-	if (tank)
+	if(tank)
 		dat += "[tank.reagents.total_volume]/[tank.reagents.maximum_volume]"
 	else
 		dat += "Error: Watertank not found"
@@ -63,7 +63,7 @@
 	onclose(user, "autofarm")
 	return
 
-/mob/living/bot/farmbot/emag_act(var/remaining_charges, var/mob/user)
+/mob/living/bot/farmbot/emag_act(remaining_charges, mob/user)
 	. = ..()
 	if(!emagged)
 		if(user)
@@ -160,7 +160,7 @@
 			if(!path)
 				path = list()
 
-/mob/living/bot/farmbot/UnarmedAttack(var/atom/A, var/proximity)
+/mob/living/bot/farmbot/UnarmedAttack(atom/A, proximity)
 	if(!..())
 		return
 	if(attacking)
@@ -285,7 +285,7 @@
 	qdel(src)
 	return
 
-/mob/living/bot/farmbot/proc/process_tray(var/obj/machinery/portable_atmospherics/hydroponics/tray)
+/mob/living/bot/farmbot/proc/process_tray(obj/machinery/portable_atmospherics/hydroponics/tray)
 	if(!tray || !istype(tray))
 		return 0
 
@@ -324,25 +324,25 @@
 		new /obj/structure/reagent_dispensers/watertank(src)
 
 
-/obj/structure/reagent_dispensers/watertank/attackby(var/obj/item/robot_parts/S, mob/user as mob)
-	if ((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))
+/obj/structure/reagent_dispensers/watertank/attackby(var/obj/item/robot_parts/S, mob/user)
+	if((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))
 		..()
 		return
 
 	var/obj/item/farmbot_arm_assembly/A = new /obj/item/farmbot_arm_assembly(loc)
 
 	to_chat(user, "You add the robot arm to [src].")
-	playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+	playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 	loc = A //Place the water tank into the assembly, it will be needed for the finished bot
 	user.drop_from_inventory(S)
 	qdel(S)
 
-/obj/item/farmbot_arm_assembly/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/farmbot_arm_assembly/attackby(obj/item/W, mob/user)
 	..()
 	if((istype(W, /obj/item/device/scanner/plant)) && (build_step == 0))
 		build_step++
 		to_chat(user, "You add the plant analyzer to [src].")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		name = "farmbot assembly"
 		user.remove_from_mob(W)
 		qdel(W)
@@ -350,7 +350,7 @@
 	else if((istype(W, /obj/item/reagent_containers/glass/bucket)) && (build_step == 1))
 		build_step++
 		to_chat(user, "You add a bucket to [src].")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		name = "farmbot assembly with bucket"
 		user.remove_from_mob(W)
 		qdel(W)
@@ -358,7 +358,7 @@
 	else if((istype(W, /obj/item/tool/minihoe)) && (build_step == 2))
 		build_step++
 		to_chat(user, "You add a minihoe to [src].")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		name = "farmbot assembly with bucket and minihoe"
 		user.remove_from_mob(W)
 		qdel(W)
@@ -366,7 +366,7 @@
 	else if((isproxsensor(W)) && (build_step == 3))
 		build_step++
 		to_chat(user, "You complete the Farmbot! Beep boop.")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		var/mob/living/bot/farmbot/S = new /mob/living/bot/farmbot(get_turf(src))
 		for(var/obj/structure/reagent_dispensers/watertank/wTank in contents)
 			wTank.loc = S
@@ -386,5 +386,5 @@
 
 		created_name = t
 
-/obj/item/farmbot_arm_assembly/attack_hand(mob/user as mob)
+/obj/item/farmbot_arm_assembly/attack_hand(mob/user)
 	return //it's a converted watertank, no you cannot pick it up and put it in your backpack

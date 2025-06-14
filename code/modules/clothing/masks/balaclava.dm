@@ -22,14 +22,14 @@
 		return
 	if(!user.incapacitated())
 		switch(open)
-			if (0)
+			if(0)
 				flags_inv = BLOCKHEADHAIR
 				body_parts_covered = HEAD
 				style_coverage = COVERS_HAIR
 				icon_state = initial(icon_state) + "_open"
 				to_chat(user, "You put the balaclava away, revealing your face.")
 				open = 1
-			if (1)
+			if(1)
 				flags_inv = HIDEFACE|BLOCKFACEHAIR
 				body_parts_covered = FACE
 				style_coverage = COVERS_MOUTH|COVERS_HAIR
@@ -58,6 +58,6 @@
 
 /obj/item/clothing/mask/balaclava/tactical
 	name = "tactical balaclava"
-	desc = "Designed to both hide identities and keep your face comfy and warm. This one is in Ironhammer colors."
+	desc = "Designed to both hide identities and keep your face comfy and warm. This one is in IronHammer colors."
 	icon_state = "swatclava"
 	item_state = "swatclava"

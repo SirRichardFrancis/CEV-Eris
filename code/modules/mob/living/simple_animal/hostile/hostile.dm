@@ -58,14 +58,14 @@ var/list/mydirs = list(NORTH, SOUTH, EAST, WEST, SOUTHWEST, NORTHWEST, NORTHEAST
 
 		if(istype(A, /obj/machinery/bot))
 			var/obj/machinery/bot/B = A
-			if (B.health > 0)
+			if(B.health > 0)
 				stance = HOSTILE_STANCE_ATTACK
 				T = B
 				break
 	return T
 
 
-/mob/living/simple_animal/hostile/proc/Found(var/atom/A)
+/mob/living/simple_animal/hostile/proc/Found(atom/A)
 	return
 
 /mob/living/simple_animal/hostile/proc/MoveToTarget()
@@ -173,11 +173,11 @@ var/list/mydirs = list(NORTH, SOUTH, EAST, WEST, SOUTHWEST, NORTHWEST, NORTHEAST
 	walk(src, 0)
 
 
-/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 7)
+/mob/living/simple_animal/hostile/proc/ListTargets(dist = 7)
 	var/list/L = hearers(src, dist)
 
-	for (var/mob/living/exosuit/M in GLOB.mechas_list)
-		if (M.z == z && get_dist(src, M) <= dist)
+	for(var/mob/living/exosuit/M in GLOB.mechas_list)
+		if(M.z == z && get_dist(src, M) <= dist)
 			L += M
 
 	return L
@@ -233,7 +233,7 @@ var/list/mydirs = list(NORTH, SOUTH, EAST, WEST, SOUTHWEST, NORTHWEST, NORTHEAST
 	target_mob = null
 	return
 
-/mob/living/simple_animal/hostile/proc/Shoot(var/target, var/start, var/user, var/bullet = 0)
+/mob/living/simple_animal/hostile/proc/Shoot(target, start, user, bullet = 0)
 	if(target == start)
 		return
 

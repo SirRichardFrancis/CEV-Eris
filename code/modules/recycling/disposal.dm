@@ -75,7 +75,7 @@
 	if(stat & BROKEN || !I || !user)
 		return
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	var/list/usable_qualities = list()
 	if(mode == DISPOSALS_OFF)
@@ -162,13 +162,13 @@
 		if(isanimal(user) && target != user)
 			return
 
-		if (target.mob_size == MOB_HUGE)
+		if(target.mob_size == MOB_HUGE)
 			return
 
-		src.add_fingerprint(user)
+		add_fingerprint(user)
 		var/target_loc = target.loc
 		var/msg
-		for (var/mob/V in viewers(usr))
+		for(var/mob/V in viewers(usr))
 			if(target == user && !user.stat && !user.weakened && !user.stunned && !user.paralysis)
 				V.show_message("[usr] starts climbing into the disposal.", 3)
 			if(target != user && !user.restrained() && !user.stat && !user.weakened && !user.stunned && !user.paralysis)
@@ -193,21 +193,21 @@
 			msg_admin_attack("[user] ([user.ckey]) placed [target] ([target.ckey]) in a disposals unit. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 		else
 			return
-		if (target.client)
+		if(target.client)
 			target.client.perspective = EYE_PERSPECTIVE
 			target.client.eye = src
 
 		target.simple_move_animation(src)
 		target.forceMove(src)
 
-		for (var/mob/C in viewers(src))
+		for(var/mob/C in viewers(src))
 			if(C == user)
 				continue
 			C.show_message(msg, 3)
 
 		update()
 		return
-	else if (istype(A, /obj/item))
+	else if(istype(A, /obj/item))
 		var/obj/item/I = A
 		if(!Adjacent(user) || !I.Adjacent(user) || user.stat)
 			return ..()
@@ -243,7 +243,7 @@
 // leave the disposal
 /obj/machinery/disposal/proc/go_out(mob/user)
 
-	if (user.client)
+	if(user.client)
 		user.client.eye = user.client.mob
 		user.client.perspective = MOB_PERSPECTIVE
 	user.forceMove(src.loc)
@@ -370,7 +370,7 @@
 		var/transfer_moles = (PUMP_MAX_FLOW_RATE/env.volume)*env.total_moles	//group_multiplier is divided out here
 		power_draw = pump_gas(src, env, air_contents, transfer_moles, active_power_usage)
 
-	if (power_draw > 0)
+	if(power_draw > 0)
 		use_power(power_draw)
 
 // perform a flush
@@ -451,7 +451,7 @@
 			visible_message("[H] dives into \the [src]!")
 			flush = TRUE
 		return
-	else if (istype(mover,/obj/item) && mover.throwing)
+	else if(istype(mover,/obj/item) && mover.throwing)
 		var/obj/item/I = mover
 		if(istype(I, /obj/item/projectile))
 			return
@@ -621,16 +621,16 @@
 
 	var/mob/living/U = user
 
-	if (U.stat || U.last_special <= world.time)
+	if(U.stat || U.last_special <= world.time)
 		return
 
 	U.last_special = world.time+100
 
-	if (src.loc)
-		for (var/mob/M in hearers(src.loc.loc))
+	if(src.loc)
+		for(var/mob/M in hearers(src.loc.loc))
 			to_chat(M, "<FONT size=[max(0, 5 - get_dist(src, M))]>CLONG, clong!</FONT>")
 
-	playsound(src.loc, 'sound/effects/clang.ogg', 50, 0, 0)
+	playsound(loc, 'sound/effects/clang.ogg', 50, 0, 0)
 
 	// called to vent all gas in holder to a location
 /obj/structure/disposalholder/proc/vent_gas(var/atom/location)
@@ -852,7 +852,7 @@
 	var/turf/T = src.loc
 	if(!T.is_plating())
 		return		// prevent interaction with T-scanner revealed pipes
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	if(QUALITY_WELDING in I.tool_qualities)
 		if(I.use_tool(user, src, WORKTIME_NORMAL, QUALITY_WELDING, FAILCHANCE_EASY, required_stat = STAT_MEC))
@@ -1132,7 +1132,7 @@
 
 		if(O.currTag)// Tag set
 			sort_tag = O.currTag
-			playsound(src.loc, 'sound/machines/twobeep.ogg', 100, 1)
+			playsound(loc, 'sound/machines/twobeep.ogg', 100, 1)
 			to_chat(user, SPAN_NOTICE("Changed tag to '[sort_tag]'."))
 			updatename()
 			updatedesc()
@@ -1200,7 +1200,7 @@
 
 		if(O.currTag)// Tag set
 			sortType = O.currTag
-			playsound(src.loc, 'sound/machines/twobeep.ogg', 100, 1)
+			playsound(loc, 'sound/machines/twobeep.ogg', 100, 1)
 			to_chat(user, "\blue Changed filter to '[sortType]'.")
 			updatename()
 			updatedesc()
@@ -1284,7 +1284,7 @@
 /obj/structure/disposalpipe/trunk/Destroy()
 	// Unlink trunk and disposal so that objets are not sent to nullspace
 	var/obj/machinery/disposal/D = linked
-	if (istype(D))
+	if(istype(D))
 		D.trunk = null
 	linked = null
 	return ..()
@@ -1294,7 +1294,7 @@
 	var/obj/machinery/disposal/D = locate() in src.loc
 	if(D)
 		linked = D
-		if (!D.trunk)
+		if(!D.trunk)
 			D.trunk = src
 
 	var/obj/structure/disposaloutlet/O = locate() in src.loc
@@ -1328,7 +1328,7 @@
 	var/turf/T = src.loc
 	if(!T.is_plating())
 		return		// prevent interaction with T-scanner revealed pipes
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	if(QUALITY_WELDING in I.tool_qualities)
 		if(I.use_tool(user, src, WORKTIME_NORMAL, QUALITY_WELDING, FAILCHANCE_EASY, required_stat = STAT_MEC))
@@ -1433,7 +1433,7 @@
 /obj/structure/disposaloutlet/attackby(var/obj/item/I, var/mob/user)
 	if(!I || !user)
 		return
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	var/list/usable_qualities = list()
 	if(mode<=0)
@@ -1483,7 +1483,7 @@
 
 // check if mob has client, if so restore client view on eject
 /mob/pipe_eject(var/direction)
-	if (src.client)
+	if(src.client)
 		src.client.perspective = MOB_PERSPECTIVE
 		src.client.eye = src
 

@@ -107,16 +107,16 @@
 	update_music()
 
 /obj/machinery/media/jukebox/proc/set_hacked(var/newhacked)
-	if (hacked == newhacked) return
+	if(hacked == newhacked) return
 	hacked = newhacked
-	if (hacked)
+	if(hacked)
 		tracks.Add(secret_tracks)
 	else
 		tracks.Remove(secret_tracks)
 	updateDialog()
 
 /obj/machinery/media/jukebox/attackby(obj/item/W as obj, mob/user as mob)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	var/tool_type = W.get_tool_type(user, list(QUALITY_WIRE_CUTTING, QUALITY_PULSING, QUALITY_BOLT_TURNING, QUALITY_SCREW_DRIVING), src)
 
@@ -132,7 +132,7 @@
 		if(QUALITY_BOLT_TURNING)
 			user.visible_message("<span class='warning'>[user] has [anchored ? "un" : ""]secured \the [src].</span>", "<span class='notice'>You [anchored ? "un" : ""]secure \the [src].</span>")
 			anchored = !anchored
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+			playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
 			power_change()
 			update_icon()
 			if(!anchored)
@@ -155,7 +155,7 @@
 
 
 /obj/machinery/media/jukebox/proc/update_tape(var/removed)
-	if (!removed)
+	if(!removed)
 		tracks.Add(get_tape_playlist())
 	else
 		tracks.Remove(get_tape_playlist())
@@ -191,7 +191,7 @@
 			overlays += "[state_base]-emagged"
 		else
 			overlays += "[state_base]-running"
-	if (panel_open)
+	if(panel_open)
 		overlays += "panel_open"
 
 /obj/machinery/media/jukebox/Topic(href, href_list)
@@ -223,7 +223,7 @@
 		StopPlaying()
 	else if(href_list["play"])
 		if(emagged)
-			playsound(src.loc, 'sound/items/AirHorn.ogg', 100, 1)
+			playsound(loc, 'sound/items/AirHorn.ogg', 100, 1)
 			for(var/mob/living/carbon/M in ohearers(6, src))
 				var/ear_safety = 0
 				if(ishuman(M))
@@ -284,7 +284,7 @@
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "jukebox.tmpl", title, 450, 600)
 		ui.set_initial_data(data)
 		ui.open()
@@ -361,7 +361,7 @@
 	set category = "Object"
 	set name = "Eject tape"
 
-	if (usr.stat)
+	if(usr.stat)
 		return
 
 	if(my_tape)

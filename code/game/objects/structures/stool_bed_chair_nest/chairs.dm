@@ -22,7 +22,7 @@
 			return
 		user.drop_item()
 		var/obj/structure/bed/chair/e_chair/E = new (src.loc, material.name)
-		playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
+		playsound(loc, 'sound/items/Deconstruct.ogg', 50, 1)
 		E.set_dir(dir)
 		E.part = SK
 		SK.loc = E
@@ -167,10 +167,10 @@
 		occupant.buckled = null
 		occupant.Move(src.loc, glide_size_override=glide_size)
 		occupant.buckled = src
-		if (occupant && (src.loc != occupant.loc))
-			if (propelled)
-				for (var/mob/O in src.loc)
-					if (O != occupant)
+		if(occupant && (src.loc != occupant.loc))
+			if(propelled)
+				for(var/mob/O in src.loc)
+					if(O != occupant)
 						Bump(O)
 			else
 				unbuckle_mob()
@@ -190,7 +190,7 @@
 		occupant.apply_effect(6, STUTTER, occupant.getarmor(def_zone, ARMOR_MELEE))
 		occupant.damage_through_armor(6, BRUTE, def_zone, ARMOR_MELEE)
 
-		playsound(src.loc, 'sound/weapons/punch1.ogg', 50, 1, -1)
+		playsound(loc, 'sound/weapons/punch1.ogg', 50, 1, -1)
 
 		if(isliving(A))
 

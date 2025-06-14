@@ -10,27 +10,24 @@
 	icon_state = "scanner_off"
 	density = TRUE
 	anchored = TRUE
-
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 60
 	active_power_usage = 10000	//10 kW. It's a big all-body scanner.
 
-/obj/machinery/bodyscanner/relaymove(mob/user as mob)
-	if (user.stat)
+/obj/machinery/bodyscanner/relaymove(mob/user)
+	if(user.stat)
 		return
-	src.go_out()
-	return
+	go_out()
 
 /obj/machinery/bodyscanner/verb/eject()
 	set src in oview(1)
 	set category = "Object"
 	set name = "Eject Body Scanner"
 
-	if (usr.stat != 0)
+	if(usr.stat != 0)
 		return
-	src.go_out()
+	go_out()
 	add_fingerprint(usr)
-	return
 
 /obj/machinery/bodyscanner/verb/move_inside()
 	set src in oview(1)
@@ -39,24 +36,23 @@
 
 	if(usr.stat)
 		return
-	if(src.occupant)
+	if(occupant)
 		to_chat(usr, SPAN_WARNING("The scanner is already occupied!"))
 		return
 	if(usr.abiotic())
 		to_chat(usr, SPAN_WARNING("The subject cannot have abiotic items on."))
 		return
 	set_occupant(usr)
-	src.add_fingerprint(usr)
-	return
+	add_fingerprint(usr)
 
 /obj/machinery/bodyscanner/proc/go_out()
-	if (!occupant || locked)
+	if(!occupant || locked)
 		return
 	for(var/obj/O in src)
 		O.forceMove(loc)
-	src.occupant.forceMove(loc)
-	src.occupant.reset_view()
-	src.occupant = null
+	occupant.forceMove(loc)
+	occupant.reset_view()
+	occupant = null
 	set_power_use(IDLE_POWER_USE)
 	update_icon()
 
@@ -64,16 +60,15 @@
 	if(Adjacent(user))
 		eject()
 
-/obj/machinery/bodyscanner/proc/set_occupant(var/mob/living/L)
+/obj/machinery/bodyscanner/proc/set_occupant(mob/living/L)
 	L.forceMove(src)
-	src.occupant = L
+	occupant = L
 	set_power_use(ACTIVE_POWER_USE)
 	update_icon()
-	src.add_fingerprint(usr)
+	add_fingerprint(usr)
 
-
-/obj/machinery/bodyscanner/affect_grab(var/mob/user, var/mob/target)
-	if (src.occupant)
+/obj/machinery/bodyscanner/affect_grab(mob/user, mob/target)
+	if(occupant)
 		to_chat(user, SPAN_NOTICE("The scanner is already occupied!"))
 		return
 	if(target.buckled)
@@ -83,30 +78,28 @@
 		to_chat(user, SPAN_NOTICE("Subject cannot have abiotic items on."))
 		return
 	set_occupant(target)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	return TRUE
 
-/obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
+/obj/machinery/bodyscanner/MouseDrop_T(mob/target, mob/user)
 	if(!ismob(target))
 		return
-	if (src.occupant)
+	if(src.occupant)
 		to_chat(user, SPAN_WARNING("The scanner is already occupied!"))
 		return
-	if (target.abiotic())
+	if(target.abiotic())
 		to_chat(user, SPAN_WARNING("Subject cannot have abiotic items on."))
 		return
-	if (target.buckled)
+	if(target.buckled)
 		to_chat(user, SPAN_NOTICE("Unbuckle the subject before attempting to move them."))
 		return
 	user.visible_message(
 		SPAN_NOTICE("\The [user] begins placing \the [target] into \the [src]."),
-		SPAN_NOTICE("You start placing \the [target] into \the [src].")
-	)
+		SPAN_NOTICE("You start placing \the [target] into \the [src]."))
 	if(!do_after(user, 30, src) || !Adjacent(target))
 		return
 	set_occupant(target)
-	src.add_fingerprint(user)
-	return
+	add_fingerprint(user)
 
 /obj/machinery/bodyscanner/explosion_act(target_power, explosion_handler/handler)
 	if(target_power > health)
@@ -136,16 +129,15 @@
 	density = TRUE
 	anchored = TRUE
 
-
 /obj/machinery/body_scanconsole/New()
 	..()
 	spawn(5)
 		for(var/dir in cardinal)
 			connected = locate(/obj/machinery/bodyscanner) in get_step(src, dir)
 			if(connected)
-				return
+				break
 
-/obj/machinery/body_scanconsole/attack_hand(user as mob)
+/obj/machinery/body_scanconsole/attack_hand(mob/user)
 	if(..())
 		return
 	if(stat & (NOPOWER|BROKEN))
@@ -158,12 +150,12 @@
 		return
 
 	var/dat
-	if (src.delete && src.temphtml) //Window in buffer but its just simple message, so nothing
+	if(src.delete && src.temphtml) //Window in buffer but its just simple message, so nothing
 		src.delete = src.delete
-	else if (!src.delete && src.temphtml) //Window in buffer - its a menu, dont add clear message
+	else if(!src.delete && src.temphtml) //Window in buffer - its a menu, dont add clear message
 		dat = text("[]<BR><BR><A href='?src=\ref[];clear=1'>Main Menu</A>", src.temphtml, src)
 	else
-		if (src.connected) //Is something connected?
+		if(src.connected) //Is something connected?
 			dat = format_occupant_data(src.connected.get_occupant_data())
 			dat += "<HR><A href='?src=\ref[src];print=1'>Print</A><BR>"
 		else
@@ -171,22 +163,21 @@
 
 	dat += text("<BR><A href='?src=\ref[];mach_close=scanconsole'>Close</A>", user)
 	user << browse(dat, "window=scanconsole;size=430x600")
-	return
 
 
 /obj/machinery/body_scanconsole/Topic(href, href_list)
-	if (..())
+	if(..())
 		return
 
-	if (href_list["print"])
-		if (!src.connected)
+	if(href_list["print"])
+		if(!src.connected)
 			to_chat(usr, "\icon[src]<span class='warning'>Error: No body scanner connected.</span>")
 			return
 		var/mob/living/carbon/human/occupant = src.connected.occupant
-		if (!src.connected.occupant)
+		if(!src.connected.occupant)
 			to_chat(usr, "\icon[src]<span class='warning'>The body scanner is empty.</span>")
 			return
-		if (!ishuman(occupant))
+		if(!ishuman(occupant))
 			to_chat(usr, "\icon[src]<span class='warning'>The body scanner cannot scan that lifeform.</span>")
 			return
 		var/obj/item/paper/R = new(src.loc)
@@ -196,7 +187,7 @@
 
 
 /obj/machinery/bodyscanner/proc/get_occupant_data()
-	if (!occupant || !ishuman(occupant))
+	if(!occupant || !ishuman(occupant))
 		return
 	var/mob/living/carbon/human/H = occupant
 	var/list/occupant_data = list(
@@ -229,7 +220,7 @@
 	return occupant_data
 
 
-/obj/machinery/body_scanconsole/proc/format_occupant_data(var/list/occ)
+/obj/machinery/body_scanconsole/proc/format_occupant_data(list/occ)
 	var/dat = "<font color='blue'><b>Scan performed at [occ["stationtime"]]</b></font><br>"
 	dat += "<font color='blue'><b>Occupant Statistics:</b></font><br>"
 	dat += text("ID Name: <i>[]</i><br>", occ["name"])
@@ -242,7 +233,7 @@
 		else
 			aux = "Dead"
 	dat += text("[]\t-Critical Health %: [] ([])</font><br>", ("<font color='[occ["health"] > 80 ? "blue" : "red"]'>"), occ["health"], aux)
-	if (occ["virus_present"])
+	if(occ["virus_present"])
 		dat += "<font color='red'>Viral pathogen detected in blood stream.</font><br>"
 	dat += text("[]\t-Brute Damage: []</font><br>", ("<font color='[occ["bruteloss"] < 60  ? "blue" : "red"]'>"), occ["bruteloss"])
 	dat += text("[]\t-Burn Severity: []</font><br>", ("<font color='[occ["fireloss"] < 60  ? "blue" : "red"]'>"), occ["fireloss"])
@@ -331,7 +322,7 @@
 
 		if(e.rejecting)
 			other_wounds += "being rejected"
-		if (e.implants.len)
+		if(e.implants.len)
 			var/unknown_body = FALSE
 			for(var/I in e.implants)
 				if(is_type_in_list(I,known_implants))
@@ -347,12 +338,12 @@
 					unknown_body = TRUE
 			if(unknown_body)
 				other_wounds += "Unknown body present"
-		if (e.is_stump() || e.burn_dam || e.brute_dam || other_wounds.len)
+		if(e.is_stump() || e.burn_dam || e.brute_dam || other_wounds.len)
 			significant = TRUE
 			dat += "<tr>"
 		if(!e.is_stump() && significant)
 			dat += "<td>[e.name]</td><td>[e.burn_dam]</td><td>[e.brute_dam]</td><td>[other_wounds.len ? jointext(other_wounds, ":") : "None"]</td>"
-		else if (significant)
+		else if(significant)
 			dat += "<td>[e.name]</td><td>-</td><td>-</td><td>Not Found</td>"
 		else
 			continue

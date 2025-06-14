@@ -23,7 +23,7 @@
 	for(var/mob/p in pilots)
 		p.setClickCooldown(timeout)
 
-/mob/living/exosuit/ClickOn(var/atom/A, var/params, var/mob/user = usr)
+/mob/living/exosuit/ClickOn(atom/A, params, mob/user = usr)
 	if(!user || incapacitated() || user.incapacitated())
 		return
 
@@ -128,7 +128,7 @@
 		return attack_self(user)
 	else if(adj && arms)
 		setClickCooldown(arms_action_delay())
-		playsound(src.loc, arms.punch_sound, 45 + 25 * (arms.melee_damage / 50), -1)
+		playsound(loc, arms.punch_sound, 45 + 25 * (arms.melee_damage / 50), -1)
 		if(user.a_intent == I_HURT)
 			return A.attack_generic(src, arms.melee_damage, "attacked")
 		else if(user.a_intent == I_DISARM && arms.can_force_doors)
@@ -191,7 +191,7 @@
 	if(!user || user.incapacitated())	return FALSE
 	if(!user.Adjacent(src)) 			return FALSE
 	if(issilicon(user))					return FALSE
-	if (user.buckled)
+	if(user.buckled)
 		to_chat(user, SPAN_WARNING("You cannot enter a mech while buckled, unbuckle first."))
 		return FALSE
 	if(body && body.has_hatch)

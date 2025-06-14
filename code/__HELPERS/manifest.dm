@@ -1,22 +1,22 @@
 // Generates a simple HTML crew manifest for use in various places
 
 //Intended for open manifest in separate window
-/proc/show_manifest(var/mob/user, var/datum/src_object = user, nano_state = GLOB.default_state)
+/proc/show_manifest(mob/user, datum/src_object = user, nano_state = GLOB.default_state)
 	var/list/data = list()
 	data["crew_manifest"] = html_crew_manifest(TRUE)
 
 	var/datum/nanoui/ui = SSnano.try_update_ui(user, src_object, "manifest", null, data, TRUE)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src_object, "manifest", "crew_manifest.tmpl", "Crew Manifest", 450, 600, state = nano_state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
 
-/proc/html_crew_manifest(var/monochrome, var/OOC)
+/proc/html_crew_manifest(monochrome, OOC)
 	var/list/dept_data = list(
 
 		list("names" = list(), "header" = "Command Staff", "flag" = COMMAND),
-		list("names" = list(), "header" = "Ironhammer Security", "flag" = IRONHAMMER),
+		list("names" = list(), "header" = "IronHammer Security", "flag" = IRONHAMMER),
 		list("names" = list(), "header" = "Moebius Medical", "flag" = MEDICAL),
 		list("names" = list(), "header" = "Moebius Research", "flag" = SCIENCE),
 		list("names" = list(), "header" = "Church of NeoTheology", "flag" = CHURCH),
@@ -60,16 +60,16 @@
 			if(trim(M.name) == trim(name))
 				matched = TRUE
 				var/temp = M.manifest_status(CR)
-				if (temp)
+				if(temp)
 					isactive[name] = temp
 				else
 					skip = TRUE
 				break
 
-		if (skip)
+		if(skip)
 			continue
 
-		if (!matched)
+		if(!matched)
 			isactive[name] = "Unknown"
 
 		var/datum/job/job = SSjob.occupations_by_name[rank]
@@ -106,7 +106,7 @@
 	dat = replacetext(dat, "\t", "")
 	return dat
 
-/proc/silicon_nano_crew_manifest(var/list/filter)
+/proc/silicon_nano_crew_manifest(list/filter)
 	var/list/filtered_entries = list()
 
 	for(var/mob/living/silicon/ai/ai in SSmobs.mob_list)
@@ -125,7 +125,7 @@
 		)))
 	return filtered_entries
 
-/proc/filtered_nano_crew_manifest(var/list/filter, var/blacklist = FALSE)
+/proc/filtered_nano_crew_manifest(list/filter, blacklist = FALSE)
 	var/list/filtered_entries = list()
 	for(var/datum/computer_file/report/crew_record/CR in department_crew_manifest(filter, blacklist))
 		filtered_entries.Add(list(list(

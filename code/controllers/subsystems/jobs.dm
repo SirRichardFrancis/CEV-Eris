@@ -165,7 +165,7 @@ SUBSYSTEM_DEF(job)
 		if(!playtime)
 			continue
 		playtime = trim(playtime)
-		if (!length(playtime))
+		if(!length(playtime))
 			continue
 		var/pos = findtext(playtime, "=")
 		var/name = null
@@ -343,7 +343,7 @@ SUBSYSTEM_DEF(job)
 			continue
 
 		var/datum/category_item/setup_option/core_implant/I = player.client.prefs.get_option("Core implant")
-		// cant be Neotheology without a cruciform
+		// cant be NeoTheology without a cruciform
 		if(job.department == DEPARTMENT_CHURCH && istype(I.implant_type,/obj/item/implant/core_implant/cruciform))
 			continue
 		if((job.current_positions < job.total_positions) || job.total_positions == -1)
@@ -677,7 +677,7 @@ SUBSYSTEM_DEF(job)
 			continue
 
 		job = trim(job)
-		if (!length(job))
+		if(!length(job))
 			continue
 
 		var/pos = findtext(job, "=")
@@ -757,7 +757,7 @@ SUBSYSTEM_DEF(job)
 
 	//Test the default spawn we just got
 	//Feeding true to the report var here will allow the user to choose to spawn anyway
-	if (SP && SP.can_spawn(H, rank, TRUE))
+	if(SP && SP.can_spawn(H, rank, TRUE))
 		return SP
 
 	else
@@ -765,11 +765,11 @@ SUBSYSTEM_DEF(job)
 		//Todo: Add in pref options to specify an ordered priority list for spawning locations
 		var/list/spawns = get_late_spawntypes()
 		var/list/possibilities = spawns.Copy() //The above proc returns a pointer to the list, we need to copy it so we dont modify the original
-		if (istype(SP))
+		if(istype(SP))
 			possibilities -= SP.name //Lets subtract the one we already tested
 		SP = null
 
-		while (possibilities.len)
+		while(possibilities.len)
 			//Randomly pick things from our shortlist
 			var/spawn_name = pick(possibilities)
 			SP = possibilities[spawn_name]

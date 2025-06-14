@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 function Extract-Variable {
 	param([string] $Path, [string] $Key)
 	foreach ($Line in Get-Content $Path) {
-		if ($Line.StartsWith("export $Key=")) {
+		if($Line.StartsWith("export $Key=")) {
 			return $Line.Substring("export $Key=".Length)
 		}
 	}
@@ -14,7 +14,7 @@ function Extract-Variable {
 }
 
 function Download-Node {
-	if (Test-Path $NodeTarget -PathType Leaf) {
+	if(Test-Path $NodeTarget -PathType Leaf) {
 		return
 	}
 	Write-Output "Downloading Node v$NodeVersion (may take a while)"
@@ -26,34 +26,23 @@ function Download-Node {
 ## Convenience variables
 $BaseDir = Split-Path $script:MyInvocation.MyCommand.Path
 $Cache = "$BaseDir\.cache"
-if ($Env:TG_BOOTSTRAP_CACHE) {
+if($Env:TG_BOOTSTRAP_CACHE) {
 	$Cache = $Env:TG_BOOTSTRAP_CACHE
 }
 
-# Get OS version
-$OSVersion = (Get-WmiObject -Class Win32_OperatingSystem).Version
-
-# Set Node version based on OS version
-if ($OSVersion -gt 6.1) {
- # Windows 7 is version 6.1
-	$NodeVersion = Extract-Variable -Path "$BaseDir\..\..\dependencies.sh" -Key "NODE_VERSION_COMPAT"
-}
-else {
-	$NodeVersion = Extract-Variable -Path "$BaseDir\..\..\dependencies.sh" -Key "NODE_VERSION_LTS"
-}
-
+$NodeVersion = Extract-Variable -Path "$BaseDir\..\..\dependencies.sh" -Key "NODE_VERSION_LTS"
 $NodeSource = "https://nodejs.org/download/release/v$NodeVersion/win-x64/node.exe"
 $NodeTargetDir = "$Cache\node-v$NodeVersion-x64"
 $NodeTarget = "$NodeTargetDir\node.exe"
 
 ## Just print the path and exit
-if ($Args.length -eq 1 -and $Args[0] -eq "Get-Path") {
+if($Args.length -eq 1 -and $Args[0] -eq "Get-Path") {
 	Write-Output "$NodeTargetDir"
 	exit 0
 }
 
 ## Just download node and exit
-if ($Args.length -eq 1 -and $Args[0] -eq "Download-Node") {
+if($Args.length -eq 1 -and $Args[0] -eq "Download-Node") {
 	Download-Node
 	exit 0
 }

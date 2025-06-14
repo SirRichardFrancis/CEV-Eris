@@ -1,5 +1,5 @@
 // Generic damage proc (slimes and monkeys).
-/atom/proc/attack_generic(mob/user as mob)
+/atom/proc/attack_generic(mob/user)
 	return 0
 
 /*
@@ -8,8 +8,7 @@
 
 	Otherwise pretty standard.
 */
-/mob/living/carbon/human/UnarmedAttack(var/atom/A, var/proximity, params)
-
+/mob/living/carbon/human/UnarmedAttack(atom/A, proximity, params)
 	if(!..())
 		return
 
@@ -22,7 +21,7 @@
 
 	A.attack_hand(src, params)
 
-/atom/proc/attack_hand(mob/user as mob, params)
+/atom/proc/attack_hand(mob/user, params)
 	. = FALSE
 	// if(!(interaction_flags_atom & INTERACT_ATOM_NO_FINGERPRINT_ATTACK_HAND))
 	// 	add_fingerprint(user)
@@ -88,10 +87,10 @@
 	// 	return ui_interact(user)
 	// return FALSE
 
-/mob/living/carbon/human/RestrainedClickOn(var/atom/A)
+/mob/living/carbon/human/RestrainedClickOn(atom/A)
 	return
 
-/mob/living/carbon/human/RangedAttack(var/atom/A)
+/mob/living/carbon/human/RangedAttack(atom/A)
 	if((istype(A, /turf/floor) || istype(A, /obj/structure/catwalk)) && isturf(loc) && shadow && !is_physically_disabled()) //Climbing through openspace
 		var/turf/T = get_turf(A)
 		if(T.Adjacent(shadow))
@@ -140,7 +139,7 @@
 	if(get_active_mutation(src, MUTATION_TELEKINESIS))
 		A.attack_tk(src)
 
-/mob/living/RestrainedClickOn(var/atom/A)
+/mob/living/RestrainedClickOn(atom/A)
 	return
 
 /*
@@ -148,30 +147,29 @@
 	Nothing happening here
 */
 
-/mob/living/carbon/slime/RestrainedClickOn(var/atom/A)
+/mob/living/carbon/slime/RestrainedClickOn(atom/A)
 	return
 
-/mob/living/carbon/slime/UnarmedAttack(var/atom/A, var/proximity)
-
+/mob/living/carbon/slime/UnarmedAttack(atom/A, proximity)
 	if(!..())
 		return
 
 	// Eating
 	if(Victim)
-		if (Victim == A)
+		if(Victim == A)
 			Feedstop()
 		return
 
 	var/mob/living/M = A
-	if (istype(M))
+	if(istype(M))
 
 		switch(src.a_intent)
-			if (I_HELP) // We just poke the other
+			if(I_HELP) // We just poke the other
 				M.visible_message(SPAN_NOTICE("[src] gently pokes [M]!"), SPAN_NOTICE("[src] gently pokes you!"))
-			if (I_DISARM) // We stun the target, with the intention to feed
+			if(I_DISARM) // We stun the target, with the intention to feed
 				var/stunprob = 1
 				var/power = max(0, min(10, (powerlevel + rand(0, 3))))
-				if (powerlevel > 0 && !isslime(A))
+				if(powerlevel > 0 && !isslime(A))
 					if(ishuman(M))
 						var/mob/living/carbon/human/H = M
 						stunprob *= H.species.siemens_coefficient
@@ -205,9 +203,9 @@
 				else
 					M.visible_message(SPAN_DANGER("[src] has tried to pounce at [M]!"), SPAN_DANGER("[src] has tried to pounce at you!"))
 				M.updatehealth()
-			if (I_GRAB) // We feed
+			if(I_GRAB) // We feed
 				Wrap(M)
-			if (I_HURT) // Attacking
+			if(I_HURT) // Attacking
 				A.attack_generic(src, (is_adult ? rand(20, 40) : rand(5, 25)), "glomped")
 	else
 		A.attack_generic(src, (is_adult ? rand(20, 40) : rand(5, 25)), "glomped") // Basic attack.
@@ -221,8 +219,7 @@
 /*
 	Animals
 */
-/mob/living/simple_animal/UnarmedAttack(var/atom/A, var/proximity)
-
+/mob/living/simple_animal/UnarmedAttack(atom/A, proximity)
 	if(!..())
 		return
 

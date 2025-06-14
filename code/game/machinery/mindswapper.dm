@@ -23,7 +23,7 @@
 /obj/machinery/mindswapper/update_icon()
 	if(stat & (NOPOWER|BROKEN))
 		return
-	if (operating)
+	if(operating)
 		icon_state = "mindswap_on"
 	else
 		icon_state = "mindswap_off"
@@ -73,14 +73,14 @@
 
 /obj/machinery/mindswapper/proc/performswapping(mob/user as mob)
 	operating = FALSE
-	playsound(src.loc, 'sound/effects/splat.ogg', 50, 1)
+	playsound(loc, 'sound/effects/splat.ogg', 50, 1)
 	operating = FALSE
 
 	// Get all candidates in range for the mind swapping
 	var/list/swapBoddies = list()
 	var/list/swapMinds = list()
 	for(var/mob/living/M in range(swap_range,src))
-		if (M.stat != DEAD && M.mob_classification != CLASSIFICATION_SYNTHETIC && !(M.type in swap_blacklist))  // candidates should not be dead
+		if(M.stat != DEAD && M.mob_classification != CLASSIFICATION_SYNTHETIC && !(M.type in swap_blacklist))  // candidates should not be dead
 			swapBoddies += M
 			swapMinds += M.ghostize(0)
 	// Shuffle the list containing the candidates' boddies

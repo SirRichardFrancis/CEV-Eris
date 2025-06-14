@@ -224,7 +224,7 @@
 		stored_units += store_mobs(stored_units)
 	opened = FALSE
 	update_icon()
-	playsound(src.loc, close_sound, 100, 1, -3)
+	playsound(loc, close_sound, 100, 1, -3)
 	density = TRUE
 	update_openspace()
 	return 1
@@ -267,9 +267,9 @@
 
 	locked = newlocked
 	if(locked)
-		playsound(src.loc, lock_on_sound, 60, 1, -3)
+		playsound(loc, lock_on_sound, 60, 1, -3)
 	else
-		playsound(src.loc, lock_off_sound, 60, 1, -3)
+		playsound(loc, lock_off_sound, 60, 1, -3)
 	if(user)
 		for(var/mob/O in viewers(user, 3))
 			O.show_message( SPAN_NOTICE("The [ctype] has been [locked ? null : "un"]locked by [user]."), 1)
@@ -508,7 +508,7 @@
 	step_towards(O, src.loc)
 	if(user != O)
 		user.show_viewers(SPAN_DANGER("[user] stuffs [O] into [src]!"))
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 /obj/structure/closet/attack_ai(mob/user)
 	if(isrobot(user) && Adjacent(user)) // Robots can open/close it, but not the AI.
@@ -522,7 +522,7 @@
 		to_chat(user, SPAN_NOTICE("It won't budge!"))
 
 /obj/structure/closet/attack_hand(mob/user as mob)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	if(secure && locked && !opened)
 		src.togglelock(user)
 	else
@@ -530,7 +530,7 @@
 
 // tk grab then use on self
 /obj/structure/closet/attack_self_tk(mob/user as mob)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	if(!src.toggle())
 		to_chat(usr, SPAN_NOTICE("It won't budge!"))
 
@@ -539,7 +539,7 @@
 		locked = FALSE
 		broken = TRUE
 		update_icon()
-		playsound(src.loc, "sparks", 60, 1)
+		playsound(loc, "sparks", 60, 1)
 		to_chat(user, SPAN_NOTICE("You unlock \the [src]."))
 		return TRUE
 
@@ -551,7 +551,7 @@
 			locked = TRUE
 		else
 			locked = FALSE
-			playsound(src.loc, 'sound/effects/sparks4.ogg', 75, 1)
+			playsound(loc, 'sound/effects/sparks4.ogg', 75, 1)
 		broken = TRUE
 	update_icon()
 	..()
@@ -565,7 +565,7 @@
 		return
 
 	if(ishuman(usr) || isrobot(usr))
-		src.add_fingerprint(usr)
+		add_fingerprint(usr)
 		src.toggle(usr)
 	else
 		to_chat(usr, SPAN_WARNING("This mob type can't use this verb."))
@@ -579,7 +579,7 @@
 		return
 
 	if(ishuman(usr) || isrobot(usr))
-		src.add_fingerprint(usr)
+		add_fingerprint(usr)
 		src.togglelock(usr)
 	else
 		to_chat(usr, SPAN_WARNING("This mob type can't use this verb."))
@@ -653,7 +653,7 @@
 			breakout = 0
 			return
 
-		playsound(src.loc, 'sound/effects/grillehit.ogg', 100, 1)
+		playsound(loc, 'sound/effects/grillehit.ogg', 100, 1)
 		animate_shake()
 		add_fingerprint(escapee)
 
@@ -661,7 +661,7 @@
 	breakout = 0
 	to_chat(escapee, SPAN_WARNING("You successfully break out!"))
 	visible_message(SPAN_DANGER("\The [escapee] successfully broke out of \the [src]!"))
-	playsound(src.loc, 'sound/effects/grillehit.ogg', 100, 1)
+	playsound(loc, 'sound/effects/grillehit.ogg', 100, 1)
 	break_open()
 	animate_shake()
 

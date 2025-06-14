@@ -1,6 +1,6 @@
 /obj/item/gun/projectile/paco
 	name = "FS HG .35 Auto \"Paco\""
-	desc = "A modern and reliable sidearm for the soldier in the field. Commonly issued as a sidearm to Ironhammer Operatives. Uses standard .35 and high capacity magazines."
+	desc = "A modern and reliable sidearm for the soldier in the field. Commonly issued as a sidearm to IronHammer Operatives. Uses standard .35 and high capacity magazines."
 	icon = 'icons/obj/guns/projectile/paco.dmi'
 	icon_state = "paco"
 	item_state = "paco"
@@ -33,16 +33,16 @@
 	var/iconstring = initial(icon_state)
 	var/itemstring = ""
 
-	if (ammo_magazine)
+	if(ammo_magazine)
 		iconstring += "_mag"
 		wielded_item_state = "_doble" + "_mag"
 	else
 		wielded_item_state = "_doble"
 
-	if (!ammo_magazine || !length(ammo_magazine.stored_ammo))
+	if(!ammo_magazine || !length(ammo_magazine.stored_ammo))
 		iconstring += "_slide"
 
-	if (silenced)
+	if(silenced)
 		iconstring += "_s"
 		itemstring += "_s"
 		wielded_item_state += "_s"

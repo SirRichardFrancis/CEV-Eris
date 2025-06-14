@@ -11,7 +11,7 @@
 
 
 /obj/item/book/ritual/attack_self(mob/living/carbon/human/H)
-	playsound(src.loc, pick('sound/items/BOOK_Turn_Page_1.ogg',\
+	playsound(loc, pick('sound/items/BOOK_Turn_Page_1.ogg',\
 		'sound/items/BOOK_Turn_Page_2.ogg',\
 		'sound/items/BOOK_Turn_Page_3.ogg',\
 		'sound/items/BOOK_Turn_Page_4.ogg',\
@@ -85,7 +85,7 @@
 	var/list/data = nano_ui_data(user, ui_key)
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "ritual_book.tmpl", "Bible", 550, 655)
@@ -130,8 +130,8 @@
 				var/datum/ritual/group/R = GLOB.all_rituals[RT]
 				incantation = R.get_group_say_phrase(ind)
 				break
-		if (incantation != "")
+		if(incantation != "")
 			//Speaking a long phrase takes a little time
-			if (do_after(H, length(incantation)*0.25))
+			if(do_after(H, length(incantation)*0.25))
 				H.say(incantation)
 	return TRUE

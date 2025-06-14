@@ -18,7 +18,7 @@
 	if(!src.can_close())
 		return FALSE
 
-	playsound(src.loc, close_sound, 15, 1, -3)
+	playsound(loc, close_sound, 15, 1, -3)
 	var/itemcount = 0
 	for(var/obj/O in get_turf(src))
 		if(itemcount >= storage_capacity)
@@ -103,7 +103,7 @@
 
 /obj/structure/closet/crate/contraband
 	name = "Poster crate"
-	desc = "A random assortment of posters manufactured by providers NOT listed under Nanotrasen's whitelist."
+	desc = "A random assortment of posters manufactured by providers NOT listed under NanoTrasen's whitelist."
 	icon_state = "crate"
 	icon_opened = "crateopen"
 	icon_closed = "crate"
@@ -228,7 +228,7 @@
 
 /obj/structure/closet/crate/large/close()
 	. = ..()
-	if (.)//we can hold up to one large item
+	if(.)//we can hold up to one large item
 		var/found = 0
 		for(var/obj/structure/S in src.loc)
 			if(S == src)
@@ -254,7 +254,7 @@
 
 /obj/structure/closet/crate/secure/large/close()
 	. = ..()
-	if (.)//we can hold up to one large item
+	if(.)//we can hold up to one large item
 		var/found = 0
 		for(var/obj/structure/S in src.loc)
 			if(S == src)

@@ -71,13 +71,13 @@
 /obj/machinery/door/unpowered/simple/close(forced = 0)
 	if(!can_close(forced))
 		return
-	playsound(src.loc, material.dooropen_noise, 100, 1)
+	playsound(loc, material.dooropen_noise, 100, 1)
 	..()
 
 /obj/machinery/door/unpowered/simple/open(forced = 0)
 	if(!can_open(forced))
 		return
-	playsound(src.loc, material.dooropen_noise, 100, 1)
+	playsound(loc, material.dooropen_noise, 100, 1)
 	..()
 
 /obj/machinery/door/unpowered/simple/set_broken()
@@ -101,7 +101,7 @@
 		set_broken()
 
 /obj/machinery/door/unpowered/simple/attackby(obj/item/I, mob/user)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	//Harm intent overrides other actions
 	if(src.density && user.a_intent == I_HURT && !istype(I, /obj/item/card))
@@ -123,7 +123,7 @@
 		var/obj/item/stack/stack = I
 		var/amount_needed = CEILING((maxHealth - health)/DOOR_REPAIR_AMOUNT, 1)
 		var/used = min(amount_needed,stack.amount)
-		if (used)
+		if(used)
 			to_chat(user, SPAN_NOTICE("You fit [used] [stack.singular_name]\s to damaged and broken parts on \the [src]."))
 			stack.use(used)
 			health = between(health, health + used*DOOR_REPAIR_AMOUNT, maxHealth)

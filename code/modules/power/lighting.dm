@@ -24,9 +24,9 @@
 
 /obj/machinery/light_construct/New()
 	..()
-	if (fixture_type == "bulb")
+	if(fixture_type == "bulb")
 		icon_state = "bulb-construct-stage1"
-	else if (istype(src, /obj/machinery/light_construct/floor))
+	else if(istype(src, /obj/machinery/light_construct/floor))
 		icon_state = "floortube-construct-stage1"
 
 /obj/machinery/light_construct/examine(mob/user, extra_description = "")
@@ -42,7 +42,7 @@
 
 /obj/machinery/light_construct/attackby(obj/item/I, mob/user)
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	var/list/usable_qualities = list()
 	if(stage == 2)
@@ -60,7 +60,7 @@
 			if(stage == 2)
 				if(I.use_tool(user, src, WORKTIME_NEAR_INSTANT, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 					switch(fixture_type)
-						if ("tube")
+						if("tube")
 							src.icon_state = "tube-empty"
 						if("bulb")
 							src.icon_state = "bulb-empty"
@@ -71,11 +71,11 @@
 					switch(fixture_type)
 
 						if("tube")
-							if (!istype(src, /obj/machinery/light_construct/floor))
+							if(!istype(src, /obj/machinery/light_construct/floor))
 								newlight = new /obj/machinery/light/built(src.loc)
 							else
 								newlight = new /obj/machinery/light/floor/built(src.loc)
-						if ("bulb")
+						if("bulb")
 							newlight = new /obj/machinery/light/small/built(src.loc)
 
 					newlight.dir = src.dir
@@ -89,8 +89,8 @@
 				if(I.use_tool(user, src, WORKTIME_FAST, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 					src.stage = 1
 					switch(fixture_type)
-						if ("tube")
-							if (!istype(src, /obj/machinery/light_construct/floor))
+						if("tube")
+							if(!istype(src, /obj/machinery/light_construct/floor))
 								src.icon_state = "tube-construct-stage1"
 							else
 								src.icon_state = "floortube-construct-stage1"
@@ -104,7 +104,7 @@
 
 		if(QUALITY_BOLT_TURNING)
 			if(stage == 1)
-				if (src.stage == 1)
+				if(src.stage == 1)
 					to_chat(user, "You begin deconstructing \a [src].")
 					if(I.use_tool(user, src, WORKTIME_NORMAL, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 						new /obj/item/stack/material/steel( get_turf(src.loc), sheets_refunded )
@@ -118,12 +118,12 @@
 			return
 
 	if(istype(I, /obj/item/stack/cable_coil))
-		if (src.stage != 1) return
+		if(src.stage != 1) return
 		var/obj/item/stack/cable_coil/coil = I
-		if (coil.use(1))
+		if(coil.use(1))
 			switch(fixture_type)
-				if ("tube")
-					if (!istype(src, /obj/machinery/light_construct/floor))
+				if("tube")
+					if(!istype(src, /obj/machinery/light_construct/floor))
 						src.icon_state = "tube-construct-stage2"
 					else
 						src.icon_state = "floortube-construct-stage2"
@@ -312,7 +312,7 @@
 	update_icon()
 	if(on == TRUE)
 		if(needsound == 1)
-			playsound(src.loc, 'sound/effects/Custom_lights.ogg', 65, 1)
+			playsound(loc, 'sound/effects/Custom_lights.ogg', 65, 1)
 			needsound = 0
 	else
 		needsound = 1
@@ -395,7 +395,7 @@
 			to_chat(user, SPAN_WARNING("There is a [fitting] already inserted."))
 			return
 		else
-			src.add_fingerprint(user)
+			add_fingerprint(user)
 			var/obj/item/light/L = I
 			if(istype(L, light_type))
 				user.drop_item()
@@ -441,7 +441,7 @@
 				M.show_message("[user.name] smashed the light!", 3, "You hear a tinkle of breaking glass", 2)
 			if(on && (I.flags & CONDUCT))
 				//if(!user.mutations & COLD_RESISTANCE)
-				if (prob(12))
+				if(prob(12))
 					electrocute_mob(user, get_area(src), src, 0.3)
 			broken()
 
@@ -477,7 +477,7 @@
 			s.set_up(3, 1, src)
 			s.start()
 			//if(!user.mutations & COLD_RESISTANCE)
-			if (prob(75))
+			if(prob(75))
 				electrocute_mob(user, get_area(src), src, rand(0.7,1))
 
 
@@ -602,7 +602,7 @@
 
 	if(!skip_sound_and_sparks)
 		if(status == LIGHT_OK || status == LIGHT_BURNED)
-			playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
+			playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 		if(on)
 			var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 			s.set_up(3, 1, src)
@@ -770,7 +770,7 @@
 		status = LIGHT_BROKEN
 		force = WEAPON_FORCE_WEAK
 		sharp = TRUE
-		playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
+		playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 		update()
 
 

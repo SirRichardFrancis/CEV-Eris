@@ -28,29 +28,29 @@ RSF
 		var/amount = min(M.get_amount(), round(max_stored_matter - stored_matter))
 		if(M.use(amount) && stored_matter < max_stored_matter)
 			stored_matter += amount
-			playsound(src.loc, 'sound/machines/click.ogg', 10, 1)
+			playsound(loc, 'sound/machines/click.ogg', 10, 1)
 			to_chat(user, "<span class='notice'>You load [amount] Compressed Matter into \the [src]</span>.")
 	else
 		..()
 /obj/item/rsf/attack_self(mob/user as mob)
-	playsound(src.loc, 'sound/effects/pop.ogg', 50, 0)
-	if (mode == 1)
+	playsound(loc, 'sound/effects/pop.ogg', 50, 0)
+	if(mode == 1)
 		mode = 2
 		to_chat(user, "Changed dispensing mode to 'Drinking Glass'")
 		return
-	if (mode == 2)
+	if(mode == 2)
 		mode = 3
 		to_chat(user, "Changed dispensing mode to 'Paper'")
 		return
-	if (mode == 3)
+	if(mode == 3)
 		mode = 4
 		to_chat(user, "Changed dispensing mode to 'Pen'")
 		return
-	if (mode == 4)
+	if(mode == 4)
 		mode = 5
 		to_chat(user, "Changed dispensing mode to 'Dice Pack'")
 		return
-	if (mode == 5)
+	if(mode == 5)
 		mode = 1
 		to_chat(user, "Changed dispensing mode to 'Cigarette'")
 		return
@@ -70,7 +70,7 @@ RSF
 	if(!istype(A, /obj/structure/table) && !istype(A, /turf/floor))
 		return
 
-	playsound(src.loc, 'sound/machines/click.ogg', 10, 1)
+	playsound(loc, 'sound/machines/click.ogg', 10, 1)
 	var/used_energy = 0
 	var/obj/product
 

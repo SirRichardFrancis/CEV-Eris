@@ -25,15 +25,15 @@
 	. = health - damage < 0 ? damage - (damage - health) : damage
 	. *= explosion_coverage
 	health -= damage
-	if (health <= 0)
-		if (!(destroyed ))
+	if(health <= 0)
+		if(!(destroyed ))
 			src.density = FALSE
 			src.destroyed = TRUE
 			new /obj/item/material/shard( src.loc )
 			playsound(src, "shatter", 70, 1)
 			update_icon()
 	else
-		playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
+		playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 	return
 
 /obj/structure/displaycase/update_icon()
@@ -51,17 +51,17 @@
 	return
 
 /obj/structure/displaycase/attack_hand(mob/user as mob)
-	if (src.destroyed && src.occupied)
+	if(src.destroyed && src.occupied)
 		new /obj/item/gun/energy/captain( src.loc )
 		to_chat(user, SPAN_NOTICE("You deactivate the hover field built into the case."))
 		src.occupied = 0
-		src.add_fingerprint(user)
+		add_fingerprint(user)
 		update_icon()
 		return
 	else
 		to_chat(usr, text(SPAN_WARNING("You kick the display case.")))
 		for(var/mob/O in oviewers())
-			if ((O.client && !( O.blinded )))
+			if((O.client && !( O.blinded )))
 				to_chat(O, SPAN_WARNING("[usr] kicks the display case."))
 		take_damage(2)
 		return

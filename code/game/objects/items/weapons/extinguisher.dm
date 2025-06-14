@@ -81,20 +81,20 @@
 		var/obj/o = target
 		var/amount = o.reagents.trans_to_obj(src, 50)
 		to_chat(user, SPAN_NOTICE("You fill [src] with [amount] units of the contents of [target]."))
-		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
+		playsound(loc, 'sound/effects/refill.ogg', 50, 1, -6)
 		return
 
-	if (!safety)
-		if (src.reagents.total_volume < 1)
+	if(!safety)
+		if(src.reagents.total_volume < 1)
 			to_chat(usr, SPAN_NOTICE("\The [src] is empty."))
 			return
 
-		if (world.time < src.last_use + 20)
+		if(world.time < src.last_use + 20)
 			return
 
 		src.last_use = world.time
 
-		playsound(src.loc, 'sound/effects/extinguish.ogg', 75, 1, -3)
+		playsound(loc, 'sound/effects/extinguish.ogg', 75, 1, -3)
 
 		var/direction = get_dir(src,target)
 

@@ -1,6 +1,6 @@
 //Takes: Area type as text string or as typepath OR an instance of the area.
 //Returns: A list of all turfs in areas of that type in the world.
-/proc/get_area_turfs(var/areatype, var/list/predicates)
+/proc/get_area_turfs(areatype, list/predicates)
 	if(!areatype) return null
 	if(istext(areatype)) areatype = text2path(areatype)
 	if(isarea(areatype))
@@ -16,27 +16,26 @@
 	return turfs
 
 //Returns everything in an area based on type, searching recursively
-/proc/get_area_contents(var/areatype)
+/proc/get_area_contents(areatype)
 	var/list/turf/LT = get_area_turfs(areatype)
 	var/list/contents = list()
-	for (var/turf/T in LT)
+	for(var/turf/T in LT)
 		contents |= T.get_recursive_contents()
 
 	return contents
 
-
-/proc/pick_area_turf(var/areatype, var/list/predicates)
+/proc/pick_area_turf(areatype, list/predicates)
 	var/list/turfs = get_area_turfs(areatype, predicates)
 	if(turfs && turfs.len)
 		return pick(turfs)
 
-/proc/is_matching_vessel(var/atom/A, var/atom/B)
+/proc/is_matching_vessel(atom/A, atom/B)
 	var/area/area1 = get_area(A)
 	var/area/area2 = get_area(B)
-	if (!area1 || !area2)
+	if(!area1 || !area2)
 		return FALSE
 
-	if (area1.vessel == area2.vessel)
+	if(area1.vessel == area2.vessel)
 		return TRUE
 	return FALSE
 
@@ -92,18 +91,14 @@
 	for(var/turf/floor/F in src.contents)
 		if(turf_clear(F))
 			turfs += F
-	if (turfs.len)
+	if(turfs.len)
 		return pick(turfs)
-	else return null
-
 
 /area/proc/random_hideable_turf()
 	var/list/turfs = list()
 	for(var/turf/floor/F in src.contents)
 		if(turf_clear(F))
-			if (F.flooring && (F.flooring.flags & TURF_HIDES_THINGS))
+			if(F.flooring && (F.flooring.flags & TURF_HIDES_THINGS))
 				turfs += F
-	if (turfs.len)
+	if(turfs.len)
 		return pick(turfs)
-	else return null
-

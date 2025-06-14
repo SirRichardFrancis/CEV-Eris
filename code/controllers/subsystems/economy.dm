@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(economy)
 	.=..()
 
 /datum/controller/subsystem/economy/fire()
-	if (world.time >= next_payday)
+	if(world.time >= next_payday)
 		next_payday = world.time + payday_interval
 		//Its payday time!
 		do_payday()
@@ -43,7 +43,7 @@ SUBSYSTEM_DEF(economy)
 			continue
 
 		if(!ED) // If no employer department found - payment is external
-			deposit_to_account(A, A.employer, "Payroll Funding", "Hansa payroll system", amount_to_pay)
+			deposit_to_account(A, A.employer, "Payroll Funding", "Hanza payroll system", amount_to_pay)
 			paid_external += amount_to_pay
 			continue
 		else

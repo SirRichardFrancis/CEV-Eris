@@ -6,7 +6,7 @@
 
 /obj/item/storage/case/attack_hand(mob/user as mob)
 
-	if ((loc != user) && opened)
+	if((loc != user) && opened)
 		open(user)
 
 	else
@@ -14,7 +14,7 @@
 		..()
 
 	update_icon()
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	return
 
 /obj/item/storage/case/open(var/mob/user)

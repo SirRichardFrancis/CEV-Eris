@@ -58,18 +58,18 @@ obj/structure/firedoor_assembly/attackby(obj/item/I, mob/user)
 
 	if(istype(I, /obj/item/stack/cable_coil) && !wired && anchored)
 		var/obj/item/stack/cable_coil/cable = I
-		if (cable.get_amount() < 1)
+		if(cable.get_amount() < 1)
 			to_chat(user, SPAN_WARNING("You need one length of coil to wire \the [src]."))
 			return
 		user.visible_message("[user] wires \the [src].", "You start to wire \the [src].")
 		if(do_after(user, 40, src) && !wired && anchored)
-			if (cable.use(1))
+			if(cable.use(1))
 				wired = 1
 				to_chat(user, SPAN_NOTICE("You wire \the [src]."))
 
 	else if(istype(I, /obj/item/electronics/airalarm) && wired)
 		if(anchored)
-			playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
+			playsound(loc, 'sound/items/Deconstruct.ogg', 50, 1)
 			user.visible_message(SPAN_WARNING("[user] has inserted a circuit into \the [src]!"),
 								  "You have inserted the circuit into \the [src]!")
 			new /obj/machinery/door/firedoor(src.loc)

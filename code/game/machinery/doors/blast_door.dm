@@ -153,7 +153,7 @@
 /obj/machinery/door/blast/proc/force_open()
 	src.operating = 1
 	flick(icon_state_opening, src)
-	playsound(src.loc, 'sound/machines/Custom_blastdooropen.ogg', 65, 0)
+	playsound(loc, 'sound/machines/Custom_blastdooropen.ogg', 65, 0)
 	src.density = FALSE
 	SEND_SIGNAL(src, COMSIG_DOOR_OPENED, TRUE)
 	update_nearby_tiles()
@@ -169,7 +169,7 @@
 	src.operating = 1
 	src.layer = closed_layer
 	flick(icon_state_closing, src)
-	playsound(src.loc, 'sound/machines/Custom_blastdoorclose.ogg', 65, 0)
+	playsound(loc, 'sound/machines/Custom_blastdoorclose.ogg', 65, 0)
 	src.density = TRUE
 	SEND_SIGNAL(src, COMSIG_DOOR_CLOSED, TRUE)
 	update_nearby_tiles()
@@ -227,7 +227,7 @@
 // Description: If we are clicked with crowbar or wielded fire axe, try to manually open the door.
 // This only works on broken doors or doors without power. Also allows repair with Plasteel.
 /obj/machinery/door/blast/attackby(obj/item/I, mob/user)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	if(user.a_intent == I_HURT)
 		hit(user, I, FALSE)
 		return
@@ -447,7 +447,7 @@
 // Parameters: 1 (forced - if true, the checks will be skipped)
 // Description: Opens the door. Does necessary checks. Automatically closes if autoclose is true
 /obj/machinery/door/blast/open(forced = FALSE)
-	if ((operating || (stat & BROKEN || stat & NOPOWER)) && !forced)
+	if((operating || (stat & BROKEN || stat & NOPOWER)) && !forced)
 		return
 	force_open()
 	if(autoclose)
@@ -459,7 +459,7 @@
 // Parameters: 1 (forced - if true, the checks will be skipped)
 // Description: Closes the door. Does necessary checks.
 /obj/machinery/door/blast/close(forced = FALSE)
-	if ((operating || (stat & BROKEN || stat & NOPOWER)) && !forced)
+	if((operating || (stat & BROKEN || stat & NOPOWER)) && !forced)
 		return
 	force_close()
 	crush()
