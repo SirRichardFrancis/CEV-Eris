@@ -3,14 +3,10 @@
 	desc = "A computer used to control a nearby holodeck."
 	icon_keyboard = "tech_key"
 	icon_screen = "holocontrol"
-
 	use_power = IDLE_POWER_USE
 	active_power_usage = 10000 //10kW for the scenery + 50W per holoitem
-
 	circuit = /obj/item/electronics/circuitboard/holodeckcontrol
-
 	var/item_power_usage = 50
-
 	var/area/holodeck/linkedholodeck = null
 	var/linkedholodeck_area
 	var/active = 0
@@ -31,7 +27,7 @@
 	supported_programs = list()
 	restricted_programs = list()
 
-/obj/machinery/computer/HolodeckControl/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/HolodeckControl/attack_hand(mob/user)
 	if(..())
 		return 1
 	user.set_machine(src)
@@ -39,43 +35,39 @@
 
 	dat += "<B>Holodeck Control System</B><BR>"
 	dat += "<HR>Current Loaded Programs:<BR>"
-
 	if(!linkedholodeck)
 		dat += SPAN_DANGER("Warning: Unable to locate holodeck.<br>")
-		user << browse(dat, "window=computer;size=400x500")
+		user << browse(HTML_SKELETON(dat), "window=computer;size=400x500")
 		onclose(user, "computer")
 		return
 
 	if(!supported_programs.len)
 		dat += SPAN_DANGER("Warning: No supported holo-programs loaded.<br>")
-		user << browse(dat, "window=computer;size=400x500")
+		user << browse(HTML_SKELETON(dat), "window=computer;size=400x500")
 		onclose(user, "computer")
 		return
 
 	for(var/prog in supported_programs)
-		dat += "<A href='?src=\ref[src];program=[supported_programs[prog]]'>([prog])</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];program=[supported_programs[prog]]'>([prog])</A><BR>"
 
 	dat += "<BR>"
-	dat += "<A href='?src=\ref[src];program=turnoff'>(Turn Off)</A><BR>"
-
+	dat += "<a href='byond://?src=\ref[src];program=turnoff'>(Turn Off)</A><BR>"
 	dat += "<BR>"
 	dat += "Please ensure that only holographic weapons are used in the holodeck if a combat simulation has been loaded.<BR>"
-
 	if(issilicon(user))
 		dat += "<BR>"
 		if(safety_disabled)
-			if (emagged)
+			if(emagged)
 				dat += "<font color=red><b>ERROR</b>: Cannot re-enable Safety Protocols.</font><BR>"
 			else
-				dat += "<A href='?src=\ref[src];AIoverride=1'>(<font color=green>Re-Enable Safety Protocols?</font>)</A><BR>"
+				dat += "<a href='byond://?src=\ref[src];AIoverride=1'>(<font color=green>Re-Enable Safety Protocols?</font>)</A><BR>"
 		else
-			dat += "<A href='?src=\ref[src];AIoverride=1'>(<font color=red>Override Safety Protocols?</font>)</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];AIoverride=1'>(<font color=red>Override Safety Protocols?</font>)</A><BR>"
 
 	dat += "<BR>"
-
 	if(safety_disabled)
 		for(var/prog in restricted_programs)
-			dat += "<A href='?src=\ref[src];program=[restricted_programs[prog]]'>(<font color=red>Begin [prog]</font>)</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];program=[restricted_programs[prog]]'>(<font color=red>Begin [prog]</font>)</A><BR>"
 			dat += "Ensure the holodeck is empty before testing.<BR>"
 			dat += "<BR>"
 		dat += "Safety Protocols are <font color=red> DISABLED </font><BR>"
@@ -83,20 +75,18 @@
 		dat += "Safety Protocols are <font color=green> ENABLED </font><BR>"
 
 	if(linkedholodeck.has_gravity)
-		dat += "Gravity is <A href='?src=\ref[src];gravity=1'><font color=green>(ON)</font></A><BR>"
+		dat += "Gravity is <a href='byond://?src=\ref[src];gravity=1'><font color=green>(ON)</font></A><BR>"
 	else
-		dat += "Gravity is <A href='?src=\ref[src];gravity=1'><font color=blue>(OFF)</font></A><BR>"
+		dat += "Gravity is <a href='byond://?src=\ref[src];gravity=1'><font color=blue>(OFF)</font></A><BR>"
 
-	user << browse(dat, "window=computer;size=400x500")
+	user << browse(HTML_SKELETON(dat), "window=computer;size=400x500")
 	onclose(user, "computer")
-	return
 
 /obj/machinery/computer/HolodeckControl/Topic(href, href_list)
 	if(..())
 		return 1
 
 	usr.set_machine(src)
-
 	if(href_list["program"])
 		var/prog = href_list["program"]
 		if(prog in holodeck_programs)
@@ -120,14 +110,12 @@
 
 	else if(href_list["gravity"])
 		toggleGravity(linkedholodeck)
+	updateUsrDialog()
 
-	src.updateUsrDialog()
-	return
-
-/obj/machinery/computer/HolodeckControl/emag_act(var/remaining_charges, var/mob/user as mob)
-	playsound(src.loc, 'sound/effects/sparks4.ogg', 75, 1)
+/obj/machinery/computer/HolodeckControl/emag_act(remaining_charges, mob/user)
+	playsound(loc, 'sound/effects/sparks4.ogg', 75, 1)
 	last_to_emag = user //emag again to change the owner
-	if (!emagged)
+	if(!emagged)
 		emagged = 1
 		safety_disabled = 1
 		update_projections()
@@ -140,7 +128,7 @@
 		..()
 
 /obj/machinery/computer/HolodeckControl/proc/update_projections()
-	if (safety_disabled)
+	if(safety_disabled)
 		item_power_usage = 250
 		for(var/obj/item/holo/esword/H in linkedholodeck)
 			H.damtype = BRUTE
@@ -151,7 +139,7 @@
 
 	for(var/mob/living/simple_animal/hostile/carp/holodeck/C in holographic_mobs)
 		C.set_safety(!safety_disabled)
-		if (last_to_emag)
+		if(last_to_emag)
 			C.friends = list(last_to_emag)
 
 //This could all be done better, but it works for now.
@@ -166,7 +154,7 @@
 /obj/machinery/computer/HolodeckControl/power_change()
 	var/oldstat
 	..()
-	if (stat != oldstat && active && (stat & NOPOWER))
+	if(stat != oldstat && active && (stat & NOPOWER))
 		emergencyShutdown()
 
 /obj/machinery/computer/HolodeckControl/Process()
@@ -174,9 +162,9 @@
 		if(!(get_turf(item) in linkedholodeck))
 			derez(item, 0)
 
-	if (!safety_disabled)
+	if(!safety_disabled)
 		for(var/mob/living/simple_animal/hostile/carp/holodeck/C in holographic_mobs)
-			if (get_area(C.loc) != linkedholodeck)
+			if(get_area(C.loc) != linkedholodeck)
 				holographic_mobs -= C
 				C.derez()
 
@@ -201,7 +189,7 @@
 				T.explosion_act(100, null)
 				T.hotspot_expose(1000,500,1)
 
-/obj/machinery/computer/HolodeckControl/proc/derez(var/obj/obj , var/silent = 1)
+/obj/machinery/computer/HolodeckControl/proc/derez(obj/obj , silent = 1)
 	holographic_objs.Remove(obj)
 
 	if(obj == null)
@@ -218,31 +206,25 @@
 		visible_message("The [oldobj.name] fades away!")
 	qdel(obj)
 
-/obj/machinery/computer/HolodeckControl/proc/checkInteg(var/area/A)
+/obj/machinery/computer/HolodeckControl/proc/checkInteg(area/A)
 	for(var/turf/T in A)
 		if(istype(T, /turf/space))
 			return 0
-
 	return 1
 
 //Why is it called toggle if it doesn't toggle?
-/obj/machinery/computer/HolodeckControl/proc/togglePower(var/toggleOn = 0)
+/obj/machinery/computer/HolodeckControl/proc/togglePower(toggleOn = 0)
 	if(toggleOn)
 		loadProgram(holodeck_programs["emptycourt"], 0)
 	else
 		loadProgram(holodeck_programs["turnoff"], 0)
-
-
-
 		if(!linkedholodeck.has_gravity)
 			linkedholodeck.has_gravity = TRUE
 			linkedholodeck.update_gravity()
-
 		active = 0
 		set_power_use(IDLE_POWER_USE)
 
-
-/obj/machinery/computer/HolodeckControl/proc/loadProgram(var/datum/holodeck_program/HP, var/check_delay = 1)
+/obj/machinery/computer/HolodeckControl/proc/loadProgram(datum/holodeck_program/HP, check_delay = 1)
 	if(!HP)
 		return
 	var/area/A = locate(HP.target)
@@ -261,7 +243,6 @@
 	last_change = world.time
 	active = 1
 	set_power_use(ACTIVE_POWER_USE)
-
 	for(var/item in holographic_objs)
 		derez(item)
 
@@ -303,11 +284,9 @@
 			if(istype(L, /obj/landmark/mob/holocarprandom))
 				if(prob(4)) //With 4 spawn points, carp should only appear 15% of the time.
 					holographic_mobs += new /mob/living/simple_animal/hostile/carp/holodeck(L.loc)
-
 		update_projections()
 
-
-/obj/machinery/computer/HolodeckControl/proc/toggleGravity(var/area/A)
+/obj/machinery/computer/HolodeckControl/proc/toggleGravity(area/A)
 	if(world.time < (last_gravity_change + 25))
 		if(world.time < (last_gravity_change + 15))//To prevent super-spam clicking
 			return
@@ -319,8 +298,6 @@
 	last_gravity_change = world.time
 	active = 1
 	set_power_use(ACTIVE_POWER_USE)
-
-
 	if(A.has_gravity)
 		A.has_gravity = FALSE
 	else
@@ -330,10 +307,7 @@
 /obj/machinery/computer/HolodeckControl/proc/emergencyShutdown()
 	//Turn it back to the regular non-holographic room
 	loadProgram(holodeck_programs["turnoff"], 0)
-
-
 	linkedholodeck.has_gravity = TRUE
-
 	active = 0
 	set_power_use(IDLE_POWER_USE)
 
@@ -346,9 +320,7 @@
 	"Texas Saloon"		= "texas",
 	"Space Bar"			= "spacebar",
 	"Wireframe Bar"		= "wireframe",
-	"Industrial Pub"			= "industrial"
-	)
+	"Industrial Pub"			= "industrial")
 
 	restricted_programs = list(
-	"Industrial Arenas"		= "industrial_arena"
-	)
+	"Industrial Arenas"		= "industrial_arena")

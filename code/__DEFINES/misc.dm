@@ -273,9 +273,9 @@
 
 #define any2ref(x) "\ref[x]"
 
-#define MAP_IMAGE_PATH "nano/images/[SSmapping.path]/"
+#define MAP_IMAGE_PATH "nano/images/eris/"
 
-#define map_image_file_name(z_level) "[SSmapping.path]-[z_level].png"
+#define map_image_file_name(z_level) "eris-[z_level].png"
 
 // Spawns multiple objects of the same type
 #define cast_new(type, num, args...) if((num) == 1) { new type(args) } else { for(var/i in 1 to num) { new type(args) } }
@@ -304,17 +304,10 @@
 
 #define get_area(A) (get_step(A, 0)?.loc)
 
-
-//Misc text define. Does 4 spaces. Used as a makeshift tabulator.
-#define FOURSPACES "&nbsp;&nbsp;&nbsp;&nbsp;"
-
-
-
 //Planet habitability class
 #define HABITABILITY_IDEAL  1
 #define HABITABILITY_OKAY  2
 #define HABITABILITY_BAD  3
-
 
 //Map template flags
 #define TEMPLATE_FLAG_ALLOW_DUPLICATES 1 // Lets multiple copies of the template to be spawned
@@ -323,9 +316,7 @@
 #define TEMPLATE_FLAG_NO_RUINS         8 // if it should forbid ruins from spawning on top of it
 #define TEMPLATE_FLAG_NO_RADS          16// Removes all radiation from the template after spawning.
 
-
 //Flags for exoplanet ruin picking
-
 #define RUIN_HABITAT 	1		//long term habitat
 #define RUIN_HUMAN 		2		//human-made structure
 #define RUIN_ALIEN 		4		//artificial structure of an unknown origin
@@ -336,9 +327,9 @@
 #define NEWorINITIAL(variable, newvalue) variable = newvalue ? newvalue : initial(variable)
 
 //Matricies
-#define MATRIX_GREYSCALE list(0.33, 0.33, 0.33,\
-                              0.33, 0.33, 0.33,\
-                              0.33, 0.33, 0.33)
+#define MATRIX_GREYSCALE list(	0.33, 0.33, 0.33,\
+								0.33, 0.33, 0.33,\
+								0.33, 0.33, 0.33)
 
 //different types of atom colorations
 #define ADMIN_COLOUR_PRIORITY 		1 //only used by rare effects like greentext coloring mobs and when admins varedit color

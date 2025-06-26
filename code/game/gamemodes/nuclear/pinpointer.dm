@@ -30,7 +30,7 @@
 		to_chat(usr, SPAN_NOTICE("You deactivate the pinpointer"))
 
 /obj/item/pinpointer/attackby(obj/item/I, mob/user, params)
-	if (!slot && istype(I, /obj/item/disk/nuclear))
+	if(!slot && istype(I, /obj/item/disk/nuclear))
 		usr.drop_item()
 		I.loc = src
 		src.slot = I
@@ -46,7 +46,7 @@
 /obj/item/pinpointer/update_icon()
 	cut_overlays()
 
-	if (slot)
+	if(slot)
 		var/tooloverlay = "disknukeloaded"
 		overlays += (tooloverlay)
 
@@ -242,7 +242,7 @@
 	var/mode = 0	//Mode 0 locates disk, mode 1 locates the shuttle
 	var/obj/machinery/computer/shuttle_control/multi/mercenary/home
 
-/obj/item/pinpointer/nukeop/attack_self(mob/user as mob)
+/obj/item/pinpointer/nukeop/attack_self(mob/user)
 	if(!active)
 		active = TRUE
 		if(!mode)

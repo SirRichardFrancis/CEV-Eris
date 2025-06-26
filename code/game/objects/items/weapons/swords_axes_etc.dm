@@ -22,7 +22,7 @@
 	structure_damage_factor = STRUCTURE_DAMAGE_BLUNT
 
 /obj/item/melee/classic_baton/attack(mob/M, mob/living/user)
-/*	if ((CLUMSY in user.mutations) && prob(50))
+/*	if((CLUMSY in user.mutations) && prob(50))
 		to_chat(user, SPAN_WARNING("You club yourself over the head."))
 		user.Weaken(3 * force)
 		if(ishuman(user))
@@ -75,7 +75,7 @@
 		force = 3//not so robust now
 		attack_verb = list("hit", "punched")
 
-	playsound(src.loc, 'sound/weapons/empty.ogg', 50, 1)
+	playsound(loc, 'sound/weapons/empty.ogg', 50, 1)
 	add_fingerprint(user)
 
 	if(blood_overlay && blood_DNA && (blood_DNA.len >= 1)) //updates blood overlay, if any
@@ -92,7 +92,7 @@
 
 /obj/item/melee/telebaton/attack(mob/target, mob/living/user)
 	if(on)
-/*		if ((CLUMSY in user.mutations) && prob(50))
+/*		if((CLUMSY in user.mutations) && prob(50))
 			to_chat(user, SPAN_WARNING("You club yourself over the head."))
 			user.Weaken(3 * force)
 			if(ishuman(user))
@@ -103,7 +103,7 @@
 			return
 */
 		if(..())
-			//playsound(src.loc, "swing_hit", 50, 1, -1)
+			//playsound(loc, "swing_hit", 50, 1, -1)
 			return
 	else
 		return ..()

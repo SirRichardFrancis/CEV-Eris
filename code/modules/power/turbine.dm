@@ -40,13 +40,10 @@
 	var/door_status = 0
 
 // the inlet stage of the gas turbine electricity generator
-
 /obj/machinery/compressor/New()
 	..()
-
 	gas_contained = new
 	inturf = get_step(src, dir)
-
 	spawn(5)
 		turbine = locate() in get_step(src, get_dir(inturf, src))
 		if(!turbine)
@@ -54,7 +51,6 @@
 		else
 			turbine.stat &= !BROKEN
 			turbine.compressor = src
-
 
 #define COMPFRICTION 5e5
 #define COMPSTARTERLOAD 2800
@@ -74,10 +70,7 @@
 	//var/transfer_moles = rpm/10000*capacity
 	var/datum/gas_mixture/removed = inturf.remove_air(transfer_moles)
 	gas_contained.merge(removed)
-
 	rpm = max(0, rpm - (rpm*rpm)/COMPFRICTION)
-
-
 	if(starter && !(stat & NOPOWER))
 		use_power(2800)
 		if(rpm<1000)
@@ -85,8 +78,6 @@
 	else
 		if(rpm<1000)
 			rpmtarget = 0
-
-
 
 	if(rpm>50000)
 		overlays += image('icons/obj/pipes.dmi', "comp-o4", FLY_LAYER)
@@ -96,15 +87,12 @@
 		overlays += image('icons/obj/pipes.dmi', "comp-o2", FLY_LAYER)
 	else if(rpm>500)
 		overlays += image('icons/obj/pipes.dmi', "comp-o1", FLY_LAYER)
-	 //TODO: DEFERRED
+	//TODO: DEFERRED
 
 /obj/machinery/power/turbine/New()
 	..()
-
 	outturf = get_step(src, dir)
-
 	spawn(5)
-
 		compressor = locate() in get_step(src, get_dir(outturf, src))
 		if(!compressor)
 			stat |= BROKEN
@@ -112,11 +100,9 @@
 			compressor.stat &= !BROKEN
 			compressor.turbine = src
 
-
 #define TURBPRES 9000000
 #define TURBGENQ 20000
 #define TURBGENG 0.8
-
 /obj/machinery/power/turbine/Process()
 	if(!compressor.starter)
 		return
@@ -143,36 +129,26 @@
 	if(lastgen > 100)
 		overlays += image('icons/obj/pipes.dmi', "turb-o", FLY_LAYER)
 
-
 	for(var/mob/M in viewers(1, src))
-		if ((M.client && M.machine == src))
+		if((M.client && M.machine == src))
 			src.interact(M)
 	AutoUpdateAI(src)
 
 /obj/machinery/power/turbine/interact(mob/user)
-
-	if ( (get_dist(src, user) > 1 ) || (stat & (NOPOWER|BROKEN)) && (!isAI(user)) )
+	if((get_dist(src, user) > 1 ) || (stat & (NOPOWER|BROKEN)) && (!isAI(user)))
 		user.machine = null
 		user << browse(null, "window=turbine")
 		return
 
 	user.machine = src
-
 	var/t = "<TT><B>Gas Turbine Generator</B><HR><PRE>"
-
 	t += "Generated power : [round(lastgen)] W<BR><BR>"
-
 	t += "Turbine: [round(compressor.rpm)] RPM<BR>"
-
-	t += "Starter: [ compressor.starter ? "<A href='?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];str=1'>On</A>"]"
-
-	t += "</PRE><HR><A href='?src=\ref[src];close=1'>Close</A>"
-
+	t += "Starter: [ compressor.starter ? "<a href='byond://?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <a href='byond://?src=\ref[src];str=1'>On</A>"]"
+	t += "</PRE><HR><a href='byond://?src=\ref[src];close=1'>Close</A>"
 	t += "</TT>"
-	user << browse(t, "window=turbine")
+	user << browse(HTML_SKELETON(t), "window=turbine")
 	onclose(user, "turbine")
-
-	return
 
 /obj/machinery/power/turbine/Topic(href, href_list)
 	..()
@@ -193,23 +169,11 @@
 
 		spawn(0)
 			for(var/mob/M in viewers(1, src))
-				if ((M.client && M.machine == src))
+				if((M.client && M.machine == src))
 					src.interact(M)
-
 	else
 		usr << browse(null, "window=turbine")
 		usr.machine = null
-
-	return
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 /obj/machinery/computer/turbine_computer/New()
 	..()
@@ -222,44 +186,39 @@
 			if(P.id == id)
 				doors += P
 
-
-/obj/machinery/computer/turbine_computer/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/turbine_computer/attack_hand(mob/user)
 	user.machine = src
 	var/dat
 	if(src.compressor)
 		dat += {"<BR><B>Gas turbine remote control system</B><HR>
-		\nTurbine status: [ src.compressor.starter ? "<A href='?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];str=1'>On</A>"]
+		\nTurbine status: [ src.compressor.starter ? "<a href='byond://?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <a href='byond://?src=\ref[src];str=1'>On</A>"]
 		\n<BR>
 		\nTurbine speed: [src.compressor.rpm]rpm<BR>
 		\nPower currently being generated: [src.compressor.turbine.lastgen]W<BR>
 		\nInternal gas temperature: [src.compressor.gas_contained.temperature]K<BR>
-		\nVent doors: [ src.door_status ? "<A href='?src=\ref[src];doors=1'>Closed</A> <B>Open</B>" : "<B>Closed</B> <A href='?src=\ref[src];doors=1'>Open</A>"]
-		\n</PRE><HR><A href='?src=\ref[src];view=1'>View</A>
-		\n</PRE><HR><A href='?src=\ref[src];close=1'>Close</A>
+		\nVent doors: [ src.door_status ? "<a href='byond://?src=\ref[src];doors=1'>Closed</A> <B>Open</B>" : "<B>Closed</B> <a href='byond://?src=\ref[src];doors=1'>Open</A>"]
+		\n</PRE><HR><a href='byond://?src=\ref[src];view=1'>View</A>
+		\n</PRE><HR><a href='byond://?src=\ref[src];close=1'>Close</A>
 		\n<BR>
 		\n"}
 	else
 		dat += SPAN_DANGER("No compatible attached compressor found.")
 
-	user << browse(dat, "window=computer;size=400x500")
+	user << browse(HTML_SKELETON(dat), "window=computer;size=400x500")
 	onclose(user, "computer")
-	return
-
-
 
 /obj/machinery/computer/turbine_computer/Topic(href, href_list)
 	if(..())
 		return 1
 
 	usr.machine = src
-
-	if( href_list["view"] )
+	if(href_list["view"])
 		usr.client.eye = src.compressor
 	else if( href_list["str"] )
 		src.compressor.starter = !src.compressor.starter
-	else if (href_list["doors"])
+	else if(href_list["doors"])
 		for(var/obj/machinery/door/blast/D in src.doors)
-			if (door_status == 0)
+			if(door_status == 0)
 				spawn( 0 )
 					D.open()
 					door_status = 1
@@ -271,9 +230,7 @@
 		usr << browse(null, "window=computer")
 		usr.machine = null
 		return
-
-	src.updateUsrDialog()
+	updateUsrDialog()
 
 /obj/machinery/computer/turbine_computer/Process()
-	src.updateDialog()
-	return
+	updateDialog()

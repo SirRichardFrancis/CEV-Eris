@@ -437,7 +437,7 @@
 	. = ..()
 
 /obj/item/clothing/suit/space/void/riggedvoidsuit/attack_hand(mob/user)
-	if ((is_worn() || is_held()) && !pockets.handle_attack_hand(user))
+	if((is_worn() || is_held()) && !pockets.handle_attack_hand(user))
 		return TRUE
 	..(user)
 
@@ -458,7 +458,7 @@
 //NT
 
 /obj/item/clothing/head/space/void/NTvoid
-	name = "neotheology voidsuit helmet"
+	name = "NeoTheology voidsuit helmet"
 	desc = "A voidsuit helmet designed by NeoTheology with a most holy mix of biomatter and inorganic matter."
 	icon_state = "ntvoidhelmet"
 	item_state = "ntvoidhelmet"
@@ -477,7 +477,7 @@
 	light_overlay = "helmet_light"
 
 /obj/item/clothing/suit/space/void/NTvoid
-	name = "neotheology voidsuit"
+	name = "NeoTheology voidsuit"
 	desc = "A voidsuit designed by NeoTheology with a most holy mix of biomatter and inorganic matter."
 	icon_state = "ntvoid"
 	item_state = "ntvoid"
@@ -485,7 +485,7 @@
 	slowdown = 0.3
 	flags_inv = HIDEGLOVES|HIDEJUMPSUIT|HIDETAIL
 	armor = list(
-	    melee = 12,
+		melee = 12,
 		bullet = 11,
 		energy = 12,
 		bomb = 50,

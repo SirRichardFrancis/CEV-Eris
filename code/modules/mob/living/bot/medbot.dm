@@ -31,12 +31,10 @@
 
 /mob/living/bot/medbot/Life()
 	..()
-
 	if(!on)
 		return
 
 	if(!client)
-
 		if(vocal && prob(1))
 			var/message = pick("Radar, put a mask on!", "There's always a catch, and it's the best there is.", "I knew it, I should've been a plastic surgeon.", "What kind of medbay is this? Everyone's dropping like dead flies.", "Delicious!")
 			say(message)
@@ -73,7 +71,7 @@
 						last_newpatient_speak = world.time
 					break
 
-/mob/living/bot/medbot/UnarmedAttack(var/mob/living/carbon/human/H, var/proximity)
+/mob/living/bot/medbot/UnarmedAttack(mob/living/carbon/human/H, proximity)
 	if(!..())
 		return
 
@@ -124,44 +122,44 @@
 		icon_state = "medibot[on]"
 	..()
 
-/mob/living/bot/medbot/attack_hand(var/mob/user)
+/mob/living/bot/medbot/attack_hand(mob/user)
 	var/dat
 	dat += "<TT><B>Automatic Medical Unit v1.0</B></TT><BR><BR>"
-	dat += "Status: <A href='?src=\ref[src];power=1'>[on ? "On" : "Off"]</A><BR>"
+	dat += "Status: <a href='byond://?src=\ref[src];power=1'>[on ? "On" : "Off"]</A><BR>"
 	dat += "Maintenance panel is [open ? "opened" : "closed"]<BR>"
 	dat += "Beaker: "
-	if (reagent_glass)
-		dat += "<A href='?src=\ref[src];eject=1'>Loaded \[[reagent_glass.reagents.total_volume]/[reagent_glass.reagents.maximum_volume]\]</a>"
+	if(reagent_glass)
+		dat += "<a href='byond://?src=\ref[src];eject=1'>Loaded \[[reagent_glass.reagents.total_volume]/[reagent_glass.reagents.maximum_volume]\]</a>"
 	else
 		dat += "None Loaded"
 	dat += "<br>Behaviour controls are [locked ? "locked" : "unlocked"]<hr>"
 	if(!locked || issilicon(user))
 		dat += "<TT>Healing Threshold: "
-		dat += "<a href='?src=\ref[src];adj_threshold=-10'>--</a> "
-		dat += "<a href='?src=\ref[src];adj_threshold=-5'>-</a> "
+		dat += "<a href='byond://?src=\ref[src];adj_threshold=-10'>--</a> "
+		dat += "<a href='byond://?src=\ref[src];adj_threshold=-5'>-</a> "
 		dat += "[heal_threshold] "
-		dat += "<a href='?src=\ref[src];adj_threshold=5'>+</a> "
-		dat += "<a href='?src=\ref[src];adj_threshold=10'>++</a>"
+		dat += "<a href='byond://?src=\ref[src];adj_threshold=5'>+</a> "
+		dat += "<a href='byond://?src=\ref[src];adj_threshold=10'>++</a>"
 		dat += "</TT><br>"
 
 		dat += "<TT>Injection Level: "
-		dat += "<a href='?src=\ref[src];adj_inject=-5'>-</a> "
+		dat += "<a href='byond://?src=\ref[src];adj_inject=-5'>-</a> "
 		dat += "[injection_amount] "
-		dat += "<a href='?src=\ref[src];adj_inject=5'>+</a> "
+		dat += "<a href='byond://?src=\ref[src];adj_inject=5'>+</a> "
 		dat += "</TT><br>"
 
 		dat += "Reagent Source: "
-		dat += "<a href='?src=\ref[src];use_beaker=1'>[use_beaker ? "Loaded Beaker (When available)" : "Internal Synthesizer"]</a><br>"
+		dat += "<a href='byond://?src=\ref[src];use_beaker=1'>[use_beaker ? "Loaded Beaker (When available)" : "Internal Synthesizer"]</a><br>"
 
-		dat += "Treatment report is [declare_treatment ? "on" : "off"]. <a href='?src=\ref[src];declaretreatment=[1]'>Toggle</a><br>"
+		dat += "Treatment report is [declare_treatment ? "on" : "off"]. <a href='byond://?src=\ref[src];declaretreatment=[1]'>Toggle</a><br>"
 
-		dat += "The speaker switch is [vocal ? "on" : "off"]. <a href='?src=\ref[src];togglevoice=[1]'>Toggle</a><br>"
+		dat += "The speaker switch is [vocal ? "on" : "off"]. <a href='byond://?src=\ref[src];togglevoice=[1]'>Toggle</a><br>"
 
-	user << browse("<HEAD><TITLE>Medibot v1.0 controls</TITLE></HEAD>[dat]", "window=automed")
+	user << browse(HTML_SKELETON("<HEAD><TITLE>Medibot v1.0 controls</TITLE></HEAD>[dat]"), "window=automed")
 	onclose(user, "automed")
 	return
 
-/mob/living/bot/medbot/attackby(var/obj/item/O, var/mob/user)
+/mob/living/bot/medbot/attackby(obj/item/O, mob/user)
 	if(istype(O, /obj/item/reagent_containers/glass))
 		if(locked)
 			to_chat(user, SPAN_NOTICE("You cannot insert a beaker because the panel is locked."))
@@ -183,8 +181,8 @@
 		return
 	usr.set_machine(src)
 	add_fingerprint(usr)
-	if ((href_list["power"]) && access_scanner.allowed(usr))
-		if (on)
+	if((href_list["power"]) && access_scanner.allowed(usr))
+		if(on)
 			turn_off()
 		else
 			turn_on()
@@ -208,23 +206,23 @@
 	else if((href_list["use_beaker"]) && (!locked || issilicon(usr)))
 		use_beaker = !use_beaker
 
-	else if (href_list["eject"] && (!isnull(reagent_glass)))
+	else if(href_list["eject"] && (!isnull(reagent_glass)))
 		if(!locked)
 			reagent_glass.loc = get_turf(src)
 			reagent_glass = null
 		else
 			to_chat(usr, SPAN_NOTICE("You cannot eject the beaker because the panel is locked."))
 
-	else if ((href_list["togglevoice"]) && (!locked || issilicon(usr)))
+	else if((href_list["togglevoice"]) && (!locked || issilicon(usr)))
 		vocal = !vocal
 
-	else if ((href_list["declaretreatment"]) && (!locked || issilicon(usr)))
+	else if((href_list["declaretreatment"]) && (!locked || issilicon(usr)))
 		declare_treatment = !declare_treatment
 
 	attack_hand(usr)
 	return
 
-/mob/living/bot/medbot/emag_act(var/remaining_uses, var/mob/user)
+/mob/living/bot/medbot/emag_act(remaining_uses, mob/user)
 	. = ..()
 	if(!emagged)
 		if(user)
@@ -249,7 +247,7 @@
 	new /obj/item/storage/firstaid(Tsec)
 	new /obj/item/device/assembly/prox_sensor(Tsec)
 	new /obj/item/device/scanner/health(Tsec)
-	if (prob(50))
+	if(prob(50))
 		new /obj/item/robot_parts/l_arm(Tsec)
 
 	if(reagent_glass)
@@ -262,7 +260,7 @@
 	qdel(src)
 	return
 
-/mob/living/bot/medbot/proc/valid_healing_target(var/mob/living/carbon/human/H)
+/mob/living/bot/medbot/proc/valid_healing_target(mob/living/carbon/human/H)
 	if(H.stat == DEAD) // He's dead, Jim
 		return null
 
@@ -293,8 +291,8 @@
 
 /* Construction */
 
-/obj/item/storage/firstaid/attackby(var/obj/item/robot_parts/S, mob/user as mob)
-	if ((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))
+/obj/item/storage/firstaid/attackby(obj/item/robot_parts/S, mob/user)
+	if((!istype(S, /obj/item/robot_parts/l_arm)) && (!istype(S, /obj/item/robot_parts/r_arm)))
 		..()
 		return
 
@@ -313,7 +311,7 @@
 	qdel(S)
 	user.put_in_hands(A)
 	to_chat(user, SPAN_NOTICE("You add the robot arm to the first aid kit."))
-	playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+	playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 	user.drop_from_inventory(src)
 	qdel(src)
 
@@ -333,7 +331,7 @@
 		if(skin)
 			overlays += image('icons/obj/aibots.dmi', "kit_skin_[src.skin]")
 
-/obj/item/firstaid_arm_assembly/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/firstaid_arm_assembly/attackby(obj/item/W, mob/user)
 	..()
 	if(istype(W, /obj/item/pen))
 		var/t = sanitizeSafe(input(user, "Enter new robot name", name, created_name), MAX_NAME_LEN)
@@ -350,7 +348,7 @@
 					qdel(W)
 					build_step++
 					to_chat(user, SPAN_NOTICE("You add the health sensor to [src]."))
-					playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+					playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 					name = "First aid/robot arm/health analyzer assembly"
 					overlays += image('icons/obj/aibots.dmi', "na_scanner")
 
@@ -359,7 +357,7 @@
 					user.drop_item()
 					qdel(W)
 					to_chat(user, SPAN_NOTICE("You complete the Medibot! Beep boop."))
-					playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+					playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 					var/turf/T = get_turf(src)
 					var/mob/living/bot/medbot/S = new /mob/living/bot/medbot(T)
 					S.skin = skin

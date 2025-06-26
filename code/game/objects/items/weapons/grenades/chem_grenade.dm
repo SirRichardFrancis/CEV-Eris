@@ -27,7 +27,7 @@
 	create_reagents(1000)
 	. = ..()
 
-/obj/item/grenade/chem_grenade/attack_self(mob/user as mob)
+/obj/item/grenade/chem_grenade/attack_self(mob/user)
 	if(stage != READY)
 		if(detonator)
 //				detonator.loc=loc
@@ -51,7 +51,7 @@
 			var/mob/living/carbon/C = user
 			C.throw_mode_on()
 
-/obj/item/grenade/chem_grenade/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/grenade/chem_grenade/attackby(obj/item/W as obj, mob/user)
 
 	if(!can_be_modified)
 		to_chat(user, SPAN_WARNING("This grenade is sealed and can't be modified."))
@@ -124,7 +124,7 @@
 		extra_description +=  "With attached [detonator.name]"
 	..(user, extra_description)
 
-/obj/item/grenade/chem_grenade/activate(mob/user as mob)
+/obj/item/grenade/chem_grenade/activate(mob/user)
 	if(active) return
 
 	if(detonator)
@@ -140,7 +140,7 @@
 		icon_state = initial(icon_state) + "_active"
 
 		if(user)
-			msg_admin_attack("[user.name] ([user.ckey]) primed \a [src] (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+			msg_admin_attack("[user.name] ([user.ckey]) primed \a [src] (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 
 	return
 

@@ -31364,7 +31364,6 @@
 	dir = 8
 	},
 /obj/machinery/vending/hydroseeds{
-	slogan_delay = 700
 	},
 /turf/floor/dirt,
 /area/eris/crew_quarters/hydroponics)
@@ -37410,7 +37409,6 @@
 /area/eris/command/tcommsat/chamber)
 "bLP" = (
 /obj/machinery/vending/hydroseeds{
-	slogan_delay = 700
 	},
 /turf/floor/tiled/dark/cargo,
 /area/eris/security/prison)
@@ -43967,7 +43965,7 @@
 /obj/structure/table/woodentable,
 /obj/item/device/megaphone,
 /obj/item/device/eftpos{
-	eftpos_name = "Ironhammer EFTPOS scanner"
+	eftpos_name = "IronHammer EFTPOS scanner"
 	},
 /turf/floor/wood,
 /area/eris/command/commander)
@@ -51575,7 +51573,7 @@
 /area/eris/quartermaster/hangarsupply)
 "ctY" = (
 /obj/machinery/camera{
-	c_tag = "Cargo Recieving Dock";
+	c_tag = "Cargo receiving Dock";
 	dir = 4
 	},
 /obj/machinery/button/remote/blast_door{
@@ -69635,7 +69633,6 @@
 /area/eris/crew_quarters/kitchen)
 "dlX" = (
 /obj/machinery/vending/hydroseeds{
-	slogan_delay = 700
 	},
 /obj/machinery/light{
 	dir = 8

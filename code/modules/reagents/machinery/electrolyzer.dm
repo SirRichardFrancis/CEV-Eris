@@ -83,11 +83,11 @@
 		var/state = electrolysis(beaker, separation_beaker, convertion_coefficient)
 		if(!state)
 			on = FALSE
-			playsound(src.loc, 'sound/machines/buzz-two.ogg', 50, 1, -3)
+			playsound(loc, 'sound/machines/buzz-two.ogg', 50, 1, -3)
 			visible_message("\icon[src]\The [src] buzzes indicating that error has occured.")
 		else if(state == -1)
 			on = FALSE
-			playsound(src.loc, 'sound/machines/ping.ogg', 50, 1, -3)
+			playsound(loc, 'sound/machines/ping.ogg', 50, 1, -3)
 			visible_message("\icon[src]\The [src] pings indicating that process is complete.")
 		update_icon()
 		SSnano.update_uis(src)
@@ -155,9 +155,9 @@
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		// the ui does not exist, so we'll create a new() one
-        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "electrolyzer.tmpl", name, 550, 400)
 		// when the ui is first opened this is the data it will use
 		ui.set_initial_data(data)
@@ -308,9 +308,9 @@
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		// the ui does not exist, so we'll create a new() one
-        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "electrolyzer.tmpl", name, 550, 400)
 		// when the ui is first opened this is the data it will use
 		ui.set_initial_data(data)

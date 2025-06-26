@@ -12,17 +12,16 @@
 	var/flush
 
 /obj/item/device/aicard/attack(mob/living/silicon/decoy/M, mob/user)
-	if (!istype (M, /mob/living/silicon/decoy))
+	if(!istype (M, /mob/living/silicon/decoy))
 		return ..()
 	else
 		M.death()
 		to_chat(user, "<b>ERROR ERROR ERROR</b>")
 
 /obj/item/device/aicard/attack_self(mob/user)
-
 	nano_ui_interact(user)
 
-/obj/item/device/aicard/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS, var/datum/nano_topic_state/state =GLOB.inventory_state)
+/obj/item/device/aicard/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui, force_open = NANOUI_FOCUS, datum/nano_topic_state/state = GLOB.inventory_state)
 	var/data[0]
 	data["has_ai"] = carded_ai != null
 	if(carded_ai)
@@ -33,7 +32,6 @@
 		data["wireless"] = !carded_ai.control_disabled
 		data["operational"] = carded_ai.stat != DEAD
 		data["flushing"] = flush
-
 		var/laws[0]
 		for(var/datum/ai_law/AL in carded_ai.laws.all_laws())
 			laws[++laws.len] = list("index" = AL.get_index(), "law" = sanitize(AL.law))
@@ -41,7 +39,7 @@
 		data["has_laws"] = laws.len
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "aicard.tmpl", "[name]", 600, 400, state = state)
 		ui.set_initial_data(data)
 		ui.open()
@@ -55,22 +53,22 @@
 		return 1
 
 	var/user = usr
-	if (href_list["wipe"])
+	if(href_list["wipe"])
 		var/confirm = alert("Are you sure you want to wipe this card's memory? This cannot be undone once started.", "Confirm Wipe", "Yes", "No")
 		if(confirm == "Yes" && (CanUseTopic(user, state) == STATUS_INTERACTIVE))
 			admin_attack_log(user, carded_ai, "Wiped using \the [src.name]", "Was wiped with \the [src.name]", "used \the [src.name] to wipe")
 			flush = 1
 			to_chat(carded_ai, "Your core files are being wiped!")
-			while (carded_ai && carded_ai.stat != DEAD)
+			while(carded_ai && carded_ai.stat != DEAD)
 				carded_ai.adjustOxyLoss(2)
 				carded_ai.updatehealth()
 				sleep(10)
 			flush = 0
-	if (href_list["radio"])
+	if(href_list["radio"])
 		carded_ai.aiRadio.disabledAi = text2num(href_list["radio"])
 		to_chat(carded_ai, "<span class='warning'>Your Subspace Transceiver has been [carded_ai.aiRadio.disabledAi ? "disabled" : "enabled"]!</span>")
 		to_chat(user, "<span class='notice'>You [carded_ai.aiRadio.disabledAi ? "disable" : "enable"] the AI's Subspace Transceiver.</span>")
-	if (href_list["wireless"])
+	if(href_list["wireless"])
 		carded_ai.control_disabled = text2num(href_list["wireless"])
 		to_chat(carded_ai, "<span class='warning'>Your wireless interface has been [carded_ai.control_disabled ? "disabled" : "enabled"]!</span>")
 		to_chat(user, "<span class='notice'>You [carded_ai.control_disabled ? "disable" : "enable"] the AI's wireless interface.</span>")
@@ -80,7 +78,7 @@
 /obj/item/device/aicard/update_icon()
 	overlays.Cut()
 	if(carded_ai)
-		if (!carded_ai.control_disabled)
+		if(!carded_ai.control_disabled)
 			overlays += image('icons/obj/pda.dmi', "aicard-on")
 		if(carded_ai.stat)
 			icon_state = "aicard-404"
@@ -89,7 +87,7 @@
 	else
 		icon_state = "aicard"
 
-/obj/item/device/aicard/proc/grab_ai(var/mob/living/silicon/ai/ai, var/mob/living/user)
+/obj/item/device/aicard/proc/grab_ai(mob/living/silicon/ai/ai, mob/living/user)
 	if(!ai.client)
 		to_chat(user, "<span class='danger'>ERROR:</span> AI [ai.name] is offline. Unable to download.")
 		return 0
@@ -145,7 +143,7 @@
 		carded_ai.show_message(rendered, type)
 	..()
 
-/obj/item/device/aicard/relaymove(var/mob/user, var/direction)
+/obj/item/device/aicard/relaymove(mob/user, direction)
 	if(user.stat || user.stunned)
 		return
 	var/obj/item/rig/rig = src.get_rig()

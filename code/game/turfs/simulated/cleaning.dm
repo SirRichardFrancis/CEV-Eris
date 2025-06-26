@@ -50,7 +50,7 @@
 	source.reagents.trans_to_turf(src, 1, 10)	//10 is the multiplier for the reaction effect. probably needed to wet the floor properly.
 	return amt
 
-/turf/proc/clean_ultimate(var/mob/user)
+/turf/proc/clean_ultimate(mob/user)
 	clean_blood()
 	for(var/obj/effect/O in src)
 		if(istype(O,/obj/effect/decal/cleanable) || istype(O,/obj/effect/overlay))
@@ -58,11 +58,11 @@
 
 //As above, but has limitations. Instead of cleaning the tile completely, it just cleans [count] number of things
 /turf/proc/clean_partial(atom/source, mob/user, var/count = 1)
-	if (!count)
+	if(!count)
 		return
 
 	//A negative value can mean infinite cleaning, but in that case just call the unlimited version
-	if (!isnum(count) || count < 0)
+	if(!isnum(count) || count < 0)
 		clean(source, user)
 		return
 
@@ -72,10 +72,8 @@
 		to_chat(user, SPAN_WARNING("\The [source] is too dry to wash that."))
 		return
 
-	for (count;count > 0;count--)
+	for(count;count > 0;count--)
 		var/cleanedsomething = FALSE
-
-
 		for(var/obj/effect/O in src)
 			if(istype(O,/obj/effect/decal/cleanable) || istype(O,/obj/effect/overlay))
 				qdel(O)
@@ -83,12 +81,11 @@
 				break //Only clean one per loop iteration
 
 		//If the tile is clean, don't keep looping
-		if (!cleanedsomething)
+		if(!cleanedsomething)
 			break
 
 /turf/proc/update_blood_overlays()
 	return
-
 
 /turf/proc/AddTracks(typepath, bloodDNA, comingdir, goingdir, bloodcolor="#A10808")
 	var/obj/effect/decal/cleanable/blood/tracks/tracks = locate(typepath) in src
@@ -96,10 +93,9 @@
 		tracks = new typepath(src)
 	tracks.AddTracks(bloodDNA,comingdir,goingdir,bloodcolor)
 
-
 //returns 1 if made bloody, returns 0 otherwise
-/turf/add_blood(mob/living/carbon/human/M as mob)
-	if (!..())
+/turf/add_blood(mob/living/carbon/human/M)
+	if(!..())
 		return 0
 
 	if(istype(M))
@@ -114,6 +110,6 @@
 	return 0
 
 // Only adds blood on the floor -- Skie
-/turf/proc/add_blood_floor(mob/living/carbon/M as mob)
+/turf/proc/add_blood_floor(mob/living/carbon/M)
 	if( istype(M, /mob/living/silicon/robot ))
 		new /obj/effect/decal/cleanable/blood/oil(src)

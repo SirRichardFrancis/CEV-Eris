@@ -29,7 +29,7 @@
 	old_turf = NewLoc
 	old_dir = turn(Dir,180)
 
-/obj/machinery/pipelayer/attack_hand(mob/user as mob)
+/obj/machinery/pipelayer/attack_hand(mob/user)
 	if(!metal&&!on)
 		to_chat(user, SPAN_WARNING("\The [src] doesn't work without metal."))
 		return
@@ -140,7 +140,7 @@
 	var/p_type
 	var/p_dir
 
-	if (fdirn!=old_dir)
+	if(fdirn!=old_dir)
 		p_type=1+P_type
 		p_dir=old_dir+M_Dir
 	else

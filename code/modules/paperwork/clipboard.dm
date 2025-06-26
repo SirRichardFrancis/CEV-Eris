@@ -27,7 +27,7 @@
 	overlays += "clipboard_over"
 	return
 
-/obj/item/clipboard/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/clipboard/attackby(obj/item/W as obj, mob/user)
 
 	if(istype(W, /obj/item/paper) || istype(W, /obj/item/photo))
 		user.drop_item()
@@ -43,26 +43,26 @@
 
 	return
 
-/obj/item/clipboard/attack_self(mob/user as mob)
+/obj/item/clipboard/attack_self(mob/user)
 	var/dat = "<title>Clipboard</title>"
 	if(haspen)
-		dat += "<A href='?src=\ref[src];pen=1'>Remove Pen</A><BR><HR>"
+		dat += "<a href='byond://?src=\ref[src];pen=1'>Remove Pen</A><BR><HR>"
 	else
-		dat += "<A href='?src=\ref[src];addpen=1'>Add Pen</A><BR><HR>"
+		dat += "<a href='byond://?src=\ref[src];addpen=1'>Add Pen</A><BR><HR>"
 
 	//The topmost paper. I don't think there's any way to organise contents in byond, so this is what we're stuck with.	-Pete
 	if(toppaper)
 		var/obj/item/paper/P = toppaper
-		dat += "<A href='?src=\ref[src];write=\ref[P]'>Write</A> <A href='?src=\ref[src];remove=\ref[P]'>Remove</A> <A href='?src=\ref[src];rename=\ref[P]'>Rename</A> - <A href='?src=\ref[src];read=\ref[P]'>[P.name]</A><BR><HR>"
+		dat += "<a href='byond://?src=\ref[src];write=\ref[P]'>Write</A> <a href='byond://?src=\ref[src];remove=\ref[P]'>Remove</A> <a href='byond://?src=\ref[src];rename=\ref[P]'>Rename</A> - <a href='byond://?src=\ref[src];read=\ref[P]'>[P.name]</A><BR><HR>"
 
 	for(var/obj/item/paper/P in src)
 		if(P==toppaper)
 			continue
-		dat += "<A href='?src=\ref[src];remove=\ref[P]'>Remove</A> <A href='?src=\ref[src];rename=\ref[P]'>Rename</A> - <A href='?src=\ref[src];read=\ref[P]'>[P.name]</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];remove=\ref[P]'>Remove</A> <a href='byond://?src=\ref[src];rename=\ref[P]'>Rename</A> - <a href='byond://?src=\ref[src];read=\ref[P]'>[P.name]</A><BR>"
 	for(var/obj/item/photo/Ph in src)
-		dat += "<A href='?src=\ref[src];remove=\ref[Ph]'>Remove</A> <A href='?src=\ref[src];rename=\ref[Ph]'>Rename</A> - <A href='?src=\ref[src];look=\ref[Ph]'>[Ph.name]</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];remove=\ref[Ph]'>Remove</A> <a href='byond://?src=\ref[src];rename=\ref[Ph]'>Rename</A> - <a href='byond://?src=\ref[src];look=\ref[Ph]'>[Ph.name]</A><BR>"
 
-	user << browse(dat, "window=clipboard")
+	user << browse(HTML_SKELETON(dat), "window=clipboard")
 	onclose(user, "clipboard")
 	add_fingerprint(usr)
 	return
@@ -133,10 +133,10 @@
 			if(P && (P.loc == src) && istype(P, /obj/item/paper) )
 
 				if(!(ishuman(usr) || isghost(usr) || issilicon(usr)))
-					usr << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY>[stars(P.info)][P.stamps]</BODY></HTML>", "window=[P.name]")
+					usr << browse(HTML_SKELETON_TITLE(P.name, "[stars(P.info)][P.stamps]"), "window=[P.name]")
 					onclose(usr, "[P.name]")
 				else
-					usr << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY>[P.info][P.stamps]</BODY></HTML>", "window=[P.name]")
+					usr << browse(HTML_SKELETON_TITLE(P.name,"[P.info][P.stamps]"), "window=[P.name]")
 					onclose(usr, "[P.name]")
 
 		else if(href_list["look"])

@@ -374,9 +374,9 @@
 	..(user, extra_description)
 
 /obj/machinery/neotheology/biomass_container/attackby(obj/item/I, mob/user)
-	if (istype(I, /obj/item/stack/material/biomatter))
+	if(istype(I, /obj/item/stack/material/biomatter))
 		var/obj/item/stack/material/biomatter/B = I
-		if (B.biomatter_in_sheet && B.amount)
+		if(B.biomatter_in_sheet && B.amount)
 			var/sheets_amount_to_transfer = input(user, "How many sheets do you want to load?", "Biomatter melting", 1) as num
 			if(sheets_amount_to_transfer > 0)
 				if(sheets_amount_to_transfer > B.amount)
@@ -423,17 +423,17 @@
 	var/reading = FALSE
 
 
-/obj/machinery/neotheology/reader/attackby(obj/item/I, mob/user as mob)
+/obj/machinery/neotheology/reader/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/implant/core_implant/cruciform))
 		var/obj/item/implant/core_implant/cruciform/C = I
 		user.drop_item()
 		C.forceMove(src)
 		implant = C
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	update_icon()
 
-/obj/machinery/neotheology/reader/attack_hand(mob/user as mob)
+/obj/machinery/neotheology/reader/attack_hand(mob/user)
 	if(!implant)
 		return
 
@@ -444,7 +444,7 @@
 	user.put_in_active_hand(implant)
 	implant = null
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	update_icon()
 
 /obj/machinery/neotheology/reader/on_deconstruction()

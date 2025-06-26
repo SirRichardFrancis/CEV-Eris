@@ -19,20 +19,20 @@
 
 /client/MouseDown(object,location,control,params)
 
-	if (CH)
-		if (!CH.MouseDown(object,location,control,params))
+	if(CH)
+		if(!CH.MouseDown(object,location,control,params))
 			return
 	.=..()
 
 /client/MouseUp(object,location,control,params)
-	if (CH)
-		if (!CH.MouseUp(object,location,control,params))
+	if(CH)
+		if(!CH.MouseUp(object,location,control,params))
 			return
 	.=..()
 
 /client/MouseDrag(over_object,src_location,over_location,src_control,over_control,params)
-	if (CH)
-		if (!CH.MouseDrag(over_object,src_location,over_location,src_control,over_control,params))
+	if(CH)
+		if(!CH.MouseDrag(over_object,src_location,over_location,src_control,over_control,params))
 			return
 	.=..()
 
@@ -43,8 +43,8 @@
 	if(dragged && !L[dragged]) //check to ensure they aren't using drag clicks to aimbot
 		return //if they are dragging, and they clicked with a different mouse button, reject the click as it will always go the atom they are currently dragging, even if out of view and not under the mouse
 
-	if (CH)
-		if (!CH.Click(target, location, control, params))
+	if(CH)
+		if(!CH.Click(target, location, control, params))
 			return
 
 
@@ -61,7 +61,7 @@
 
 	After that, mostly just check your state, check whether you're holding an item,
 	check whether you're adjacent to the target, then pass off the click to whoever
-	is recieving it.
+	is receiving it.
 	The most common are:
 	* mob/UnarmedAttack(atom, adjacent) - used here only when adjacent, with no item in hand; in the case of humans, checks gloves
 	* atom/attackby(item, user) - used only when adjacent

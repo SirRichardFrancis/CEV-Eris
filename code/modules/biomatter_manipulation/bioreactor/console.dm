@@ -13,7 +13,7 @@
 	set_light(1, 2, COLOR_LIGHTING_BLUE_MACHINERY)
 
 
-/obj/machinery/multistructure/bioreactor_part/console/attack_hand(mob/user as mob)
+/obj/machinery/multistructure/bioreactor_part/console/attack_hand(mob/user)
 	if(MS)
 		nano_ui_interact(user)
 
@@ -60,7 +60,7 @@
 	var/list/data = nano_ui_data()
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "bioreactor.tmpl", src.name, 410, 500, state = state)
 		ui.set_initial_data(data)
 		ui.open()

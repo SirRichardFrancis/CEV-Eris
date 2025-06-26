@@ -43,33 +43,32 @@
 	return mob_overlay
 
 //when user attached an accessory to S
-/obj/item/clothing/accessory/proc/on_attached(var/obj/item/clothing/S, var/mob/user)
+/obj/item/clothing/accessory/proc/on_attached(obj/item/clothing/S, mob/user)
 	if(!istype(S))
 		return
 	has_suit = S
 	loc = has_suit
 	has_suit.overlays += get_inv_overlay()
-
 	to_chat(user, SPAN_NOTICE("You attach \the [src] to \the [has_suit]."))
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
-/obj/item/clothing/accessory/proc/on_removed(var/mob/user)
+/obj/item/clothing/accessory/proc/on_removed(mob/user)
 	if(!has_suit)
 		return
 	has_suit.overlays -= get_inv_overlay()
 	has_suit = null
 	if(user)
 		usr.put_in_hands(src)
-		src.add_fingerprint(user)
+		add_fingerprint(user)
 	else
-		src.forceMove(get_turf(src))
+		forceMove(get_turf(src))
 
 //default attackby behaviour
 /obj/item/clothing/accessory/attackby(obj/item/I, mob/user)
 	..()
 
 //default attack_hand behaviour
-/obj/item/clothing/accessory/attack_hand(mob/user as mob)
+/obj/item/clothing/accessory/attack_hand(mob/user)
 	if(has_suit)
 		return	//we aren't an object on the ground so don't call parent
 	..()
@@ -144,7 +143,6 @@
 				user.visible_message("[user] places [src] against [M]'s [body_part] and listens attentively.", "You place [src] against [their] [body_part]. You [sound_strength] [sound].")
 	return ..(M,user)
 
-
 //Medals
 /obj/item/clothing/accessory/medal
 	name = "bronze medal"
@@ -191,7 +189,7 @@
 
 /obj/item/clothing/accessory/medal/gold/heroism
 	name = "medal of exceptional heroism"
-	desc = "An extremely rare golden medal awarded only by company officials. To recieve such a medal is the highest honor and as such, very few exist. This medal is almost never awarded to anybody but commanders."
+	desc = "An extremely rare golden medal awarded only by company officials. To receive such a medal is the highest honor and as such, very few exist. This medal is almost never awarded to anybody but commanders."
 
 /obj/item/clothing/accessory/armor
 	name = "armor plates"
@@ -284,7 +282,6 @@
 	)
 
 //Ponchos, Capes and Cloaks//
-
 /obj/item/clothing/accessory/cloak
 	name = "oversized poncho"
 	desc = "Able to be worn over a voidsuit or smaller rigs. More of a fashion statement than anything else."

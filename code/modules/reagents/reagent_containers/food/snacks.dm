@@ -108,7 +108,7 @@
 			SPAN_NOTICE("[eater] finishes eating \the [src]."),
 			SPAN_NOTICE("You finish eating \the [src].")
 		)
-		if (!feeder)
+		if(!feeder)
 			feeder = eater
 
 		feeder.drop_from_inventory(src)	//so icons update :[
@@ -129,7 +129,7 @@
 		food_tier = CWJ_QUALITY_GARBAGE
 		food_descriptor = "It looks gross. Someone cooked this poorly."
 		bite_descriptor = " Eating this makes you regret every decision that lead you to this moment."
-	else if (food_quality >= 100)
+	else if(food_quality >= 100)
 		food_tier = CWJ_QUALITY_ELDRITCH
 		food_descriptor = "What cruel twist of fate it must be, for this unparalleled artistic masterpiece can only be truly appreciated through its destruction. Does this dish's transient form belie the true nature of all things? You see the totality of existence reflected through \the [src]."
 		bite_descriptor = " It's like reliving the happiest moments of your life, nothing is better than this!"
@@ -164,10 +164,10 @@
 				food_descriptor = "The quality of this food is legendary. Words fail to describe it further. It must be eaten"
 				bite_descriptor = " This food is unreal, the textures blend perfectly with the flavor, could food get any better than this?"
 
-/obj/item/reagent_containers/food/snacks/attack_self(mob/user as mob)
+/obj/item/reagent_containers/food/snacks/attack_self(mob/user)
 	return
 
-/obj/item/reagent_containers/food/snacks/attack(mob/mob as mob, mob/user as mob, def_zone)
+/obj/item/reagent_containers/food/snacks/attack(mob/mob as mob, mob/user, def_zone)
 	if(!reagents.total_volume)
 		to_chat(user, SPAN_DANGER("None of [src] left!"))
 		user.drop_from_inventory(src)
@@ -193,22 +193,22 @@
 					return
 
 			user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN) //puts a limit on how fast people can eat/drink things
-			if (fullness <= 50)
+			if(fullness <= 50)
 				to_chat(carbon, SPAN_DANGER("You hungrily devour a piece of [src]."))
-			if (fullness > 50 && fullness <= 150)
+			if(fullness > 50 && fullness <= 150)
 				to_chat(carbon, SPAN_NOTICE("You hungrily begin to eat [src]."))
-			if (fullness > 150 && fullness <= 350)
+			if(fullness > 150 && fullness <= 350)
 				to_chat(carbon, SPAN_NOTICE("You take a bite of [src]."))
-			if (fullness > 350 && fullness <= 550)
+			if(fullness > 350 && fullness <= 550)
 				to_chat(carbon, SPAN_NOTICE("You unwillingly chew a bit of [src]."))
-			if (fullness > 550)
+			if(fullness > 550)
 				to_chat(carbon, SPAN_DANGER("You cannot force any more of [src] to go down your throat."))
 				return 0
 		else
 			if(!mob.can_force_feed(user, src))
 				return
 
-			if (fullness <= 550)
+			if(fullness <= 550)
 				user.visible_message(SPAN_DANGER("[user] attempts to feed [mob] [src]."))
 			else
 				user.visible_message(SPAN_DANGER("[user] cannot force anymore of [src] down [mob]'s throat."))
@@ -235,7 +235,7 @@
 				On_Consume(mob, user)
 			return 1
 
-	else if (isanimal(mob))
+	else if(isanimal(mob))
 		var/mob/living/simple_animal/SA = mob
 		SA.scan_interval = SA.min_scan_interval//Feeding an animal will make it suddenly care about food
 
@@ -245,24 +245,24 @@
 		if(reagents && SA.reagents)
 			m_bitesize = min(m_bitesize, reagents.total_volume)
 			//If the creature can't even stomach half a bite, then it eats nothing
-			if (!SA.eat_from_hand)
+			if(!SA.eat_from_hand)
 				to_chat(user, SPAN_WARNING("[mob] doesn't accept hand-feeding."))
 				return 0
-			else if (!SA.can_eat() || ((user.reagents.maximum_volume - user.reagents.total_volume) < m_bitesize * 0.5))
+			else if(!SA.can_eat() || ((user.reagents.maximum_volume - user.reagents.total_volume) < m_bitesize * 0.5))
 				amount_eaten = 0
 			else
 				amount_eaten = reagents.trans_to_mob(SA, m_bitesize, CHEM_INGEST)
 		else
 			return 0//The target creature can't eat
 
-		if (amount_eaten)
+		if(amount_eaten)
 			playsound(mob.loc,pick(mob.eat_sounds), rand(10,30), 1)
 			bitecount++
-			if (amount_eaten >= m_bitesize)
+			if(amount_eaten >= m_bitesize)
 				user.visible_message(SPAN_NOTICE("[user] feeds [src] to [mob]."))
 			else
 				user.visible_message(SPAN_NOTICE("[user] feeds [mob] a tiny bit of [src]. <b>It looks full.</b>"))
-				if (!istype(mob.loc, /turf))
+				if(!istype(mob.loc, /turf))
 					to_chat(mob, SPAN_NOTICE("[user] feeds you a tiny bit of [src]. <b>You feel pretty full!</b>"))
 			On_Consume(mob, user)
 			return 1
@@ -271,7 +271,7 @@
 
 	return 0
 
-/obj/item/reagent_containers/food/snacks/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/attackby(obj/item/W as obj, mob/user)
 	if(istype(W,/obj/item/storage))
 		..() // -> item/attackby()
 		return
@@ -283,7 +283,7 @@
 			if(!utensil.reagents)
 				utensil.create_reagents(5)
 
-			if (utensil.reagents.total_volume > 0)
+			if(utensil.reagents.total_volume > 0)
 				to_chat(user, SPAN_WARNING("You already have something on your [utensil]."))
 				return
 
@@ -301,19 +301,19 @@
 
 			reagents.trans_to_obj(utensil, min(reagents.total_volume,5))
 
-			if (reagents.total_volume <= 0)
+			if(reagents.total_volume <= 0)
 				qdel(src)
 			return
 
-	if (is_sliceable())
+	if(is_sliceable())
 		//these are used to allow hiding edge items in food that is not on a table/tray
 		var/can_slice_here = isturf(src.loc) && ((locate(/obj/structure/table) in src.loc) || (locate(/obj/machinery/optable) in src.loc) || (locate(/obj/item/tray) in src.loc))
 		var/hide_item = !has_edge(W) || !can_slice_here
 
-		if (hide_item)
+		if(hide_item)
 			if(!user.canUnEquip(W))
 				return
-			if (W.w_class >= src.w_class || is_robot_module(W))
+			if(W.w_class >= src.w_class || is_robot_module(W))
 				return
 
 			to_chat(user, SPAN_WARNING("You slip \the [W] inside \the [src]."))
@@ -323,13 +323,13 @@
 			contents += W
 			return
 
-		if (has_edge(W))
-			if (!can_slice_here)
+		if(has_edge(W))
+			if(!can_slice_here)
 				to_chat(user, SPAN_WARNING("You cannot slice \the [src] here; you need a table or a tray."))
 				return
 
 			var/slices_lost = 0
-			if (W.w_class > ITEM_SIZE_NORMAL)
+			if(W.w_class > ITEM_SIZE_NORMAL)
 				user.visible_message(SPAN_NOTICE("\The [user] crudely slices \the [src] with [W]."), SPAN_NOTICE("You crudely slice \the [src] with your [W]."))
 				slices_lost = rand(1,min(1,round(slices_num/2)))
 			else
@@ -363,11 +363,11 @@
 	var/amount_eaten = bitesize
 	var/m_bitesize = bitesize
 
-	if (isanimal(user))
+	if(isanimal(user))
 		var/mob/living/simple_animal/SA = user
 		m_bitesize = bitesize * SA.bite_factor//Modified bitesize based on creature size
 		amount_eaten = m_bitesize
-		if (!SA.can_eat())
+		if(!SA.can_eat())
 			to_chat(user, "<span class='danger'>You're too full to eat anymore.</span>")
 			return
 
@@ -375,15 +375,15 @@
 		reagents.trans_to_mob(user, bitesize, CHEM_INGEST)
 		m_bitesize = min(m_bitesize, reagents.total_volume)
 		//If the creature can't even stomach half a bite, then it eats nothing
-		if (((user.reagents.maximum_volume - user.reagents.total_volume) < m_bitesize * 0.5))
+		if(((user.reagents.maximum_volume - user.reagents.total_volume) < m_bitesize * 0.5))
 			amount_eaten = 0
 		else
 			amount_eaten = reagents.trans_to_mob(user, m_bitesize, CHEM_INGEST)
-	if (amount_eaten)
+	if(amount_eaten)
 		playsound(user.loc,pick(user.eat_sounds), rand(10,30), 1)
 		shake_animation(5)
 		bitecount++
-		if (amount_eaten < m_bitesize)
+		if(amount_eaten < m_bitesize)
 			to_chat(user, SPAN_NOTICE("You reluctantly nibble a tiny part of \the [src]. <b>You can't stomach much more.</b>."))
 		else
 			to_chat(user, SPAN_NOTICE("You nibble away at \the [src]."))
@@ -721,7 +721,7 @@
 	price_tag = 5
 	description_info = "Can have a flashlight used on it to determine if there is a chick inside."
 
-/obj/item/reagent_containers/food/snacks/egg/afterattack(obj/O as obj, mob/user as mob, proximity)
+/obj/item/reagent_containers/food/snacks/egg/afterattack(obj/O as obj, mob/user, proximity)
 	if(istype(O,/obj/machinery/microwave))
 		return ..()
 	if(!proximity || !O.is_refillable())
@@ -741,7 +741,7 @@
 	)
 	qdel(src)
 
-/obj/item/reagent_containers/food/snacks/egg/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/egg/attackby(obj/item/W as obj, mob/user)
 	if(istype( W, /obj/item/pen/crayon ))
 		var/obj/item/pen/crayon/crayon = W
 		var/clr = crayon.colourName
@@ -752,14 +752,14 @@
 		icon_state = "egg-[clr]"
 	else
 		var/valid = FALSE
-		if (istype(W, /obj/item/device/lighting))
+		if(istype(W, /obj/item/device/lighting))
 			var/obj/item/device/lighting/light = W
 			if(!light.on)
 				to_chat(usr, SPAN_WARNING("[W] needs to be turned on to reveal the egg's insides."))
 				return
 			valid = TRUE
 
-		else if (istype(W, /obj/item/flame))
+		else if(istype(W, /obj/item/flame))
 			var/obj/item/flame/fire = W
 			if(!fire.lit)
 				to_chat(usr, SPAN_WARNING("[W] needs to be aflame to reveal the egg's insides."))
@@ -900,7 +900,7 @@
 	preloaded_reagents = list("protein" = 2)
 	taste_tag = list(MEAT_FOOD)
 
-/obj/item/reagent_containers/food/snacks/rawmeatball/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/rawmeatball/attackby(obj/item/W as obj, mob/user)
 	if(istype(W,/obj/item/material/kitchen/rollingpin))
 		new /obj/item/reagent_containers/food/snacks/patty_raw(src)
 		to_chat(user, "You flatten the raw meatball.")
@@ -948,7 +948,7 @@
 		cooltime()
 
 	proc/cooltime()
-		if (src.warm)
+		if(src.warm)
 			spawn(4200)
 				if(src)
 					src.warm = 0
@@ -1902,17 +1902,17 @@
 	taste_tag = list(MEAT_FOOD,SALTY_FOOD)
 
 /obj/item/reagent_containers/food/snacks/monkeycube/punpun
-    name = "emergency companion cube"
+	name = "emergency companion cube"
 
 /obj/item/reagent_containers/food/snacks/monkeycube/punpun/Expand()
-    visible_message(SPAN_NOTICE("\The [src] expands!"))
-    var/turf/T = get_turf(src)
-    if(istype(T))
-        new /mob/living/carbon/human/monkey/punpun(T)
-    qdel(src)
-    return TRUE
+	visible_message(SPAN_NOTICE("\The [src] expands!"))
+	var/turf/T = get_turf(src)
+	if(istype(T))
+		new /mob/living/carbon/human/monkey/punpun(T)
+	qdel(src)
+	return TRUE
 
-/obj/item/reagent_containers/food/snacks/monkeycube/attack_self(mob/user as mob)
+/obj/item/reagent_containers/food/snacks/monkeycube/attack_self(mob/user)
 	if(wrapped)
 		Unwrap(user)
 
@@ -1924,7 +1924,7 @@
 	qdel(src)
 	return TRUE
 
-/obj/item/reagent_containers/food/snacks/monkeycube/proc/Unwrap(mob/user as mob)
+/obj/item/reagent_containers/food/snacks/monkeycube/proc/Unwrap(mob/user)
 	icon_state = "monkeycube"
 	desc = "Just add water!"
 	to_chat(user, "You unwrap the cube.")
@@ -2589,7 +2589,7 @@
 		to_chat(user, "You think \the [src] is ready to eat about now.")
 		heat()
 
-/obj/item/reagent_containers/food/snacks/mre/attack(mob/mob as mob, mob/user as mob, def_zone)
+/obj/item/reagent_containers/food/snacks/mre/attack(mob/mob as mob, mob/user, def_zone)
 	. = ..()
 	if(!open)
 		openmre()
@@ -2668,7 +2668,7 @@
 		to_chat(user, SPAN_NOTICE("You tear \the [src] open."))
 		return
 
-/obj/item/reagent_containers/food/snacks/attack(mob/mob as mob, mob/user as mob, def_zone)
+/obj/item/reagent_containers/food/snacks/attack(mob/mob as mob, mob/user, def_zone)
 	. = ..()
 	if(!open)
 		open()
@@ -3337,7 +3337,7 @@
 
 	icon_state = "pizzabox[boxes.len+1]"
 
-/obj/item/pizzabox/attack_hand( mob/user as mob )
+/obj/item/pizzabox/attack_hand( mob/user )
 
 	if(open && pizza )
 		user.put_in_hands( pizza )
@@ -3362,7 +3362,7 @@
 		return
 	..()
 
-/obj/item/pizzabox/attack_self( mob/user as mob )
+/obj/item/pizzabox/attack_self( mob/user )
 
 	if(boxes.len > 0 )
 		return
@@ -3374,7 +3374,7 @@
 
 	update_icon()
 
-/obj/item/pizzabox/attackby( obj/item/item as obj, mob/user as mob )
+/obj/item/pizzabox/attackby( obj/item/item as obj, mob/user )
 	if(istype(item, /obj/item/pizzabox/) )
 		var/obj/item/pizzabox/box = item
 
@@ -3467,14 +3467,14 @@
 	taste_tag = list(BLAND_FOOD,FLOURY_FOOD)
 
 // Dough + rolling pin = flat dough
-/obj/item/reagent_containers/food/snacks/dough/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/dough/attackby(obj/item/W as obj, mob/user)
 	if(istype(W,/obj/item/material/kitchen/rollingpin))
 		new /obj/item/reagent_containers/food/snacks/sliceable/flatdough(src)
 		to_chat(user, "You flatten the dough.")
 		qdel(src)
 
 // Dough slice + rolling pin = flat dough slice
-/obj/item/reagent_containers/food/snacks/doughslice/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/doughslice/attackby(obj/item/W as obj, mob/user)
 	if(istype(W,/obj/item/material/kitchen/rollingpin))
 		new /obj/item/reagent_containers/food/snacks/flatdoughslice(src)
 		to_chat(user, "You flatten the dough slice.")
@@ -3530,7 +3530,7 @@
 	taste_tag = list(BLAND_FOOD,FLOURY_FOOD)
 
 /*
-/obj/item/reagent_containers/food/snacks/bun/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/bun/attackby(obj/item/W as obj, mob/user)
 	// Bun + meatball = burger
 	if(istype(W,/obj/item/reagent_containers/food/snacks/meatball))
 		new /obj/item/reagent_containers/food/snacks/monkeyburger(src)
@@ -3553,7 +3553,7 @@
 		qdel(src)
 
 // Burger + cheese wedge = cheeseburger
-/obj/item/reagent_containers/food/snacks/monkeyburger/attackby(obj/item/reagent_containers/food/snacks/cheesewedge/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/monkeyburger/attackby(obj/item/reagent_containers/food/snacks/cheesewedge/W as obj, mob/user)
 	if(istype(W))// && !istype(src,/obj/item/reagent_containers/food/snacks/cheesewedge))
 		new /obj/item/reagent_containers/food/snacks/cheeseburger(src)
 		to_chat(user, "You make a cheeseburger.")
@@ -3564,7 +3564,7 @@
 		..()
 
 // Human Burger + cheese wedge = cheeseburger
-/obj/item/reagent_containers/food/snacks/human/burger/attackby(obj/item/reagent_containers/food/snacks/cheesewedge/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/human/burger/attackby(obj/item/reagent_containers/food/snacks/cheesewedge/W as obj, mob/user)
 	if(istype(W))
 		new /obj/item/reagent_containers/food/snacks/cheeseburger(src)
 		to_chat(user, "You make a cheeseburger.")
@@ -3608,7 +3608,7 @@
 	preloaded_reagents = list("protein" = 3)
 	taste_tag = list(MEAT_FOOD)
 
-/obj/item/reagent_containers/food/snacks/rawcutlet/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/reagent_containers/food/snacks/rawcutlet/attackby(obj/item/W as obj, mob/user)
 	if(istype(W,/obj/item/material/kitchen/rollingpin))
 		new /obj/item/reagent_containers/food/snacks/rawmeatball(src)
 		new /obj/item/reagent_containers/food/snacks/rawmeatball(src)

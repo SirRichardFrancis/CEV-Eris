@@ -36,7 +36,7 @@
 	if(climbable)
 		verbs += /obj/structure/proc/climb_on
 
-/obj/structure/railing/Created(var/mob/user)
+/obj/structure/railing/Created(mob/user)
 	anchored = FALSE
 	// this way its much easier to build it, and there is no need to update_icon after that, flip will take care of that
 	spawn()
@@ -74,11 +74,11 @@
 	if(reinforced)
 		var/reinforcement_text = "\nIt is reinforced with rods"
 		switch(reinforcement_security)
-			if (0 to 1)
+			if(0 to 1)
 				reinforcement_text += ", which are barely hanging on"
-			if (1 to 20)
+			if(1 to 20)
 				reinforcement_text += ", which are loosely attached"
-			if (20 to 30)
+			if(20 to 30)
 				reinforcement_text += ", which are a bit loose"
 		extra_description += SPAN_NOTICE("[reinforcement_text].")
 	..(user, extra_description)
@@ -86,8 +86,8 @@
 /obj/structure/railing/take_damage(amount)
 	. = health - amount < 0 ? amount - health : amount
 	. *= explosion_coverage
-	if (reinforced)
-		if (reinforcement_security == 0)
+	if(reinforced)
+		if(reinforcement_security == 0)
 			visible_message(SPAN_WARNING("[src]'s reinforcing rods fall off!"))
 			reinforced = FALSE
 			var/obj/item/stack/rodtoedit = new /obj/item/stack/rods(src.loc)
@@ -102,68 +102,66 @@
 		playsound(loc, 'sound/effects/grillehit.ogg', 50, 1)
 		new /obj/item/stack/rods(get_turf(usr))
 		qdel(src)
-	return
 
-/obj/structure/railing/proc/NeighborsCheck(var/UpdateNeighbors = 1)
+/obj/structure/railing/proc/NeighborsCheck(UpdateNeighbors = 1)
 	check = 0
-	var/Rturn = turn(src.dir, -90)
-	var/Lturn = turn(src.dir, 90)
-
-	for(var/obj/structure/railing/R in src.loc)	// analyzing turf
-		if ((R.dir == Lturn) && R.anchored)	//checking left side
+	var/Rturn = turn(dir, -90)
+	var/Lturn = turn(dir, 90)
+	for(var/obj/structure/railing/R in loc)	// analyzing turf
+		if((R.dir == Lturn) && R.anchored)	//checking left side
 			check |= 32
-			if (UpdateNeighbors)
+			if(UpdateNeighbors)
 				R.update_icon(0)
-		if ((R.dir == Rturn) && R.anchored)	//checking right side
+		if((R.dir == Rturn) && R.anchored)	//checking right side
 			check |= 2
-			if (UpdateNeighbors)
+			if(UpdateNeighbors)
 				R.update_icon(0)
 
-	for (var/obj/structure/railing/R in get_step(src, Lturn))	//analysing left turf
-		if ((R.dir == src.dir) && R.anchored)
+	for(var/obj/structure/railing/R in get_step(src, Lturn))	//analysing left turf
+		if((R.dir == dir) && R.anchored)
 			check |= 16
-			if (UpdateNeighbors)
+			if(UpdateNeighbors)
 				R.update_icon(0)
-	for (var/obj/structure/railing/R in get_step(src, Rturn))	//analysing right turf
-		if ((R.dir == src.dir) && R.anchored)
+	for(var/obj/structure/railing/R in get_step(src, Rturn))	//analysing right turf
+		if((R.dir == dir) && R.anchored)
 			check |= 1
-			if (UpdateNeighbors)
+			if(UpdateNeighbors)
 				R.update_icon(0)
 
-	for (var/obj/structure/railing/R in get_step(src, (Lturn + src.dir)))	//analysing upper-left turf from src direction
-		if ((R.dir == Rturn) && R.anchored)
+	for(var/obj/structure/railing/R in get_step(src, (Lturn + dir)))	//analysing upper-left turf from src direction
+		if((R.dir == Rturn) && R.anchored)
 			check |= 64
-			if (UpdateNeighbors)
+			if(UpdateNeighbors)
 				R.update_icon(0)
-	for (var/obj/structure/railing/R in get_step(src, (Rturn + src.dir)))	//analysing upper-right turf from src direction
-		if ((R.dir == Lturn) && R.anchored)
+	for(var/obj/structure/railing/R in get_step(src, (Rturn + dir)))	//analysing upper-right turf from src direction
+		if((R.dir == Lturn) && R.anchored)
 			check |= 4
-			if (UpdateNeighbors)
+			if(UpdateNeighbors)
 				R.update_icon(0)
 
-/obj/structure/railing/update_icon(var/UpdateNeighbors = 1)
+/obj/structure/railing/update_icon(UpdateNeighbors = 1)
 	NeighborsCheck(UpdateNeighbors)
 	cut_overlays()
-	if (!check || !anchored)
+	if(!check || !anchored)
 		icon_state = "[icon_modifier][reinforced ? "reinforced_": null]railing0"
 	else
 		icon_state = "[icon_modifier][reinforced ? "reinforced_": null]railing1"
 		//left side
-		if (check & 32)
+		if(check & 32)
 			overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]corneroverlay")
-		if ((check & 16) || !(check & 32) || (check & 64))
+		if((check & 16) || !(check & 32) || (check & 64))
 			overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]frontoverlay_l")
-		if (!(check & 2) || (check & 1) || (check & 4))
+		if(!(check & 2) || (check & 1) || (check & 4))
 			overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]frontoverlay_r")
 			if(check & 4)
 				switch (src.dir)
-					if (NORTH)
+					if(NORTH)
 						overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]mcorneroverlay", pixel_x = 32)
-					if (SOUTH)
+					if(SOUTH)
 						overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]mcorneroverlay", pixel_x = -32)
-					if (EAST)
+					if(EAST)
 						overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]mcorneroverlay", pixel_y = -32)
-					if (WEST)
+					if(WEST)
 						overlays += image ('icons/obj/railing.dmi', src, "[icon_modifier]mcorneroverlay", pixel_y = 32)
 
 /obj/structure/railing/verb/rotate()
@@ -173,14 +171,11 @@
 
 	if(usr.incapacitated())
 		return 0
-
 	if(anchored)
 		to_chat(usr, SPAN_NOTICE("It is fastened to the floor therefore you can't rotate it!"))
 		return 0
-
 	set_dir(turn(dir, 90))
 	update_icon()
-	return
 
 /obj/structure/railing/verb/revrotate()
 	set name = "Rotate Railing Clockwise"
@@ -189,37 +184,28 @@
 
 	if(usr.incapacitated())
 		return 0
-
 	if(anchored)
 		to_chat(usr, SPAN_NOTICE("It is fastened to the floor therefore you can't rotate it!"))
 		return 0
-
 	set_dir(turn(dir, -90))
 	update_icon()
-	return
 
-/obj/structure/railing/verb/flip(var/mob/living/user as mob) // This will help push railing to remote places, such as open space turfs
+/obj/structure/railing/verb/flip(mob/living/user) // This will help push railing to remote places, such as open space turfs
 	set name = "Flip Railing"
 	set category = "Object"
 	set src in oview(1)
 
 	if(user.incapacitated())
 		return 0
-
 	if(anchored)
 		to_chat(user, SPAN_NOTICE("It is fastened to the floor therefore you can't flip it!"))
 		return 0
-
 	if(!neighbor_turf_passable())
 		to_chat(user, SPAN_NOTICE("You can't flip the [src] because something blocking it."))
 		return 0
-
-	src.loc = get_step(src, src.dir)
+	loc = get_step(src, dir)
 	set_dir(turn(dir, 180))
 	update_icon()
-	return
-
-
 
 /obj/structure/railing/CheckExit(atom/movable/O as mob|obj, target as turf)
 	if(!reinforced && istype(O) && O.checkpass(PASSTABLE))
@@ -228,12 +214,12 @@
 		return 0
 	return 1
 
-/obj/structure/railing/affect_grab(var/mob/user, var/mob/living/target, var/state)
+/obj/structure/railing/affect_grab(mob/user, mob/living/target, state)
 	var/obj/occupied = turf_is_crowded()
 	if(occupied)
 		to_chat(user, SPAN_DANGER("There's \a [occupied] in the way."))
 		return
-	if (state < GRAB_AGGRESSIVE)
+	if(state < GRAB_AGGRESSIVE)
 		if(user.a_intent == I_HURT)
 			if(prob(15))
 				target.Weaken(5)
@@ -248,7 +234,7 @@
 			to_chat(user, SPAN_DANGER("You need a better grip to do that!"))
 			return
 	else
-		if (get_turf(target) == get_turf(src))
+		if(get_turf(target) == get_turf(src))
 			target.forceMove(get_step(src, src.dir))
 		else
 			target.forceMove(get_turf(src))
@@ -268,7 +254,6 @@
 
 	var/tool_type = I.get_tool_type(user, usable_qualities, src)
 	switch(tool_type)
-
 		if(QUALITY_SCREW_DRIVING)
 			if(reinforcement_security)
 				to_chat(user, SPAN_NOTICE("You cannot remove [src]'s reinforcement when it's this tightly secured."))
@@ -277,7 +262,7 @@
 					to_chat(user, (anchored ? SPAN_NOTICE("You have unfastened \the [src] from the floor.") : SPAN_NOTICE("You have fastened \the [src] to the floor.")))
 					anchored = !anchored
 					update_icon()
-				else if (!reinforcement_security)
+				else if(!reinforcement_security)
 					to_chat(user, SPAN_NOTICE("You remove the reinforcing rods from [src]"))
 					var/obj/item/stack/rodtoedit = new /obj/item/stack/rods(get_turf(usr))
 					rodtoedit.amount = 2
@@ -307,7 +292,6 @@
 					else
 						user.visible_message(SPAN_NOTICE("[user] secures [src]'s reinforcing rods."), SPAN_NOTICE("You secure [src]'s reinforcing rods."))
 						reinforcement_security = 40
-
 			return
 
 		if(ABORT_CHECK)
@@ -331,7 +315,6 @@
 			return
 	playsound(loc, 'sound/effects/grillehit.ogg', 50, 1)
 	take_damage(I.force)
-
 	return ..()
 
 /obj/structure/railing/attack_generic(mob/M, damage, attack_message)
@@ -375,15 +358,12 @@
 	if(!anchored)	take_damage(maxHealth) // Fatboy
 	climbers -= user
 
-/obj/structure/railing/get_fall_damage(var/turf/from, var/turf/dest)
+/obj/structure/railing/get_fall_damage(turf/from, turf/dest)
 	var/damage = health * 0.4
-
-	if (from && dest)
+	if(from && dest)
 		damage *= abs(from.z - dest.z)
-
 	return damage
 
 /obj/structure/railing/bullet_act(obj/item/projectile/P, def_zone)
 	. = ..()
 	take_damage(P.get_structure_damage())
-

@@ -32,7 +32,7 @@
 			SPAN_NOTICE("You pull the cord on the flare, activating it!")
 		)
 
-/obj/item/device/lighting/glowstick/flare/turn_on(var/mob/user)
+/obj/item/device/lighting/glowstick/flare/turn_on(mob/user)
 	. = ..()
 	if(.)
 		force = on_damage
@@ -52,5 +52,5 @@
 	update_wear_icon()
 
 /obj/item/device/lighting/glowstick/flare/is_hot()
-	if (on)
+	if(on)
 		return heat

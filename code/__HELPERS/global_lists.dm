@@ -51,9 +51,7 @@ GLOBAL_LIST_EMPTY(hearing_objects)			//list of all objects, that can hear mob sa
 //Jobs and economy
 GLOBAL_LIST_EMPTY(joblist)					//list of all jobstypes, minus borg and AI
 GLOBAL_LIST_EMPTY(all_departments)			//List of all department datums
-var/global/list/department_IDs = list(DEPARTMENT_COMMAND, DEPARTMENT_MEDICAL, DEPARTMENT_ENGINEERING,
- DEPARTMENT_SCIENCE, DEPARTMENT_SECURITY, DEPARTMENT_GUILD, DEPARTMENT_CHURCH, DEPARTMENT_CIVILIAN, DEPARTMENT_OFFSHIP)
-
+var/global/list/department_IDs = list(DEPARTMENT_COMMAND, DEPARTMENT_MEDICAL, DEPARTMENT_ENGINEERING, DEPARTMENT_SCIENCE, DEPARTMENT_SECURITY, DEPARTMENT_GUILD, DEPARTMENT_CHURCH, DEPARTMENT_CIVILIAN, DEPARTMENT_OFFSHIP)
 
 GLOBAL_LIST_EMPTY(HUDdatums)
 
@@ -226,10 +224,10 @@ GLOBAL_LIST_EMPTY(ignore_health_alerts_from)
 		var/datum/stash/L = new T
 		//First, make a sublist in the main list if we haven't already
 		//And make a sublist in the main list if we haven't already
-		if (!GLOB.all_stash_datums[L.base_type])
+		if(!GLOB.all_stash_datums[L.base_type])
 			GLOB.all_stash_datums[L.base_type] = list()
 
-		if (L.type == L.base_type)
+		if(L.type == L.base_type)
 			//This is a base category. Add it to the categories list with a weighting
 			GLOB.stash_categories[L.base_type] = L.weight
 
@@ -244,7 +242,7 @@ GLOBAL_LIST_EMPTY(ignore_health_alerts_from)
 		var/datum/language/L = new T
 		all_languages[L.name] = L
 
-	for (var/language_name in all_languages)
+	for(var/language_name in all_languages)
 		var/datum/language/L = all_languages[language_name]
 		if(!(L.flags & NONGLOBAL))
 			language_keys[lowertext(L.key)] = L
@@ -285,7 +283,7 @@ GLOBAL_LIST_EMPTY(ignore_health_alerts_from)
 		var/datum/ritual/R = new T
 
 		//Rituals which are just categories for subclasses will have a null phrase
-		if (R.phrase)
+		if(R.phrase)
 			GLOB.all_rituals[R.name] = R
 
 	return 1

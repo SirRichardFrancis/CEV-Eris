@@ -12,13 +12,13 @@
 
 	var/code = 2
 
-/obj/item/device/radio/electropack/attack_hand(mob/user as mob)
+/obj/item/device/radio/electropack/attack_hand(mob/user)
 	if(src == user.back)
 		to_chat(user, SPAN_NOTICE("You need help taking this off!"))
 		return
 	..()
 
-/obj/item/device/radio/electropack/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/device/radio/electropack/attackby(obj/item/W as obj, mob/user)
 	..()
 	if(istype(W, /obj/item/clothing/head/armor/helmet))
 		if(!b_stat)
@@ -104,26 +104,25 @@
 		master.receive_signal()
 	return
 
-/obj/item/device/radio/electropack/attack_self(mob/user as mob, flag1)
+/obj/item/device/radio/electropack/attack_self(mob/user, flag1)
 
 	if(!ishuman(user))
 		return
 	user.set_machine(src)
 	var/dat = {"<TT>
-<A href='?src=\ref[src];power=1'>Turn [on ? "Off" : "On"]</A><BR>
-<B>Frequency/Code</B> for electropack:<BR>
-Frequency:
-<A href='byond://?src=\ref[src];freq=-10'>-</A>
-<A href='byond://?src=\ref[src];freq=-2'>-</A> [format_frequency(frequency)]
-<A href='byond://?src=\ref[src];freq=2'>+</A>
-<A href='byond://?src=\ref[src];freq=10'>+</A><BR>
+	<a href='byond://?src=\ref[src];power=1'>Turn [on ? "Off" : "On"]</A><BR>
+	<B>Frequency/Code</B> for electropack:<BR>
+	Frequency:
+	<a href='byond://?src=\ref[src];freq=-10'>-</A>
+	<a href='byond://?src=\ref[src];freq=-2'>-</A> [format_frequency(frequency)]
+	<a href='byond://?src=\ref[src];freq=2'>+</A>
+	<a href='byond://?src=\ref[src];freq=10'>+</A><BR>
 
-Code:
-<A href='byond://?src=\ref[src];code=-5'>-</A>
-<A href='byond://?src=\ref[src];code=-1'>-</A> [code]
-<A href='byond://?src=\ref[src];code=1'>+</A>
-<A href='byond://?src=\ref[src];code=5'>+</A><BR>
-</TT>"}
-	user << browse(dat, "window=radio")
+	Code:
+	<a href='byond://?src=\ref[src];code=-5'>-</A>
+	<a href='byond://?src=\ref[src];code=-1'>-</A> [code]
+	<a href='byond://?src=\ref[src];code=1'>+</A>
+	<a href='byond://?src=\ref[src];code=5'>+</A><BR>
+	</TT>"}
+	user << browse(HTML_SKELETON(dat), "window=radio")
 	onclose(user, "radio")
-	return

@@ -221,7 +221,7 @@
 	var/DamageToApply = round(BombDamage / 4)
 
 	for(var/limb in BP_BY_DEPTH)
-		if (limb in organ_rel_size)
+		if(limb in organ_rel_size)
 			apply_damage(DamageToApply * (organ_rel_size[limb] / 100), BRUTE, limb)
 	return BombDamage * BlockCoefficient
 
@@ -236,7 +236,7 @@
 /mob/living/carbon/human/var/temperature_resistance = T0C+75
 
 
-/mob/living/carbon/human/show_inv(mob/user as mob)
+/mob/living/carbon/human/show_inv(mob/user)
 	if(user.incapacitated()  || !user.Adjacent(src))
 		return
 
@@ -252,36 +252,31 @@
 		if(slot in list(slot_l_store, slot_r_store))
 			continue
 		var/obj/item/thing_in_slot = get_equipped_item(slot)
-		dat += "<BR><B>[entry]:</b> <a href='?src=\ref[src];item=[slot]'>[istype(thing_in_slot) ? thing_in_slot : "nothing"]</a>"
+		dat += "<BR><B>[entry]:</b> <a href='byond://?src=\ref[src];item=[slot]'>[istype(thing_in_slot) ? thing_in_slot : "nothing"]</a>"
 
 	dat += "<BR><HR>"
-
-/*	if(species.hud.has_hands)
-		dat += "<BR><b>Left hand:</b> <A href='?src=\ref[src];item=[slot_l_hand]'>[istype(l_hand) ? l_hand : "nothing"]</A>"
-		dat += "<BR><b>Right hand:</b> <A href='?src=\ref[src];item=[slot_r_hand]'>[istype(r_hand) ? r_hand : "nothing"]</A>"*/
 
 	// Do they get an option to set internals?
 	if(istype(wear_mask, /obj/item/clothing/mask) || istype(head, /obj/item/clothing/head/space))
 		if(istype(back, /obj/item/tank) || istype(belt, /obj/item/tank) || istype(s_store, /obj/item/tank))
-			dat += "<BR><A href='?src=\ref[src];item=internals'>Toggle internals.</A>"
+			dat += "<BR><a href='byond://?src=\ref[src];item=internals'>Toggle internals.</A>"
 
 	// Other incidentals.
 	if(handcuffed)
-		dat += "<BR><A href='?src=\ref[src];item=[slot_handcuffed]'>Handcuffed</A>"
+		dat += "<BR><a href='byond://?src=\ref[src];item=[slot_handcuffed]'>Handcuffed</A>"
 	if(legcuffed)
-		dat += "<BR><A href='?src=\ref[src];item=[slot_legcuffed]'>Legcuffed</A>"
+		dat += "<BR><a href='byond://?src=\ref[src];item=[slot_legcuffed]'>Legcuffed</A>"
 
 	if(suit && suit.accessories.len)
-		dat += "<BR><A href='?src=\ref[src];item=tie'>Remove accessory</A>"
-	dat += "<BR><A href='?src=\ref[src];item=splints'>Remove splints</A>"
-	dat += "<BR><A href='?src=\ref[src];item=pockets'>Empty pockets</A>"
-	dat += "<BR><A href='?src=\ref[user];refresh=1'>Refresh</A>"
-	dat += "<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>"
+		dat += "<BR><a href='byond://?src=\ref[src];item=tie'>Remove accessory</A>"
+	dat += "<BR><a href='byond://?src=\ref[src];item=splints'>Remove splints</A>"
+	dat += "<BR><a href='byond://?src=\ref[src];item=pockets'>Empty pockets</A>"
+	dat += "<BR><a href='byond://?src=\ref[user];refresh=1'>Refresh</A>"
+	dat += "<BR><a href='byond://?src=\ref[user];mach_close=mob[name]'>Close</A>"
 
 	var/datum/browser/panel = new(user, "mob[name]", "Mob", 340, 540)
 	panel.set_content(dat)
 	panel.open()
-
 
 // called when something steps onto a human
 // this handles mulebots and vehicles
@@ -463,7 +458,7 @@ var/list/rank_prefix = list(\
 								to_chat(usr, "<b>Major Crimes:</b> [R.fields["ma_crim"]]")
 								to_chat(usr, "<b>Details:</b> [R.fields["ma_crim_d"]]")
 								to_chat(usr, "<b>Notes:</b> [R.fields["notes"]]")
-								to_chat(usr, "<a href='?src=\ref[src];secrecordComment=`'>\[View Comment Log\]</a>")
+								to_chat(usr, "<a href='byond://?src=\ref[src];secrecordComment=`'>\[View Comment Log\]</a>")
 								read = 1
 
 			if(!read)
@@ -492,7 +487,7 @@ var/list/rank_prefix = list(\
 									counter++
 								if(counter == 1)
 									to_chat(usr, "No comment found")
-								to_chat(usr, "<a href='?src=\ref[src];secrecordadd=`'>\[Add comment\]</a>")
+								to_chat(usr, "<a href='byond://?src=\ref[src];secrecordadd=`'>\[Add comment\]</a>")
 
 			if(!read)
 				to_chat(usr, "\red Unable to locate a data core entry for this person.")
@@ -591,7 +586,7 @@ var/list/rank_prefix = list(\
 								to_chat(usr, "<b>Major Disabilities:</b> [R.fields["ma_dis"]]")
 								to_chat(usr, "<b>Details:</b> [R.fields["ma_dis_d"]]")
 								to_chat(usr, "<b>Notes:</b> [R.fields["notes"]]")
-								to_chat(usr, "<a href='?src=\ref[src];medrecordComment=`'>\[View Comment Log\]</a>")
+								to_chat(usr, "<a href='byond://?src=\ref[src];medrecordComment=`'>\[View Comment Log\]</a>")
 								read = 1
 
 			if(!read)
@@ -624,7 +619,7 @@ var/list/rank_prefix = list(\
 									counter++
 								if(counter == 1)
 									to_chat(usr, "No comment found")
-								to_chat(usr, "<a href='?src=\ref[src];medrecordadd=`'>\[Add comment\]</a>")
+								to_chat(usr, "<a href='byond://?src=\ref[src];medrecordadd=`'>\[Add comment\]</a>")
 
 			if(!read)
 				to_chat(usr, "\red Unable to locate a data core entry for this person.")
@@ -725,7 +720,6 @@ var/list/rank_prefix = list(\
 
 	if( (src.l_hand && !src.l_hand.abstract) || (src.r_hand && !src.r_hand.abstract) )
 		return 1
-
 	return 0
 
 /mob/living/carbon/human/get_species()
@@ -741,7 +735,6 @@ var/list/rank_prefix = list(\
 		xylophone = 1
 		spawn(1200)
 			xylophone=0
-	return
 
 /mob/living/carbon/human/proc/check_has_mouth()
 	// Todo, check stomach organ when implemented.
@@ -750,8 +743,7 @@ var/list/rank_prefix = list(\
 		return FALSE
 	return TRUE
 
-/mob/living/carbon/human/vomit(var/forced = 0)
-
+/mob/living/carbon/human/vomit(forced = 0)
 	if(!check_has_mouth())
 		return
 	if(stat == DEAD)
@@ -802,9 +794,7 @@ var/list/rank_prefix = list(\
 					if(H.brainmob.mind)
 						H.brainmob.mind.transfer_to(src)
 						qdel(H)
-
 	losebreath = 0
-
 	..()
 
 /mob/living/carbon/human/add_blood(mob/living/carbon/human/M)
@@ -849,8 +839,6 @@ var/list/rank_prefix = list(\
 				feet_blood_DNA.Cut()
 				update_inv_shoes()
 
-	return
-
 /mob/living/carbon/human/get_visible_implants()
 	var/list/visible_implants = list()
 
@@ -868,7 +856,6 @@ var/list/rank_prefix = list(\
 	return FALSE
 
 /mob/living/carbon/human/proc/handle_embedded_objects()
-
 	for(var/obj/item/organ/external/organ in organs)
 		if(organ.status & ORGAN_SPLINTED) //Splints prevent movement.
 			continue
@@ -902,7 +889,8 @@ var/list/rank_prefix = list(\
 	set src in view(1)
 	var/self = 0
 
-	if(usr.stat || usr.restrained() || !isliving(usr)) return
+	if(usr.stat || usr.restrained() || !isliving(usr))
+		return
 
 	if(usr == src)
 		self = 1
@@ -1243,7 +1231,7 @@ var/list/rank_prefix = list(\
 			return TRUE
 	return FALSE
 
-/mob/living/carbon/human/slip(var/slipped_on, stun_duration=8)
+/mob/living/carbon/human/slip(slipped_on, stun_duration=8)
 	if((species.flags & NO_SLIP) || (shoes && (shoes.item_flags & NOSLIP)))
 		return FALSE
 	return ..(slipped_on,stun_duration)
@@ -1428,7 +1416,7 @@ var/list/rank_prefix = list(\
 //	else
 	return FALSE
 
-/mob/living/carbon/human/proc/set_remoteview(var/atom/A)
+/mob/living/carbon/human/proc/set_remoteview(atom/A)
 	remoteview_target = A
 	reset_view(A)
 
@@ -1548,7 +1536,6 @@ var/list/rank_prefix = list(\
 		var/obj/screen/block/HUD = HUDneed["block"]
 		HUD.update_icon()
 	update_block_overlay()
-	return
 
 /mob/living/carbon/human/proc/stop_blocking()
 	if(!blocking)//already blockingn't with an item somehow?
@@ -1559,4 +1546,3 @@ var/list/rank_prefix = list(\
 		var/obj/screen/block/HUD = HUDneed["block"]
 		HUD.update_icon()
 	update_block_overlay()
-	return

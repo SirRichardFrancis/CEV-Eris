@@ -278,7 +278,7 @@ var/list/custom_table_appearance = list(
 	if(!istype(M))
 		to_chat(user, SPAN_WARNING("You cannot [verb]e \the [src] with \the [S]."))
 		return null
-	if (src.flipped && istype(M, /material/glass))
+	if(src.flipped && istype(M, /material/glass))
 		to_chat(user, SPAN_WARNING("You cannot [verb]e \the [src] with \the [S] when [src] flipped!"))
 		return null
 	if(manipulating) return M
@@ -297,9 +297,8 @@ var/list/custom_table_appearance = list(
 		to_chat(user, SPAN_WARNING("You are unable to remove the [what] from this table!"))
 		return M
 	user.visible_message(SPAN_NOTICE("\The [user] removes the [M.display_name] [what] from \the [src]."),
-	                              SPAN_NOTICE("You remove the [M.display_name] [what] from \the [src]."))
+						SPAN_NOTICE("You remove the [M.display_name] [what] from \the [src]."))
 	new M.stack_type(src.loc)
-	return null
 
 /obj/structure/table/proc/remove_reinforced(obj/item/I, mob/user)
 	reinforced = common_material_remove(user, reinforced, 40, "reinforcements", "screws")
@@ -356,18 +355,18 @@ var/list/custom_table_appearance = list(
 		if(!custom_appearance || (custom_appearance && !(custom_appearance[4] == CUSTOM_TABLE_ICON_REPLACE)))
 			// Standard table image
 			if(material)
-				if (istype(material, /material/glass))
+				if(istype(material, /material/glass))
 					for(var/i = 1 to 4)
 						I = image(icon, "glass_[connections[i]]", dir = 1<<(i-1))
 						if(material.icon_colour)
 							I.color = material.icon_colour
 						overlays += I
 						var/material/glass/G = material
-						if (G.is_reinforced())
+						if(G.is_reinforced())
 							I = image(icon, "rglass_[connections[i]]", dir = 1<<(i-1))
 							overlays += I
 
-				else if (istype(material, /material/wood))
+				else if(istype(material, /material/wood))
 					for(var/i = 1 to 4)
 						I = image(icon, "wood_[connections[i]]", dir = 1<<(i-1))
 						overlays += I
@@ -397,15 +396,15 @@ var/list/custom_table_appearance = list(
 		var/tabledirs = 0
 		for(var/direction in list(turn(dir,90), turn(dir,-90)) )
 			var/obj/structure/table/T = locate(/obj/structure/table ,get_step(src,direction))
-			if (T && T.flipped == 1 && T.dir == src.dir && material && T.material && T.material.name == material.name)
+			if(T && T.flipped == 1 && T.dir == src.dir && material && T.material && T.material.name == material.name)
 				type++
 				tabledirs |= direction
 
 		type = "[type]"
-		if (type=="1")
-			if (tabledirs & turn(dir,90))
+		if(type=="1")
+			if(tabledirs & turn(dir,90))
 				type += "-"
-			if (tabledirs & turn(dir,-90))
+			if(tabledirs & turn(dir,-90))
 				type += "+"
 
 		icon_state = "flip[type]"
@@ -413,7 +412,7 @@ var/list/custom_table_appearance = list(
 			var/image/I = image(icon, "[custom_appearance[3]]_flip[type]")
 			overlays += I
 		else if(material)
-			if (istype(material, /material/wood))
+			if(istype(material, /material/wood))
 				var/image/I = image(icon, "wood_flip[type]")
 				overlays += I
 			else
@@ -491,10 +490,10 @@ var/list/custom_table_appearance = list(
 #define CORNER_CLOCKWISE 4
 
 /*
-  turn() is weird:
-    turn(icon, angle) turns icon by angle degrees clockwise
-    turn(matrix, angle) turns matrix by angle degrees clockwise
-    turn(dir, angle) turns dir by angle degrees counter-clockwise
+	turn() is weird:
+	turn(icon, angle) turns icon by angle degrees clockwise
+	turn(matrix, angle) turns matrix by angle degrees clockwise
+	turn(dir, angle) turns dir by angle degrees counter-clockwise
 */
 
 //This function is more complex than it appears.

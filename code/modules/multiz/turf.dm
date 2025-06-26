@@ -129,7 +129,7 @@ see multiz/movement.dm for some info.
 		return
 
 	var/obj/effect/shield/turf_shield = getEffectShield()
-	if (turf_shield && !turf_shield.CanPass(mover))
+	if(turf_shield && !turf_shield.CanPass(mover))
 		return
 
 	// See if something prevents us from falling.
@@ -219,22 +219,22 @@ see multiz/movement.dm for some info.
 		SEND_SIGNAL_OLD(O, COMSIG_TURF_LEVELUPDATE, FALSE)
 
 // Straight copy from space.
-/turf/open/attackby(obj/item/C as obj, mob/user as mob)
-	if (istype(C, /obj/item/stack/rods))
+/turf/open/attackby(obj/item/C as obj, mob/user)
+	if(istype(C, /obj/item/stack/rods))
 		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
 		if(L)
 			return
 		var/obj/item/stack/rods/R = C
-		if (R.use(1))
+		if(R.use(1))
 			to_chat(user, SPAN_NOTICE("Constructing support lattice ..."))
 			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
 			ReplaceWithLattice()
 		return
 
-	if (istype(C, /obj/item/stack/material))
+	if(istype(C, /obj/item/stack/material))
 		var/obj/item/stack/material/M = C
 		var/material/mat = M.get_material()
-		if (!mat.name == MATERIAL_STEEL)
+		if(!mat.name == MATERIAL_STEEL)
 			return
 
 		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)

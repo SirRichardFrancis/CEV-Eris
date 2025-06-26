@@ -2,7 +2,7 @@
 
 /datum/objective/abduct/get_panel_entry()
 	var/target = src.target ? "[src.target.current.real_name], the [src.target.assigned_role]" : "no_target"
-	return "Capture <a href='?src=\ref[src];switch_target=1'>[target]</a> alive and take them away from the ship."
+	return "Capture <a href='byond://?src=\ref[src];switch_target=1'>[target]</a> alive and take them away from the ship."
 
 /datum/objective/abduct/update_explanation()
 	if(target && target.current)
@@ -11,7 +11,7 @@
 		explanation_text = "Target has not arrived today. Is it a coincidence?"
 
 /datum/objective/abduct/check_completion()
-	if (failed)
+	if(failed)
 		return FALSE
 
 	if(!target || !target.current)
@@ -20,6 +20,6 @@
 	if(target.current.stat == DEAD)
 		return FALSE
 	var/list/all_items = get_owner_inventory() //This will get atoms aboard the faction ship
-	if (!(target.current in all_items))
+	if(!(target.current in all_items))
 		return FALSE
 	return TRUE

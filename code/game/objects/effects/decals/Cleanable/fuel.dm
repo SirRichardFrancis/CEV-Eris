@@ -8,7 +8,7 @@
 
 /obj/effect/decal/cleanable/liquid_fuel/New(turf/newLoc,_amount=1,nologs=0)
 	if(usr && usr.client && !nologs)
-		message_admins("Liquid fuel has spilled in [newLoc.loc.name] ([newLoc.x],[newLoc.y],[newLoc.z]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[newLoc.x];Y=[newLoc.y];Z=[newLoc.z]'>JMP</a>)")
+		message_admins("Liquid fuel has spilled in [newLoc.loc.name] ([newLoc.x],[newLoc.y],[newLoc.z]) (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[newLoc.x];Y=[newLoc.y];Z=[newLoc.z]'>JMP</a>)")
 		log_game("Liquid fuel has spilled in [newLoc.loc.name] ([newLoc.x],[newLoc.y],[newLoc.z])")
 	amount = _amount
 
@@ -68,7 +68,7 @@
 
 	for(var/d in list(turn(dir,90),turn(dir,-90), dir))
 		var/turf/O = get_step(S,d)
-		if (O == origin)
+		if(O == origin)
 			continue //No torching the user
 		if(!(locate(/obj/effect/decal/cleanable/liquid_fuel/flamethrower_fuel) in O))
 

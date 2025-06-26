@@ -57,7 +57,7 @@
 	S.setValue(Value)
 
 /datum/stat_holder/proc/getStat(statName, pure = FALSE)
-	if (!islist(statName))
+	if(!islist(statName))
 		var/datum/stat/S = stat_list[statName]
 		if(holder)
 			SEND_SIGNAL_OLD(holder, COMSIG_STAT, S.name, S.getValue(), S.getValue(TRUE))
@@ -73,7 +73,7 @@
 		log_debug("passed non-list to getMinStat()")
 		return 0
 	var/lowest = INFINITY
-	for (var/name in namesList)
+	for(var/name in namesList)
 		if(getStat(name, pure) < lowest)
 			lowest = getStat(name, pure)
 	return lowest
@@ -84,7 +84,7 @@
 		log_debug("passed non-list to getMaxStat()")
 		return 0
 	var/highest = -INFINITY
-	for (var/name in namesList)
+	for(var/name in namesList)
 		if(getStat(name, pure) > highest)
 			highest = getStat(name, pure)
 	return highest
@@ -95,7 +95,7 @@
 		log_debug("passed non-list to getSumStat()")
 		return 0
 	var/sum = 0
-	for (var/name in namesList)
+	for(var/name in namesList)
 		sum += getStat(name, pure)
 	return sum
 
@@ -120,9 +120,9 @@
 // return value from 0 to 1 based on value of stat, more stat value less return value
 // use this proc to get multiplier for decreasing delay time (exaple: "50 * getMult(STAT_ROB, STAT_LEVEL_ADEPT)"  this will result in 5 seconds if stat STAT_ROB = 0 and result will be 0 if STAT_ROB = STAT_LEVEL_ADEPT)
 /datum/stat_holder/proc/getMult(statName, statCap = STAT_LEVEL_MAX, pure = FALSE)
-    if(!statName)
-        return
-    return 1 - max(0,min(1,getStat(statName, pure)/statCap))
+	if(!statName)
+		return
+	return 1 - max(0,min(1,getStat(statName, pure)/statCap))
 
 /datum/stat_holder/proc/getPerk(perkType)
 	RETURN_TYPE(/datum/perk)
@@ -252,13 +252,13 @@
 
 /proc/statPointsToLevel(var/points)
 	switch(points)
-		if (STAT_LEVEL_NONE to STAT_LEVEL_BASIC)
+		if(STAT_LEVEL_NONE to STAT_LEVEL_BASIC)
 			return "Untrained"
-		if (STAT_LEVEL_BASIC to STAT_LEVEL_ADEPT)
+		if(STAT_LEVEL_BASIC to STAT_LEVEL_ADEPT)
 			return "Basic"
-		if (STAT_LEVEL_ADEPT to STAT_LEVEL_EXPERT)
+		if(STAT_LEVEL_ADEPT to STAT_LEVEL_EXPERT)
 			return "Adept"
-		if (STAT_LEVEL_EXPERT to STAT_LEVEL_PROF)
+		if(STAT_LEVEL_EXPERT to STAT_LEVEL_PROF)
 			return "Expert"
-		if (STAT_LEVEL_PROF to INFINITY)
+		if(STAT_LEVEL_PROF to INFINITY)
 			return "Master"

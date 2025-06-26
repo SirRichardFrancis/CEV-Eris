@@ -24,12 +24,12 @@
 		while(select_query.NextRow())
 			poll_id = select_query.item[1]
 			poll_question = select_query.item[2]
-			output += "<tr bgcolor='[ (i % 2 == 1) ? color1 : color2 ]'><td><a href=\"byond://?src=\ref[src];poll_id=[poll_id]\"><b>[poll_question]</b></a></td></tr>"
+			output += "<tr bgcolor='[ (i % 2 == 1) ? color1 : color2 ]'><td><a href='byond://\"byond://?src=\ref[src];poll_id=[poll_id]\"'><b>[poll_question]</b></a></td></tr>"
 			i++
 
 		output += "</table>"
 
-		src << browse(output,"window=playerpolllist;size=500x300")
+		src << browse(HTML_SKELETON(output), "window=playerpolllist;size=500x300")
 
 
 /mob/new_player/proc/poll_player(var/poll_id = -1)
@@ -114,7 +114,7 @@
 
 				output += "</div>"
 
-				src << browse(output,"window=playerpoll;size=500x250")
+				src << browse(HTML_SKELETON(output), "window=playerpoll;size=500x250")
 
 			//Polls with a text input
 			if("TEXT")
@@ -157,7 +157,7 @@
 				else
 					output += "[vote_text]"
 
-				src << browse(output,"window=playerpoll;size=500x500")
+				src << browse(HTML_SKELETON(output), "window=playerpoll;size=500x500")
 
 
 /mob/new_player/proc/vote_on_poll(var/poll_id = -1, var/option_id = -1)

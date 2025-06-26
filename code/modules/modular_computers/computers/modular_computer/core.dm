@@ -33,7 +33,7 @@
 	)
 	if(enabled && world.time > ambience_last_played + 60 SECONDS && prob(1))
 		ambience_last_played = world.time
-		playsound(src.loc, pick(beepsounds),15,1,10)
+		playsound(loc, pick(beepsounds),15,1,10)
 
 // Used to perform preset-specific hardware changes.
 /obj/item/modular_computer/proc/install_default_hardware()
@@ -59,7 +59,6 @@
 
 /obj/item/modular_computer/Initialize()
 	START_PROCESSING(SSobj, src)
-
 	if(stores_pen && ispath(stored_pen))
 		stored_pen = new stored_pen(src)
 
@@ -79,7 +78,6 @@
 	kill_program(forced=TRUE)
 	QDEL_LIST(terminals)
 	STOP_PROCESSING(SSobj, src)
-
 	if(stored_pen && !ispath(stored_pen))
 		QDEL_NULL(stored_pen)
 
@@ -94,7 +92,7 @@
 		qdel(CH)
 	QDEL_NULL(cell)
 
-/obj/item/modular_computer/emag_act(var/remaining_charges, var/mob/user)
+/obj/item/modular_computer/emag_act(remaining_charges, mob/user)
 	if(computer_emagged)
 		to_chat(user, "\The [src] was already emagged.")
 		return NO_EMAG_ACT
@@ -105,7 +103,7 @@
 
 /obj/item/modular_computer/update_icon()
 	overlays.Cut()
-	if (screen_on)
+	if(screen_on)
 		if(bsod)
 			overlays.Add("bsod")
 			set_light(screen_light_range, screen_light_strength, get_average_color(icon,"bsod"), skip_screen_check = TRUE)
@@ -129,13 +127,13 @@
 
 //skip_screen_check is used when set_light is called from update_icon
 /obj/item/modular_computer/set_light(range, brightness, color, skip_screen_check = FALSE)
-	if (enabled && led && led.enabled)
+	if(enabled && led && led.enabled)
 		//We need to buff non handheld devices cause othervise their screen light might be brighter
 		brightness = (hardware_flag & (PROGRAM_PDA | PROGRAM_TABLET)) ? led.brightness_power : (led.brightness_power * 1.4)
 		range = (hardware_flag & (PROGRAM_PDA | PROGRAM_TABLET)) ? led.brightness_range : (led.brightness_range * 1.2)
 		..(range, brightness, led.brightness_color)
-	else if (!skip_screen_check)
-		if (screen_on)
+	else if(!skip_screen_check)
+		if(screen_on)
 			if(bsod)
 				color = get_average_color(icon, "bsod")
 				..(screen_light_range, screen_light_strength, color)
@@ -152,8 +150,7 @@
 	else
 		..(range, brightness, color)
 
-
-/obj/item/modular_computer/proc/turn_on(var/mob/user)
+/obj/item/modular_computer/proc/turn_on(mob/user)
 	if(bsod)
 		return
 	if(tesla_link)
@@ -190,20 +187,19 @@
 	update_icon()
 
 // Returns 0 for No Signal, 1 for Low Signal and 2 for Good Signal. 3 is for wired connection (always-on)
-/obj/item/modular_computer/proc/get_ntnet_status(var/specific_action = FALSE)
+/obj/item/modular_computer/proc/get_ntnet_status(specific_action = FALSE)
 	if(network_card)
 		return network_card.get_signal(specific_action)
 	else
 		return FALSE
 
-/obj/item/modular_computer/proc/add_log(var/text)
+/obj/item/modular_computer/proc/add_log(text)
 	if(!get_ntnet_status())
 		return FALSE
 	return ntnet_global.add_log(text, network_card)
 
 /obj/item/modular_computer/proc/shutdown_computer(loud = FALSE)
 	QDEL_LIST(terminals)
-
 	kill_program(forced=TRUE)
 	for(var/p in all_threads)
 		var/datum/computer_file/program/PRG = p
@@ -211,8 +207,8 @@
 		all_threads.Remove(PRG)
 
 	//Turn on all non-disabled hardware
-	for (var/obj/item/computer_hardware/H in src)
-		if (H.enabled)
+	for(var/obj/item/computer_hardware/H in src)
+		if(H.enabled)
 			H.disabled()
 	if(loud)
 		visible_message("\The [src] shuts down.", range = TRUE)
@@ -224,13 +220,12 @@
 	update_icon()
 
 	//Turn on all non-disabled hardware
-	for (var/obj/item/computer_hardware/H in src)
-		if (H.enabled)
+	for(var/obj/item/computer_hardware/H in src)
+		if(H.enabled)
 			H.enabled()
 
 	// Autorun feature
 	autorun_program(hard_drive)
-
 	if(user)
 		nano_ui_interact(user)
 
@@ -301,10 +296,9 @@
 
 /obj/item/modular_computer/proc/update_label()
 	var/obj/item/card/id/I = GetIdCard()
-	if (istype(I))
+	if(istype(I))
 		SetName("[initial(name)]-[I.registered_name] ([I.assignment])")
 		return
-
 	SetName(initial(name))
 
 /obj/item/modular_computer/proc/update_uis()
@@ -351,7 +345,7 @@
 		update_uis()
 
 // Used by camera monitor program
-/obj/item/modular_computer/check_eye(var/mob/user)
+/obj/item/modular_computer/check_eye(mob/user)
 	if(active_program)
 		return active_program.check_eye(user)
 	else
@@ -381,31 +375,26 @@
 		return
 	LAZYADD(terminals, new /datum/terminal/(user, src))
 
-
-/obj/item/modular_computer/proc/getProgramByType(type, include_portable=TRUE)
+/obj/item/modular_computer/proc/getProgramByType(type, include_portable = TRUE)
 	var/datum/computer_file/F = null
-
 	if(hard_drive?.check_functionality())
 		F = locate(type) in hard_drive.stored_files
 
 	if(!F && include_portable && portable_drive?.check_functionality())
 		F = locate(type) in portable_drive.stored_files
-
 	return F
 
-/obj/item/modular_computer/proc/getFileByName(name, include_portable=TRUE)
+/obj/item/modular_computer/proc/getFileByName(name, include_portable = TRUE)
 	var/datum/computer_file/F = null
-
 	if(hard_drive?.check_functionality())
 		F = hard_drive.find_file_by_name(name)
 
 	if(!F && include_portable && portable_drive?.check_functionality())
 		F = portable_drive.find_file_by_name(name)
-
 	return F
 
 // accepts either name or type
-/obj/item/modular_computer/proc/getNanoModuleByFile(var/name)
+/obj/item/modular_computer/proc/getNanoModuleByFile(name)
 	var/datum/computer_file/program/P
 	if(ispath(name))
 		P = getProgramByType(name)
@@ -414,6 +403,5 @@
 	if(!P || !istype(P))
 		return null
 	var/datum/nano_module/module = P.NM
-	if(!module)
-		return null
-	return module
+	if(module)
+		return module

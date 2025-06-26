@@ -27,9 +27,6 @@
 	health -= damage
 	if(health < 0)
 		qdel(src)
-	return
-
-
 
 /**
  * An overridable proc used by SSfalling to determine whether if the object deals
@@ -40,12 +37,10 @@
  *
  * Values are found in code/__defines/inventory_sizes.dm
  */
-/obj/structure/get_fall_damage(var/turf/from, var/turf/dest)
+/obj/structure/get_fall_damage(turf/from, turf/dest)
 	var/damage = w_class * 10 * get_health_ratio()
-
-	if (from && dest)
+	if(from && dest)
 		damage *= abs(from.z - dest.z)
-
 	return damage
 
 /obj/structure/Destroy()
@@ -67,7 +62,6 @@
 		user.visible_message(SPAN_WARNING("[user.name] shakes \the [src]."), \
 					SPAN_NOTICE("You shake \the [src]."))
 		structure_shaken()
-
 	return ..()
 
 /obj/structure/attack_tk()
@@ -83,7 +77,6 @@
 		verbs += /obj/structure/proc/climb_on
 
 /obj/structure/proc/climb_on()
-
 	set name = "Climb structure"
 	set desc = "Climbs onto a structure."
 	set category = "Object"
@@ -92,7 +85,6 @@
 	do_climb(usr)
 
 /obj/structure/MouseDrop_T(mob/target, mob/user)
-
 	var/mob/living/H = user
 	if(istype(H) && can_climb(H) && (target == user || ismech(user.loc)))
 		do_climb(target)
@@ -100,7 +92,7 @@
 		return ..()
 
 /obj/structure/proc/can_climb(mob/living/user, post_climb_check=0)
-	if (!climbable || !can_touch(user) || (!post_climb_check && (user in climbers)))
+	if(!climbable || !can_touch(user) || (!post_climb_check && (user in climbers)))
 		return FALSE
 
 	if(ismech(user.loc))
@@ -108,7 +100,7 @@
 		if(!mech.Adjacent(src))
 			to_chat(user, SPAN_DANGER("You can't climb there, the way is blocked."))
 			return FALSE
-	else if (!user.Adjacent(src))
+	else if(!user.Adjacent(src))
 		to_chat(user, SPAN_DANGER("You can't climb there, the way is blocked."))
 		return FALSE
 
@@ -146,25 +138,23 @@
 	return 1
 
 /obj/structure/proc/do_climb(mob/living/user)
-	if (!can_climb(user))
+	if(!can_climb(user))
 		return
 
 	user.visible_message(SPAN_WARNING("[user] starts climbing onto \the [src]!"))
 	climbers |= user
-
 	var/delay = (issmall(user) ? 20 : 34) * (user.stats.getPerk(PERK_PARKOUR) ? 0.5 : 1)
 	var/duration = max(delay * user.stats.getMult(STAT_VIG, STAT_LEVEL_EXPERT), delay * 0.66)
 	if(!do_after(user, duration, src))
 		climbers -= user
 		return
 
-	if (!can_climb(user, post_climb_check=1))
+	if(!can_climb(user, post_climb_check=1))
 		climbers -= user
 		return
 
 	user.forceMove(get_turf(src))
-
-	if (get_turf(user) == get_turf(src))
+	if(get_turf(user) == get_turf(src))
 		user.visible_message(SPAN_WARNING("[user] climbs onto \the [src]!"))
 	climbers -= user
 	add_fingerprint(user)
@@ -182,7 +172,6 @@
 		to_chat(M, SPAN_DANGER("You topple as \the [src] moves under you!"))
 
 		if(prob(25))
-
 			var/damage = rand(15,30)
 			var/mob/living/carbon/human/H = M
 			if(!istype(H))
@@ -191,7 +180,6 @@
 				return
 
 			var/obj/item/organ/external/affecting
-
 			switch(pick(list("head","knee","elbow")))
 				if("knee")
 					affecting = H.get_organ(pick(BP_L_LEG , BP_R_LEG))
@@ -211,25 +199,24 @@
 
 			H.UpdateDamageIcon()
 			H.updatehealth()
-	return
 
-/obj/structure/proc/can_touch(var/mob/user)
-	if (!user)
+/obj/structure/proc/can_touch(mob/user)
+	if(!user)
 		return 0
 	if(!Adjacent(user))
 		return 0
 
-	if (!ismech(user) && (user.restrained() || user.buckled))
+	if(!ismech(user) && (user.restrained() || user.buckled))
 		to_chat(user, SPAN_NOTICE("You need your hands and legs free for this."))
 		return 0
-	if (user.stat || user.paralysis || user.sleeping || user.lying || user.weakened)
+	if(user.stat || user.paralysis || user.sleeping || user.lying || user.weakened)
 		return 0
-	if (issilicon(user))
+	if(issilicon(user))
 		to_chat(user, SPAN_NOTICE("You need hands for this."))
 		return 0
 	return 1
 
-/obj/structure/attack_generic(var/mob/user, var/damage, var/attack_verb, var/wallbreaker)
+/obj/structure/attack_generic(mob/user, damage, attack_verb, wallbreaker)
 	if(!breakable || !damage || !wallbreaker)
 		return 0
 	visible_message(SPAN_DANGER("[user] [attack_verb] the [src] apart!"))

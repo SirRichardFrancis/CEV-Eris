@@ -41,18 +41,18 @@
 
 	var/dat = {"<B>Freeze Gun Configuration: </B><BR>
 	Current output temperature: [temp_text]<BR>
-	Target output temperature: <A href='?src=\ref[src];temp=-100'>-</A> <A href='?src=\ref[src];temp=-10'>-</A> <A href='?src=\ref[src];temp=-1'>-</A> [current_temperature] <A href='?src=\ref[src];temp=1'>+</A> <A href='?src=\ref[src];temp=10'>+</A> <A href='?src=\ref[src];temp=100'>+</A><BR>
+	Target output temperature: <a href='byond://?src=\ref[src];temp=-100'>-</A> <a href='byond://?src=\ref[src];temp=-10'>-</A> <a href='byond://?src=\ref[src];temp=-1'>-</A> [current_temperature] <a href='byond://?src=\ref[src];temp=1'>+</A> <a href='byond://?src=\ref[src];temp=10'>+</A> <a href='byond://?src=\ref[src];temp=100'>+</A><BR>
 	"}
 
-	user << browse(dat, "window=freezegun;size=450x300;can_resize=1;can_close=1;can_minimize=1")
+	user << browse(HTML_SKELETON(dat), "window=freezegun;size=450x300;can_resize=1;can_close=1;can_minimize=1")
 	onclose(user, "window=freezegun", src)
 
 
 /obj/item/gun/energy/temperature/Topic(href, href_list)
-	if (..())
+	if(..())
 		return 1
 	usr.set_machine(src)
-	src.add_fingerprint(usr)
+	add_fingerprint(usr)
 
 
 
@@ -62,9 +62,9 @@
 			src.current_temperature = min(500, src.current_temperature+amount)
 		else
 			src.current_temperature = max(0, src.current_temperature+amount)
-	if (ismob(loc))
+	if(ismob(loc))
 		attack_self(loc)
-	src.add_fingerprint(usr)
+	add_fingerprint(usr)
 	return
 
 

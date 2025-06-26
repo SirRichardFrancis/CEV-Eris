@@ -70,13 +70,13 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 // HIDDEN UPLINK - Can be stored in anything but the host item has to have a trigger for it.
 /* How to create an uplink in 3 easy steps!
 
- 1. All obj/item 's have a hidden_uplink var. By default it's null. Give the item one with "new(src)", it must be in it's contents. Feel free to add "uses".
+1. All obj/item 's have a hidden_uplink var. By default it's null. Give the item one with "new(src)", it must be in it's contents. Feel free to add "uses".
 
- 2. Code in the triggers. Use check_trigger for this, I recommend closing the item's menu with "usr << browse(null, "window=windowname") if it returns true.
- The var/value is the value that will be compared with the var/target. If they are equal it will activate the menu.
+2. Code in the triggers. Use check_trigger for this, I recommend closing the item's menu with "usr << browse(null, "window=windowname") if it returns true.
+The var/value is the value that will be compared with the var/target. If they are equal it will activate the menu.
 
- 3. If you want the menu to stay until the users locks his uplink, add an active_uplink_check(mob/user as mob) in your interact/attack_hand proc.
- Then check if it's true, if true return. This will stop the normal menu appearing and will instead show the uplink menu.
+3. If you want the menu to stay until the users locks his uplink, add an active_uplink_check(mob/user) in your interact/attack_hand proc.
+Then check if it's true, if true return. This will stop the normal menu appearing and will instead show the uplink menu.
 */
 
 /obj/item/device/uplink/hidden
@@ -103,7 +103,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	active = !active
 
 // Directly trigger the uplink. Turn on if it isn't already.
-/obj/item/device/uplink/hidden/proc/trigger(mob/user as mob)
+/obj/item/device/uplink/hidden/proc/trigger(mob/user)
 	if(!active)
 		toggle()
 	interact(user)
@@ -111,7 +111,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 // Checks to see if the value meets the target. Like a frequency being a contractor_frequency, in order to unlock a headset.
 // If true, it accesses trigger() and returns 1. If it fails, it returns false. Use this to see if you need to close the
 // current item's menu.
-/obj/item/device/uplink/hidden/proc/check_trigger(mob/user as mob, var/value)
+/obj/item/device/uplink/hidden/proc/check_trigger(mob/user, var/value)
 	if(value == trigger_code)
 		trigger(user)
 		return 1
@@ -144,13 +144,13 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	data["crystals"] = uses
 	data["menu"] = nanoui_menu
 	data["has_contracts"] = uplink_owner ? player_is_antag_in_list(uplink_owner, ROLES_CONTRACT_VIEW)\
-	                                     : !!length(owner_roles & ROLES_CONTRACT_VIEW)
+										: !!length(owner_roles & ROLES_CONTRACT_VIEW)
 	data += nanoui_data
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)	// No auto-refresh
-		if (emplaced)
+	if(!ui)	// No auto-refresh
+		if(emplaced)
 			ui = new(user, src, ui_key, "uplink.tmpl", title, 450, 600, state =GLOB.default_state)
 		else
 			ui = new(user, src, ui_key, "uplink.tmpl", title, 450, 600, state =GLOB.inventory_state)
@@ -243,8 +243,8 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 		for(var/datum/data/record/L in data_core.locked)
 			if(L.fields["id"] == exploit_id)
 				nanoui_data["exploit"] = list()  // Setting this to equal L.fields passes it's variables that are lists as reference instead of value.
-								 // We trade off being able to automatically add shit for more control over what gets passed to json
-								 // and if it's sanitized for html.
+								// We trade off being able to automatically add shit for more control over what gets passed to json
+								// and if it's sanitized for html.
 				nanoui_data["exploit"]["nanoui_exploit_record"] = html_encode(L.fields["exploit_record"])                         		// Change stuff into html
 				nanoui_data["exploit"]["nanoui_exploit_record"] = replacetext(nanoui_data["exploit"]["nanoui_exploit_record"], "\n", "<br>")    // change line breaks into <br>
 				nanoui_data["exploit"]["name"] =  html_encode(L.fields["name"])
@@ -277,7 +277,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 // You place this in your uplinkable item to check if an uplink is active or not.
 // If it is, it will display the uplink menu and return 1, else it'll return false.
 // If it returns true, I recommend closing the item's normal menu with "user << browse(null, "window=name")"
-/obj/item/proc/active_uplink_check(mob/user as mob)
+/obj/item/proc/active_uplink_check(mob/user)
 	// Activates the uplink if it's active
 	if(src.hidden_uplink)
 		if(src.hidden_uplink.active)
@@ -305,7 +305,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 	hidden_uplink = new(src, mind, crystal_amount)
 
 
-/obj/item/tool/multitool/uplink/attack_self(mob/user as mob)
+/obj/item/tool/multitool/uplink/attack_self(mob/user)
 	if(hidden_uplink)
 		hidden_uplink.trigger(user)
 
@@ -340,7 +340,7 @@ A list of items and costs is stored under the datum of every game mode, alongsid
 		uplink.owner_roles |= owner_roles
 	..()
 
-/obj/structure/uplink/attack_hand(var/mob/user)
+/obj/structure/uplink/attack_hand(mob/user)
 	uplink.trigger(user)
 
 /obj/structure/uplink/mercenary

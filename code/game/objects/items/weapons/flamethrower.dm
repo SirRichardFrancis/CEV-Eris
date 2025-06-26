@@ -57,18 +57,18 @@
 	return
 
 /obj/item/flamethrower/afterattack(atom/target, mob/user, proximity)
-	if (!lit)
+	if(!lit)
 		to_chat(user, SPAN_WARNING("You press the trigger but nothing happens."))
-	if (istype(target,/obj/item) && user == target.get_holding_mob())
+	if(istype(target,/obj/item) && user == target.get_holding_mob())
 		return
-	if (get_dist(target, user) <= flamerange)
+	if(get_dist(target, user) <= flamerange)
 		// Make sure our user is still holding us
 		var/turf/target_turf = get_turf(target)
 		if(target_turf)
 			var/turflist = getline(user, target_turf)
 			flame_turf(turflist)
 
-/obj/item/flamethrower/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/flamethrower/attackby(obj/item/W as obj, mob/user)
 	if(user.stat || user.restrained() || user.lying)	return
 
 	if(istype(W,/obj/item/tank/plasma))
@@ -84,11 +84,11 @@
 	return
 
 
-/obj/item/flamethrower/attack_self(mob/user as mob)
+/obj/item/flamethrower/attack_self(mob/user)
 	if(user.stat || user.restrained() || user.lying)	return
 	user.set_machine(src)
-	var/dat = text("<TT><B>Flamethrower (<A HREF='?src=\ref[src];light=1'>[!lit ? "<font color='red'>Ignite</font>" : "Extinguish"]</a>)</B><BR>\n [ptank ? "Tank Pressure: [ptank.air_contents.return_pressure()]" : "No tank installed"]<BR>\nAmount to throw: <A HREF='?src=\ref[src];amount=-100'>-</A> <A HREF='?src=\ref[src];amount=-10'>-</A> <A HREF='?src=\ref[src];amount=-1'>-</A> [throw_amount] <A HREF='?src=\ref[src];amount=1'>+</A> <A HREF='?src=\ref[src];amount=10'>+</A> <A HREF='?src=\ref[src];amount=100'>+</A><BR>\n[ptank ? "<A HREF='?src=\ref[src];remove=1'>Remove plasmatank</A> - " : ""]<A HREF='?src=\ref[src];close=1'>Close</A></TT>")
-	user << browse(dat, "window=flamethrower;size=340x160")
+	var/dat = text("<TT><B>Flamethrower (<a href='byond://?src=\ref[src];light=1'>[!lit ? "<font color='red'>Ignite</font>" : "Extinguish"]</a>)</B><BR>\n [ptank ? "Tank Pressure: [ptank.air_contents.return_pressure()]" : "No tank installed"]<BR>\nAmount to throw: <a href='byond://?src=\ref[src];amount=-100'>-</A> <a href='byond://?src=\ref[src];amount=-10'>-</A> <a href='byond://?src=\ref[src];amount=-1'>-</A> [throw_amount] <a href='byond://?src=\ref[src];amount=1'>+</A> <a href='byond://?src=\ref[src];amount=10'>+</A> <a href='byond://?src=\ref[src];amount=100'>+</A><BR>\n[ptank ? "<a href='byond://?src=\ref[src];remove=1'>Remove plasmatank</A> - " : ""]<a href='byond://?src=\ref[src];close=1'>Close</A></TT>")
+	user << browse(HTML_SKELETON(dat), "window=flamethrower;size=340x160")
 	onclose(user, "flamethrower")
 	return
 
@@ -105,9 +105,9 @@
 			to_chat(usr, SPAN_WARNING("You press the ignite button but nothing happens."))
 			return
 		lit = !lit
-		if (lit)
+		if(lit)
 			usr.visible_message(SPAN_WARNING("\The [usr] ignites \the [src]."), SPAN_WARNING("You ignite \the [src]."), "You hear sparking.")
-			playsound(src.loc, 'sound/effects/sparks4.ogg', 50, 1)
+			playsound(loc, 'sound/effects/sparks4.ogg', 50, 1)
 			START_PROCESSING(SSobj, src)
 		else
 			usr.visible_message(SPAN_NOTICE("\The [usr] extinguish \the [src]."), SPAN_NOTICE("You extinguish \the [src]."))

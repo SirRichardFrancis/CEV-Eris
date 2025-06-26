@@ -1,7 +1,6 @@
 /datum/objective/steal
 	var/obj/item/steal_target
 	var/target_name
-
 	var/global/possible_items[] = list(
 		"the captain's antique laser gun" = /obj/item/gun/energy/captain,
 		"a hand teleporter" = /obj/item/hand_tele,
@@ -17,12 +16,12 @@
 		"a Moebius expedition overseer's jumpsuit" = /obj/item/clothing/under/rank/expedition_overseer,
 		"a exultant's jumpsuit" = /obj/item/clothing/under/rank/exultant,
 		"a Moebius biolab officer's jumpsuit" = /obj/item/clothing/under/rank/moebius_biolab_officer,
-		"a Ironhammer commander's jumpsuit" = /obj/item/clothing/under/rank/ih_commander,
+		"a IronHammer commander's jumpsuit" = /obj/item/clothing/under/rank/ih_commander,
 		"a First Officer's jumpsuit" = /obj/item/clothing/under/rank/first_officer,
 		"the hypospray" = /obj/item/reagent_containers/hypospray,
 		"the captain's pinpointer" = /obj/item/pinpointer,
 		"an ablative armor vest" = /obj/item/clothing/suit/armor/laserproof,
-		"an Ironhammer hardsuit control module" = /obj/item/rig/combat/ironhammer,
+		"an IronHammer hardsuit control module" = /obj/item/rig/combat/ironhammer,
 		"a Bluespace Biosyphon" = /obj/item/biosyphon,
 		"a S REV .35 Auto \"Sky Driver\"" = /obj/item/gun/projectile/revolver/sky_driver,
 		"Von-Krabin Stimulator" = /obj/item/device/von_krabin,
@@ -33,8 +32,7 @@
 		"the Sword of Truth" = /obj/item/tool/sword/nt_sword,
 		"the Last Shelter" = /obj/item/device/last_shelter,
 		"an Atomic Distillery" = /obj/item/reagent_containers/atomic_distillery,
-		"the Laurelin bonsai" = /obj/item/reagent_containers/bonsai
-	)
+		"the Laurelin bonsai" = /obj/item/reagent_containers/bonsai)
 
 	var/global/possible_items_special[] = list(
 		"mindflayer" = /obj/item/gun/energy/psychic/mindflayer,
@@ -44,11 +42,9 @@
 		"hyper-capacity cell" = /obj/item/cell/large/hyper,
 		"10 diamonds" = /obj/item/stack/material/diamond,
 		"50 gold bars" = /obj/item/stack/material/gold,
-		"25 refined uranium bars" = /obj/item/stack/material/uranium,
-	)
+		"25 refined uranium bars" = /obj/item/stack/material/uranium)
 
-
-/datum/objective/steal/set_target(var/item_name)
+/datum/objective/steal/set_target(item_name)
 	target_name = item_name
 	steal_target = possible_items[target_name]
 	if(!steal_target)
@@ -60,8 +56,7 @@
 	var/list/valid_items = possible_items - get_owner_targets()
 	return set_target(pick(valid_items))
 
-
-/datum/objective/steal/proc/select_target(var/mob/user)
+/datum/objective/steal/proc/select_target(mob/user)
 	var/list/possible_items_all = possible_items + possible_items_special
 	var/new_target = input(user, "Select target:", "Objective target", target_name) as null|anything in possible_items_all
 	if(!new_target)
@@ -71,7 +66,7 @@
 	return steal_target
 
 /datum/objective/steal/check_completion()
-	if (failed)
+	if(failed)
 		return FALSE
 	if(!steal_target)
 		return FALSE
@@ -90,7 +85,6 @@
 
 		if("50 coins (in bag)")
 			var/obj/item/moneybag/B = locate() in all_items
-
 			if(B)
 				var/target = text2num(target_name)
 				var/found_amount = 0
@@ -99,7 +93,6 @@
 				return found_amount>=target
 
 		if("a functional AI")
-
 			for(var/obj/item/device/aicard/C in all_items) //Check for ai card
 				for(var/mob/living/silicon/ai/M in C)
 					//See if any AI's are alive inside that card.
@@ -121,7 +114,7 @@
 	return FALSE
 
 /datum/objective/steal/get_panel_entry()
-	return "Steal <a href='?src=\ref[src];switch_item=1'>[target_name]</a>."
+	return "Steal <a href='byond://?src=\ref[src];switch_item=1'>[target_name]</a>."
 
 /datum/objective/steal/update_explanation()
 	explanation_text = "Steal [target_name]."

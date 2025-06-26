@@ -299,7 +299,7 @@
 		if(3)
 			take_damage(5, BURN)
 
-/obj/item/organ/external/attack_self(var/mob/user)
+/obj/item/organ/external/attack_self(mob/user)
 	if(!contents.len)
 		return ..()
 	var/list/removable_objects = list()
@@ -364,7 +364,7 @@
 		return parent.is_nerve_struck()
 	return FALSE
 
-/obj/item/organ/external/proc/nerve_strike_add(var/primary)
+/obj/item/organ/external/proc/nerve_strike_add(primary)
 	if(nerve_struck != -1)
 		if(primary)
 			nerve_struck = 2
@@ -440,8 +440,8 @@ This function completely restores a damaged organ to perfect condition.
 		if((type == CUT || type == BRUISE) && damage >= 5)
 			//we need to make sure that the wound we are going to worsen is compatible with the type of damage...
 			var/list/compatible_wounds = list()
-			for (var/datum/wound/W in wounds)
-				if (W.can_worsen(type, damage))
+			for(var/datum/wound/W in wounds)
+				if(W.can_worsen(type, damage))
 					compatible_wounds += W
 
 			if(compatible_wounds.len)
@@ -478,7 +478,7 @@ This function completely restores a damaged organ to perfect condition.
 			wounds += W
 
 /****************************************************
-			   PROCESSING & UPDATING
+			PROCESSING & UPDATING
 ****************************************************/
 
 //external organs handle brokenness a bit differently when it comes to damage. Instead brute_dam is checked inside process()
@@ -565,7 +565,7 @@ This function completely restores a damaged organ to perfect condition.
 		var/heal_amt = 0
 
 		// if damage >= 50 AFTER treatment then it's probably too severe to heal within the timeframe of a round.
-		if (W.can_autoheal() && W.wound_damage() < 50)
+		if(W.can_autoheal() && W.wound_damage() < 50)
 			heal_amt += 0.5
 
 		//we only update wounds once in [wound_update_accuracy] ticks so have to emulate realtime
@@ -587,7 +587,7 @@ This function completely restores a damaged organ to perfect condition.
 
 	// sync the organ's damage with its wounds
 	src.update_damages()
-	if (update_damstate())
+	if(update_damstate())
 		owner.UpdateDamageIcon(1)
 
 //Updates brute_damn and burn_damn from wound damages. Updates BLEEDING status.
@@ -616,7 +616,7 @@ This function completely restores a damaged organ to perfect condition.
 		number_wounds += W.amount
 
 	//things tend to bleed if they are CUT OPEN
-	if (open && !clamped)
+	if(open && !clamped)
 		src.setBleeding()
 
 	SSnano.update_uis(src)
@@ -624,7 +624,7 @@ This function completely restores a damaged organ to perfect condition.
 //Returns 1 if damage_state changed
 /obj/item/organ/external/proc/update_damstate()
 	var/n_is = damage_state_text()
-	if (n_is != damage_state)
+	if(n_is != damage_state)
 		damage_state = n_is
 		return TRUE
 	return FALSE
@@ -638,41 +638,41 @@ This function completely restores a damaged organ to perfect condition.
 
 	if(burn_dam ==0)
 		tburn =0
-	else if (burn_dam < (max_damage * 0.25 / 2))
+	else if(burn_dam < (max_damage * 0.25 / 2))
 		tburn = 1
-	else if (burn_dam < (max_damage * 0.75 / 2))
+	else if(burn_dam < (max_damage * 0.75 / 2))
 		tburn = 2
 	else
 		tburn = 3
 
-	if (brute_dam == 0)
+	if(brute_dam == 0)
 		tbrute = 0
-	else if (brute_dam < (max_damage * 0.25 / 2))
+	else if(brute_dam < (max_damage * 0.25 / 2))
 		tbrute = 1
-	else if (brute_dam < (max_damage * 0.75 / 2))
+	else if(brute_dam < (max_damage * 0.75 / 2))
 		tbrute = 2
 	else
 		tbrute = 3
 	return "[tbrute][tburn]"
 
 /****************************************************
-			   HELPERS
+					HELPERS
 ****************************************************/
 
 /obj/item/organ/external/proc/is_stump()
 	return FALSE
 
-/obj/item/organ/external/proc/release_restraints(var/mob/living/carbon/human/holder)
+/obj/item/organ/external/proc/release_restraints(mob/living/carbon/human/holder)
 	if(!holder)
 		holder = owner
 	if(!holder)
 		return
-	if (holder.handcuffed && (body_part in list(ARM_LEFT, ARM_RIGHT)))
+	if(holder.handcuffed && (body_part in list(ARM_LEFT, ARM_RIGHT)))
 		holder.visible_message(\
 			"\The [holder.handcuffed.name] falls off of [holder.name].",\
 			"\The [holder.handcuffed.name] falls off you.")
 		holder.drop_from_inventory(holder.handcuffed)
-	if (holder.legcuffed && (body_part in list(LEG_LEFT, LEG_RIGHT)))
+	if(holder.legcuffed && (body_part in list(LEG_LEFT, LEG_RIGHT)))
 		holder.visible_message(\
 			"\The [holder.legcuffed.name] falls off of [holder.name].",\
 			"\The [holder.legcuffed.name] falls off you.")
@@ -801,7 +801,7 @@ This function completely restores a damaged organ to perfect condition.
 		W.add_blood(owner)
 	W.loc = owner
 
-/obj/item/organ/external/proc/disfigure(var/type = "brute")
+/obj/item/organ/external/proc/disfigure(type = "brute")
 	if(disfigured)
 		return
 	if(owner)
@@ -843,7 +843,7 @@ This function completely restores a damaged organ to perfect condition.
 	var/list/wound_descriptors = list()
 	if(open > 1)
 		wound_descriptors["an open incision"] = 1
-	else if (open)
+	else if(open)
 		wound_descriptors["an incision"] = 1
 	for(var/datum/wound/W in wounds)
 		var/this_wound_desc = W.desc

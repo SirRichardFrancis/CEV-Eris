@@ -28,10 +28,10 @@ cp -r config/names $1/config/
 cp -r tgui/public/* $1/tgui/public/
 cp -r tgui/packages/tgfont/dist/* $1/tgui/packages/tgfont/dist/
 
-#remove .dm files from _maps
+#remove .dm files from /maps
 
 #this regrettably doesn't work with windows find
-#find $1/_maps -name "*.dm" -type f -delete
+#find $1/maps -name "*.dm" -type f -delete
 
 #dlls on windows
 if [ "$(uname -o)" = "Msys" ]; then

@@ -85,15 +85,15 @@
 		t += "<div class='statusDisplay'>No telepad located. <BR>Please add telepad data via use of Multitool.</div><BR>"
 	else
 		if(inserted_gps)
-			t += "<A href='?src=\ref[src];ejectGPS=1'>Eject GPS</A>"
-			t += "<A href='?src=\ref[src];setMemory=1'>Set GPS memory</A>"
+			t += "<a href='byond://?src=\ref[src];ejectGPS=1'>Eject GPS</A>"
+			t += "<a href='byond://?src=\ref[src];setMemory=1'>Set GPS memory</A>"
 		else
 			t += "<span class='linkOff'>Eject GPS</span>"
 			t += "<span class='linkOff'>Set GPS memory</span>"
 		t += "<div class='statusDisplay'>[temp_msg]</div><BR>"
-		t += "<A href='?src=\ref[src];setrotation=1'>Set Bearing</A>"
+		t += "<a href='byond://?src=\ref[src];setrotation=1'>Set Bearing</A>"
 		t += "<div class='statusDisplay'>[rotation]&deg;</div>"
-		t += "<A href='?src=\ref[src];setangle=1'>Set Elevation</A>"
+		t += "<a href='byond://?src=\ref[src];setangle=1'>Set Elevation</A>"
 		t += "<div class='statusDisplay'>[angle]&deg;</div>"
 		t += "<span class='linkOn'>Set Power</span>"
 		t += "<div class='statusDisplay'>"
@@ -105,15 +105,15 @@
 			if(power == power_options[i])
 				t += "<span class='linkOn'>[power_options[i]]</span>"
 				continue
-			t += "<A href='?src=\ref[src];setpower=[i]'>[power_options[i]]</A>"
+			t += "<a href='byond://?src=\ref[src];setpower=[i]'>[power_options[i]]</A>"
 		t += "</div>"
 
-		t += "<A href='?src=\ref[src];setz=1'>Set Sector</A>"
+		t += "<a href='byond://?src=\ref[src];setz=1'>Set Sector</A>"
 		t += "<div class='statusDisplay'>[z_co ? z_co : "NULL"]</div>"
 
-		t += "<BR><A href='?src=\ref[src];send=1'>Send</A>"
-		t += " <A href='?src=\ref[src];receive=1'>Receive</A>"
-		t += "<BR><A href='?src=\ref[src];recal=1'>Recalibrate Crystals</A> <A href='?src=\ref[src];eject=1'>Eject Crystals</A>"
+		t += "<BR><a href='byond://?src=\ref[src];send=1'>Send</A>"
+		t += " <a href='byond://?src=\ref[src];receive=1'>Receive</A>"
+		t += "<BR><a href='byond://?src=\ref[src];recal=1'>Recalibrate Crystals</A> <a href='byond://?src=\ref[src];eject=1'>Eject Crystals</A>"
 
 		// Information about the last teleport
 		t += "<BR><div class='statusDisplay'>"
@@ -235,7 +235,7 @@
 					log_msg += "[key_name(T)], "
 				else
 					log_msg += "[ROI.name]"
-					if (istype(ROI, /obj/structure/closet))
+					if(istype(ROI, /obj/structure/closet))
 						var/obj/structure/closet/C = ROI
 						log_msg += " ("
 						for(var/atom/movable/Q as mob|obj in C)
@@ -243,7 +243,7 @@
 								log_msg += "[key_name(Q)], "
 							else
 								log_msg += "[Q.name], "
-						if (dd_hassuffix(log_msg, "("))
+						if(dd_hassuffix(log_msg, "("))
 							log_msg += "empty)"
 						else
 							log_msg = dd_limittext(log_msg, length(log_msg) - 2)
@@ -251,7 +251,7 @@
 					log_msg += ", "
 				go_to_bluespace(get_turf(src),telepad.entropy_value, FALSE, ROI, dest)
 
-			if (dd_hassuffix(log_msg, ", "))
+			if(dd_hassuffix(log_msg, ", "))
 				log_msg = dd_limittext(log_msg, length(log_msg) - 2)
 			else
 				log_msg += "nothing"
@@ -360,7 +360,7 @@
 
 /proc/dd_limittext(message, length)
 	var/size = length(message)
-	if (size <= length)
+	if(size <= length)
 		return message
 	else
 		return copytext(message, 1, length + 1)

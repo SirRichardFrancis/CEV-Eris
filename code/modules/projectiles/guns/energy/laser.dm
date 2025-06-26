@@ -85,7 +85,7 @@
 	name = "sawn down OS LG \"Cog\""
 	icon = 'icons/obj/guns/energy/obrez_retro.dmi'
 	desc = "A modified One Star cheaply produced laser gun. \
-		 In the distant past - this was the main weapon of low-rank police forces, and thus widely used by criminals."
+			In the distant past - this was the main weapon of low-rank police forces, and thus widely used by criminals."
 	icon_state = "shorty"
 	item_state = "shorty"
 	slot_flags = SLOT_BACK|SLOT_HOLSTER
@@ -108,7 +108,7 @@
 	icon_state = "caplaser"
 	item_state = "caplaser"
 	item_charge_meter = TRUE
-	desc = "This weapon is old, yet still robust and reliable. It's marked with old Nanotrasen brand, a distant reminder of what this corporation was, before the Church took control of everything."
+	desc = "This weapon is old, yet still robust and reliable. It's marked with old NanoTrasen brand, a distant reminder of what this corporation was, before the Church took control of everything."
 	force = WEAPON_FORCE_PAINFUL
 	fire_sound = 'sound/weapons/Laser.ogg'
 	slot_flags = SLOT_BELT|SLOT_HOLSTER

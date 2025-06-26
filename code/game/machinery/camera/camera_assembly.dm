@@ -117,7 +117,7 @@
 					var/obj/U = locate(/obj) in upgrades
 					if(U)
 						to_chat(user, SPAN_NOTICE("You unattach an upgrade from the assembly."))
-						playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+						playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
 						U.loc = get_turf(src)
 						upgrades -= U
 						return
@@ -153,6 +153,6 @@
 	else
 		icon_state = "cameracase"
 
-/obj/item/camera_assembly/attack_hand(mob/user as mob)
+/obj/item/camera_assembly/attack_hand(mob/user)
 	if(!anchored)
 		..()

@@ -98,18 +98,18 @@
 		var/is_in_use = 0
 		var/list/nearby = viewers(1, src)
 		for(var/mob/M in nearby)
-			if ((M.client && M.machine == src))
+			if((M.client && M.machine == src))
 				is_in_use = 1
 				src.attack_hand(M)
-		if (isAI(usr) || isrobot(usr))
-			if (!(usr in nearby))
-				if (usr.client && usr.machine==src) // && M.machine == src is omitted because if we triggered this by using the dialog, it doesn't matter if our machine changed in between triggering it and this - the dialog is probably still supposed to refresh.
+		if(isAI(usr) || isrobot(usr))
+			if(!(usr in nearby))
+				if(usr.client && usr.machine==src) // && M.machine == src is omitted because if we triggered this by using the dialog, it doesn't matter if our machine changed in between triggering it and this - the dialog is probably still supposed to refresh.
 					is_in_use = 1
 					src.attack_ai(usr)
 
 		// check for TK users
 
-		if (ishuman(usr))
+		if(ishuman(usr))
 			if(istype(usr.l_hand, /obj/item/tk_grab) || istype(usr.r_hand, /obj/item/tk_grab/))
 				if(!(usr in nearby))
 					if(usr.client && usr.machine==src)
@@ -123,7 +123,7 @@
 		var/list/nearby = viewers(1, src)
 		var/is_in_use = 0
 		for(var/mob/M in nearby)
-			if ((M.client && M.machine == src))
+			if((M.client && M.machine == src))
 				is_in_use = 1
 				src.interact(M)
 		var/ai_in_use = AutoUpdateAI(src)
@@ -186,7 +186,7 @@
 	if(!I || !user.IsAdvancedToolUser() || user.stat || !user.Adjacent(I))
 		return FALSE
 	user.put_in_hands(I)
-	playsound(src.loc, 'sound/weapons/guns/interact/pistol_magin.ogg', 75, 1)
+	playsound(loc, 'sound/weapons/guns/interact/pistol_magin.ogg', 75, 1)
 	user.visible_message(
 		"[user] removes [I] from [src].",
 		SPAN_NOTICE("You remove [I] from [src].")
@@ -197,7 +197,7 @@
 	if(!I || !istype(user) || user.stat || !user.unEquip(I))
 		return FALSE
 	I.forceMove(src)
-	playsound(src.loc, 'sound/weapons/guns/interact/pistol_magout.ogg', 75, 1)
+	playsound(loc, 'sound/weapons/guns/interact/pistol_magout.ogg', 75, 1)
 	to_chat(user, SPAN_NOTICE("You insert [I] into [src]."))
 	return TRUE
 
@@ -206,9 +206,9 @@
 		return FALSE
 	I_new.forceMove(src)
 	user.put_in_hands(I_old)
-	playsound(src.loc, 'sound/weapons/guns/interact/pistol_magout.ogg', 75, 1)
+	playsound(loc, 'sound/weapons/guns/interact/pistol_magout.ogg', 75, 1)
 	spawn(2)
-		playsound(src.loc, 'sound/weapons/guns/interact/pistol_magin.ogg', 75, 1)
+		playsound(loc, 'sound/weapons/guns/interact/pistol_magin.ogg', 75, 1)
 	user.visible_message(
 		"[user] replaces [I_old] with [I_new] in [src].",
 		SPAN_NOTICE("You replace [I_old] with [I_new] in [src]."))
@@ -239,7 +239,7 @@
 //Makes an object move around randomly for a couple of tiles
 /obj/proc/tumble(var/dist = 2)
 	set waitfor = FALSE
-	if (dist >= 1)
+	if(dist >= 1)
 		dist += rand(0,1)
 		for(var/i = 1, i <= dist, i++)
 			if(src)

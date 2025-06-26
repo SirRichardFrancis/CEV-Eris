@@ -30,7 +30,7 @@
 		desc = "This is a space piano, like a regular piano, but always in tune! Even if the musician isn't."
 		icon_state = "piano"
 
-/obj/structure/device/piano/proc/playnote(var/note as text)
+/obj/structure/device/piano/proc/playnote(note as text)
 	var/soundfile
 	/*BYOND loads resource files at compile time if they are ''. This means you can't really manipulate them dynamically.
 	Tried doing it dynamically at first but its more trouble than its worth. Would have saved many lines tho.*/
@@ -254,36 +254,35 @@
 	playing = 0
 	updateUsrDialog()
 
-/obj/structure/device/piano/attack_hand(var/mob/user)
+/obj/structure/device/piano/attack_hand(mob/user)
 	if(!anchored)
 		return
 
 	usr.machine = src
 	var/dat = "<HEAD><TITLE>Piano</TITLE></HEAD><BODY>"
-
 	if(song)
 		if(song.lines.len > 0 && !(playing))
-			dat += "<A href='?src=\ref[src];play=1'>Play Song</A><BR><BR>"
-			dat += "<A href='?src=\ref[src];repeat=1'>Repeat Song: [repeat] times.</A><BR><BR>"
+			dat += "<a href='byond://?src=\ref[src];play=1'>Play Song</A><BR><BR>"
+			dat += "<a href='byond://?src=\ref[src];repeat=1'>Repeat Song: [repeat] times.</A><BR><BR>"
 		if(playing)
-			dat += "<A href='?src=\ref[src];stop=1'>Stop Playing</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];stop=1'>Stop Playing</A><BR>"
 			dat += "Repeats left: [repeat].<BR><BR>"
 	if(!edit)
-		dat += "<A href='?src=\ref[src];edit=2'>Show Editor</A><BR><BR>"
+		dat += "<a href='byond://?src=\ref[src];edit=2'>Show Editor</A><BR><BR>"
 	else
-		dat += "<A href='?src=\ref[src];edit=1'>Hide Editor</A><BR>"
-		dat += "<A href='?src=\ref[src];newsong=1'>Start a New Song</A><BR>"
-		dat += "<A href='?src=\ref[src];import=1'>Import a Song</A><BR><BR>"
+		dat += "<a href='byond://?src=\ref[src];edit=1'>Hide Editor</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];newsong=1'>Start a New Song</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];import=1'>Import a Song</A><BR><BR>"
 		if(song)
 			var/calctempo = (10/song.tempo)*60
-			dat += "Tempo : <A href='?src=\ref[src];tempo=10'>-</A><A href='?src=\ref[src];tempo=1'>-</A> [calctempo] BPM <A href='?src=\ref[src];tempo=-1'>+</A><A href='?src=\ref[src];tempo=-10'>+</A><BR><BR>"
+			dat += "Tempo : <a href='byond://?src=\ref[src];tempo=10'>-</A><a href='byond://?src=\ref[src];tempo=1'>-</A> [calctempo] BPM <a href='byond://?src=\ref[src];tempo=-1'>+</A><a href='byond://?src=\ref[src];tempo=-10'>+</A><BR><BR>"
 			var/linecount = 0
 			for(var/line in song.lines)
 				linecount += 1
-				dat += "Line [linecount]: [line] <A href='?src=\ref[src];deleteline=[linecount]'>Delete Line</A> <A href='?src=\ref[src];modifyline=[linecount]'>Modify Line</A><BR>"
-			dat += "<A href='?src=\ref[src];newline=1'>Add Line</A><BR><BR>"
+				dat += "Line [linecount]: [line] <a href='byond://?src=\ref[src];deleteline=[linecount]'>Delete Line</A> <a href='byond://?src=\ref[src];modifyline=[linecount]'>Modify Line</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];newline=1'>Add Line</A><BR><BR>"
 		if(help)
-			dat += "<A href='?src=\ref[src];help=1'>Hide Help</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];help=1'>Hide Help</A><BR>"
 			dat += {"
 					Lines are a series of chords, separated by commas (,), each with notes seperated by hyphens (-).<br>
 					Every note in a chord will play together, with chord timed by the tempo.<br>
@@ -302,13 +301,12 @@
 					A song may only contain up to 200 lines.<br>
 					"}
 		else
-			dat += "<A href='?src=\ref[src];help=2'>Show Help</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];help=2'>Show Help</A><BR>"
 	dat += "</BODY></HTML>"
-	user << browse(dat, "window=piano;size=700x300")
+	user << browse(HTML_SKELETON(dat), "window=piano;size=700x300")
 	onclose(user, "piano")
 
 /obj/structure/device/piano/Topic(href, href_list)
-
 	if(!in_range(src, usr) || issilicon(usr) || !anchored || !usr.canmove || usr.restrained())
 		usr << browse(null, "window=piano;size=700x300")
 		onclose(usr, "piano")
@@ -376,7 +374,7 @@
 			var/t = ""
 			do
 				t = html_encode(input(usr, "Please paste the entire song, formatted:", text("[]", src.name), t)  as message)
-				if (!in_range(src, usr))
+				if(!in_range(src, usr))
 					return
 
 				if(length(t) >= 12000)
@@ -409,10 +407,9 @@
 
 	add_fingerprint(usr)
 	updateUsrDialog()
-	return
 
 /obj/structure/device/piano/attackby(var/obj/item/tool/tool, mob/user)
-	if (tool.use_tool(user, src, WORKTIME_NORMAL, QUALITY_BOLT_TURNING, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
+	if(tool.use_tool(user, src, WORKTIME_NORMAL, QUALITY_BOLT_TURNING, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 		anchored = !anchored
 		user.visible_message( \
 			"[user] [anchored ? "tightens" : "loosens"] \the [src]'s casters.", \

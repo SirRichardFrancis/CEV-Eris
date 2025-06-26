@@ -25,7 +25,7 @@
 
 	// There's a chance for a weed explosion to happen if the weeds take over.
 	// Plants that are themselves weeds (weed_tolerance > 10) are unaffected.
-	if (weedlevel >= 10 && prob(10))
+	if(weedlevel >= 10 && prob(10))
 		if(!seed || weedlevel >= seed.get_trait(TRAIT_WEED_TOLERANCE))
 			weed_invasion()
 
@@ -82,7 +82,7 @@
 		health -= seed.handle_environment(T,environment)
 
 	// If we're attached to a pipenet, then we should let the pipenet know we might have modified some gasses
-	if (closed_system && connected_port)
+	if(closed_system && connected_port)
 		update_connected_network()
 
 	// Toxin levels beyond the plant's tolerance cause damage, but
@@ -99,7 +99,7 @@
 		if(seed.get_trait(TRAIT_CARNIVOROUS))
 			health += HYDRO_SPEED_MULTIPLIER
 			pestlevel -= HYDRO_SPEED_MULTIPLIER
-		else if (pestlevel >= seed.get_trait(TRAIT_PEST_TOLERANCE))
+		else if(pestlevel >= seed.get_trait(TRAIT_PEST_TOLERANCE))
 			health -= HYDRO_SPEED_MULTIPLIER
 
 	// Some plants thrive and live off of weeds.
@@ -107,7 +107,7 @@
 		if(seed.get_trait(TRAIT_PARASITE))
 			health += HYDRO_SPEED_MULTIPLIER
 			weedlevel -= HYDRO_SPEED_MULTIPLIER
-		else if (weedlevel >= seed.get_trait(TRAIT_WEED_TOLERANCE))
+		else if(weedlevel >= seed.get_trait(TRAIT_WEED_TOLERANCE))
 			health -= HYDRO_SPEED_MULTIPLIER
 
 	// Handle life and death.
@@ -116,17 +116,17 @@
 
 	// If enough time (in cycles, not ticks) has passed since the plant was harvested, we're ready to harvest again.
 	if((age > seed.get_trait(TRAIT_MATURATION)) && \
-	 ((age - lastproduce) > seed.get_trait(TRAIT_PRODUCTION)) && \
-	 (!harvest && !dead))
+	((age - lastproduce) > seed.get_trait(TRAIT_PRODUCTION)) && \
+	(!harvest && !dead))
 		harvest = 1
 		lastproduce = age
 
 	// If we're a vine which is not in a closed tray and is at least half mature, and there's no vine currently on our turf: make one (maybe)
 	if(!closed_system && \
-	 seed.get_trait(TRAIT_SPREAD) == 2 && \
-	 2 * age >= seed.get_trait(TRAIT_MATURATION) && \
-	 !(locate(/obj/effect/plant) in get_turf(src)) && \
-	 prob(2 * seed.get_trait(TRAIT_POTENCY)))
+	seed.get_trait(TRAIT_SPREAD) == 2 && \
+	2 * age >= seed.get_trait(TRAIT_MATURATION) && \
+	!(locate(/obj/effect/plant) in get_turf(src)) && \
+	prob(2 * seed.get_trait(TRAIT_POTENCY)))
 		new /obj/effect/plant(get_turf(src), seed)
 
 	if(prob(3))  // On each tick, there's a chance the pest population will increase

@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(economy)
 	.=..()
 
 /datum/controller/subsystem/economy/fire()
-	if (world.time >= next_payday)
+	if(world.time >= next_payday)
 		next_payday = world.time + payday_interval
 		//Its payday time!
 		do_payday()
@@ -43,7 +43,7 @@ SUBSYSTEM_DEF(economy)
 			continue
 
 		if(!ED) // If no employer department found - payment is external
-			deposit_to_account(A, A.employer, "Payroll Funding", "Hansa payroll system", amount_to_pay)
+			deposit_to_account(A, A.employer, "Payroll Funding", "Hanza payroll system", amount_to_pay)
 			paid_external += amount_to_pay
 			continue
 		else
@@ -121,9 +121,9 @@ SUBSYSTEM_DEF(economy)
 	var/address = R.get_email()
 
 	var/datum/computer_file/data/email_message/message = new()
-	message.title = "You have recieved funds"
+	message.title = "You have received funds"
 
-	message.stored_data = "You have recieved a payment\n\n \
+	message.stored_data = "You have received a payment\n\n \
 	From: [sender]\n \
 	Reason: Regular Wages\n\n \
 	----------------------------\n \

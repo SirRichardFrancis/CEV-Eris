@@ -24,9 +24,9 @@
 
 /obj/machinery/light_construct/New()
 	..()
-	if (fixture_type == "bulb")
+	if(fixture_type == "bulb")
 		icon_state = "bulb-construct-stage1"
-	else if (istype(src, /obj/machinery/light_construct/floor))
+	else if(istype(src, /obj/machinery/light_construct/floor))
 		icon_state = "floortube-construct-stage1"
 
 /obj/machinery/light_construct/examine(mob/user, extra_description = "")
@@ -41,9 +41,7 @@
 	..(user, extra_description)
 
 /obj/machinery/light_construct/attackby(obj/item/I, mob/user)
-
-	src.add_fingerprint(user)
-
+	add_fingerprint(user)
 	var/list/usable_qualities = list()
 	if(stage == 2)
 		usable_qualities.Add(QUALITY_SCREW_DRIVING)
@@ -52,15 +50,13 @@
 	if(stage == 1)
 		usable_qualities.Add(QUALITY_BOLT_TURNING)
 
-
 	var/tool_type = I.get_tool_type(user, usable_qualities, src)
 	switch(tool_type)
-
 		if(QUALITY_SCREW_DRIVING)
 			if(stage == 2)
 				if(I.use_tool(user, src, WORKTIME_NEAR_INSTANT, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 					switch(fixture_type)
-						if ("tube")
+						if("tube")
 							src.icon_state = "tube-empty"
 						if("bulb")
 							src.icon_state = "bulb-empty"
@@ -69,13 +65,12 @@
 						"You close [src]'s casing.", "You hear a noise.")
 
 					switch(fixture_type)
-
 						if("tube")
-							if (!istype(src, /obj/machinery/light_construct/floor))
+							if(!istype(src, /obj/machinery/light_construct/floor))
 								newlight = new /obj/machinery/light/built(src.loc)
 							else
 								newlight = new /obj/machinery/light/floor/built(src.loc)
-						if ("bulb")
+						if("bulb")
 							newlight = new /obj/machinery/light/small/built(src.loc)
 
 					newlight.dir = src.dir
@@ -89,8 +84,8 @@
 				if(I.use_tool(user, src, WORKTIME_FAST, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 					src.stage = 1
 					switch(fixture_type)
-						if ("tube")
-							if (!istype(src, /obj/machinery/light_construct/floor))
+						if("tube")
+							if(!istype(src, /obj/machinery/light_construct/floor))
 								src.icon_state = "tube-construct-stage1"
 							else
 								src.icon_state = "floortube-construct-stage1"
@@ -104,7 +99,7 @@
 
 		if(QUALITY_BOLT_TURNING)
 			if(stage == 1)
-				if (src.stage == 1)
+				if(src.stage == 1)
 					to_chat(user, "You begin deconstructing \a [src].")
 					if(I.use_tool(user, src, WORKTIME_NORMAL, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
 						new /obj/item/stack/material/steel( get_turf(src.loc), sheets_refunded )
@@ -118,12 +113,12 @@
 			return
 
 	if(istype(I, /obj/item/stack/cable_coil))
-		if (src.stage != 1) return
+		if(src.stage != 1) return
 		var/obj/item/stack/cable_coil/coil = I
-		if (coil.use(1))
+		if(coil.use(1))
 			switch(fixture_type)
-				if ("tube")
-					if (!istype(src, /obj/machinery/light_construct/floor))
+				if("tube")
+					if(!istype(src, /obj/machinery/light_construct/floor))
 						src.icon_state = "tube-construct-stage2"
 					else
 						src.icon_state = "floortube-construct-stage2"
@@ -254,7 +249,6 @@
 	. = ..()
 
 /obj/machinery/light/update_icon()
-
 	switch(status)		// set icon_states
 		if(LIGHT_OK)
 			if(firealarmed && on && cmptext(base_state,"tube"))
@@ -272,7 +266,6 @@
 		if(LIGHT_BROKEN)
 			icon_state = "[base_state]-broken"
 			on = FALSE
-	return
 
 /obj/machinery/light/proc/set_blue()
 	if(on)
@@ -302,17 +295,14 @@
 
 			else
 				brightness_color = COLOR_LIGHTING_DEFAULT_BRIGHT
-
 		update()
 
-
 // update the icon_state and luminosity of the light depending on its state
-/obj/machinery/light/proc/update(var/trigger = 1)
-
+/obj/machinery/light/proc/update(trigger = 1)
 	update_icon()
 	if(on == TRUE)
 		if(needsound == 1)
-			playsound(src.loc, 'sound/effects/Custom_lights.ogg', 65, 1)
+			playsound(loc, 'sound/effects/Custom_lights.ogg', 65, 1)
 			needsound = 0
 	else
 		needsound = 1
@@ -346,7 +336,7 @@
 	if(on != on_gs)
 		on_gs = on
 
-/obj/machinery/light/attack_generic(var/mob/user, var/damage)
+/obj/machinery/light/attack_generic(mob/user, damage)
 	if(!damage)
 		return
 	if(status == LIGHT_EMPTY||status == LIGHT_BROKEN)
@@ -380,7 +370,6 @@
 
 // attack with item - insert light (if right type), otherwise try to break the light
 /obj/machinery/light/attackby(obj/item/I, mob/user)
-
 	//Light replacer code
 	if(istype(I, /obj/item/device/lightreplacer))
 		var/obj/item/device/lightreplacer/LR = I
@@ -395,7 +384,7 @@
 			to_chat(user, SPAN_WARNING("There is a [fitting] already inserted."))
 			return
 		else
-			src.add_fingerprint(user)
+			add_fingerprint(user)
 			var/obj/item/light/L = I
 			if(istype(L, light_type))
 				user.drop_item()
@@ -430,10 +419,7 @@
 		//If xenos decide they want to smash a light bulb with a toolbox, who am I to stop them? /N
 
 	else if(status != LIGHT_BROKEN && status != LIGHT_EMPTY)
-
-
 		if(prob(1+I.force * 5))
-
 			to_chat(user, "You hit the light, and it smashes!")
 			for(var/mob/M in viewers(src))
 				if(M == user)
@@ -441,7 +427,7 @@
 				M.show_message("[user.name] smashed the light!", 3, "You hear a tinkle of breaking glass", 2)
 			if(on && (I.flags & CONDUCT))
 				//if(!user.mutations & COLD_RESISTANCE)
-				if (prob(12))
+				if(prob(12))
 					electrocute_mob(user, get_area(src), src, 0.3)
 			broken()
 
@@ -477,9 +463,8 @@
 			s.set_up(3, 1, src)
 			s.start()
 			//if(!user.mutations & COLD_RESISTANCE)
-			if (prob(75))
+			if(prob(75))
 				electrocute_mob(user, get_area(src), src, rand(0.7,1))
-
 
 // returns whether this light has power
 // true if area has power and lightswitch is on
@@ -510,15 +495,12 @@
 // ai attack - make lights flick_light, because why not
 
 /obj/machinery/light/attack_ai(mob/user)
-	src.flick_light(1)
-	return
+	flick_light(1)
 
 // attack with hand - remove tube/bulb
 // if hands aren't protected and the light is on, burn the player
 /obj/machinery/light/attack_hand(mob/user)
-
 	add_fingerprint(user)
-
 	if(status == LIGHT_EMPTY)
 		to_chat(user, "There is no [fitting] in this light.")
 		return
@@ -559,7 +541,6 @@
 
 	drop_light_tube(user)
 
-
 /obj/machinery/light/attack_tk(mob/user)
 	if(status == LIGHT_EMPTY)
 		to_chat(user, "There is no [fitting] in this light.")
@@ -567,7 +548,6 @@
 
 	to_chat(user, SPAN_NOTICE("You telekinetically remove the light [fitting]."))
 	drop_light_tube()
-
 
 // create a light tube/bulb item and put it in the drop location
 /obj/machinery/light/proc/drop_light_tube(mob/living/user)
@@ -581,9 +561,7 @@
 	// light item inherits the switchcount, then zero it
 	L.switchcount = switchcount
 	switchcount = 0
-
 	L.update()
-
 	status = LIGHT_EMPTY
 	set_light(0, 0)
 	update()
@@ -596,13 +574,13 @@
 
 // break the light and make sparks if was on
 
-/obj/machinery/light/proc/broken(var/skip_sound_and_sparks = 0)
+/obj/machinery/light/proc/broken(skip_sound_and_sparks = 0)
 	if(status == LIGHT_EMPTY)
 		return
 
 	if(!skip_sound_and_sparks)
 		if(status == LIGHT_OK || status == LIGHT_BURNED)
-			playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
+			playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 		if(on)
 			var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 			s.set_up(3, 1, src)
@@ -732,24 +710,18 @@
 
 // attack bulb/tube with object
 // if a syringe, can inject plasma to make it explode
-/obj/item/light/attackby(var/obj/item/I, var/mob/user)
+/obj/item/light/attackby(obj/item/I, mob/user)
 	..()
 	if(istype(I, /obj/item/reagent_containers/syringe))
 		var/obj/item/reagent_containers/syringe/S = I
-
 		to_chat(user, "You inject the solution into [src].")
-
 		if(S.reagents.has_reagent("plasma", 5))
-
 			log_admin("LOG: [user.name] ([user.ckey]) injected a light with plasma, rigging it to explode.")
 			message_admins("LOG: [user.name] ([user.ckey]) injected a light with plasma, rigging it to explode.")
-
 			rigged = 1
-
 		S.reagents.clear_reagents()
 	else
 		..()
-	return
 
 // called after an attack with a light item
 // shatter light, unless it was an attempt to put it in a light socket
@@ -761,7 +733,6 @@
 		return
 	if(user.a_intent != I_HURT)
 		return
-
 	shatter()
 
 /obj/item/light/proc/shatter()
@@ -770,9 +741,8 @@
 		status = LIGHT_BROKEN
 		force = WEAPON_FORCE_WEAK
 		sharp = TRUE
-		playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
+		playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 		update()
-
 
 /atom/proc/auto_turn_destructive()
 	//Automatically turns based on nearby walls, destroys if not found.
@@ -780,7 +750,6 @@
 	var/gotdir = 0
 	for(var/i = 1, i <= 8; i += i)
 		T = get_ranged_target_turf(src, i, 1)
-
 		if(istype(T))
 			//If someone knows a better way to do this, let me know. -Giacom
 			switch(i)

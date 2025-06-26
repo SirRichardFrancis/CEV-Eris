@@ -27,7 +27,7 @@
 		R.info += "<b>When first setting up your EFTPOS device:</b>"
 		R.info += "1. Memorise your EFTPOS command code (provided with all EFTPOS devices).<br>"
 		R.info += "2. Confirm that your EFTPOS device is connected to your local accounts database. For additional assistance with this step, contact NanoTrasen IT Support<br>"
-		R.info += "3. Confirm that your EFTPOS device has been linked to the account that you wish to recieve funds for all transactions processed on this device.<br>"
+		R.info += "3. Confirm that your EFTPOS device has been linked to the account that you wish to receive funds for all transactions processed on this device.<br>"
 		R.info += "<b>When starting a new transaction with your EFTPOS device:</b>"
 		R.info += "1. Ensure the device is UNLOCKED so that new data may be entered.<br>"
 		R.info += "2. Enter a sum of money and reference message for the new transaction.<br>"
@@ -83,12 +83,12 @@
 	D.wrapped = R
 	D.name = "small parcel - 'EFTPOS access code'"
 
-/obj/item/device/eftpos/attack_self(mob/user as mob)
+/obj/item/device/eftpos/attack_self(mob/user)
 	if(get_dist(src,user) <= 1)
 		var/dat = "<b>[eftpos_name]</b><br>"
 		dat += "<i>This terminal is</i> [machine_id]. <i>Report this code when contacting IT Support</i><br>"
 		if(transaction_locked)
-			dat += "<a href='?src=\ref[src];choice=toggle_lock'>Back[transaction_paid ? "" : " (authentication required)"]</a><br><br>"
+			dat += "<a href='byond://?src=\ref[src];choice=toggle_lock'>Back[transaction_paid ? "" : " (authentication required)"]</a><br><br>"
 
 			dat += "Transaction purpose: <b>[transaction_purpose]</b><br>"
 			dat += "Value: <b>[transaction_amount][CREDS]</b><br>"
@@ -97,17 +97,17 @@
 				dat += "<i>This transaction has been processed successfully.</i><hr>"
 			else
 				dat += "<i>Swipe your card below the line to finish this transaction.</i><hr>"
-				dat += "<a href='?src=\ref[src];choice=scan_card'>\[------\]</a>"
+				dat += "<a href='byond://?src=\ref[src];choice=scan_card'>\[------\]</a>"
 		else
-			dat += "<a href='?src=\ref[src];choice=toggle_lock'>Lock in new transaction</a><br><br>"
+			dat += "<a href='byond://?src=\ref[src];choice=toggle_lock'>Lock in new transaction</a><br><br>"
 
-			dat += "<a href='?src=\ref[src];choice=trans_purpose'>Transaction purpose: [transaction_purpose]</a><br>"
-			dat += "Value: <a href='?src=\ref[src];choice=trans_value'>[transaction_amount][CREDS]</a><br>"
-			dat += "Linked account: <a href='?src=\ref[src];choice=link_account'>[linked_account ? linked_account.owner_name : "None"]</a><hr>"
-			dat += "<a href='?src=\ref[src];choice=change_code'>Change access code</a><br>"
-			dat += "<a href='?src=\ref[src];choice=change_id'>Change EFTPOS ID</a><br>"
-			dat += "Scan card to reset access code <a href='?src=\ref[src];choice=reset'>\[------\]</a>"
-		user << browse(dat,"window=eftpos")
+			dat += "<a href='byond://?src=\ref[src];choice=trans_purpose'>Transaction purpose: [transaction_purpose]</a><br>"
+			dat += "Value: <a href='byond://?src=\ref[src];choice=trans_value'>[transaction_amount][CREDS]</a><br>"
+			dat += "Linked account: <a href='byond://?src=\ref[src];choice=link_account'>[linked_account ? linked_account.owner_name : "None"]</a><hr>"
+			dat += "<a href='byond://?src=\ref[src];choice=change_code'>Change access code</a><br>"
+			dat += "<a href='byond://?src=\ref[src];choice=change_id'>Change EFTPOS ID</a><br>"
+			dat += "Scan card to reset access code <a href='byond://?src=\ref[src];choice=reset'>\[------\]</a>"
+		user << browse(HTML_SKELETON(dat),"window=eftpos")
 	else
 		user << browse(null,"window=eftpos")
 
@@ -120,9 +120,9 @@
 			scan_card(I, O)
 		else
 			to_chat(usr, "\icon[src]<span class='warning'>Unable to connect to linked account.</span>")
-	else if (istype(O, /obj/item/spacecash/ewallet))
+	else if(istype(O, /obj/item/spacecash/ewallet))
 		var/obj/item/spacecash/ewallet/E = O
-		if (linked_account)
+		if(linked_account)
 			if(linked_account.is_valid())
 				if(transaction_locked && !transaction_paid)
 					if(transaction_amount <= E.worth)
@@ -188,7 +188,7 @@
 					transaction_amount = try_num
 			if("toggle_lock")
 				if(transaction_locked)
-					if (transaction_paid)
+					if(transaction_paid)
 						transaction_locked = 0
 						transaction_paid = 0
 					else
@@ -203,26 +203,26 @@
 			if("scan_card")
 				if(linked_account)
 					var/obj/item/I = usr.get_active_hand()
-					if (istype(I, /obj/item/card))
+					if(istype(I, /obj/item/card))
 						scan_card(I)
 				else
 					to_chat(usr, "\icon[src]<span class='warning'>Unable to link accounts.</span>")
 			if("reset")
 				//reset the access code - requires HoP/captain access
 				var/obj/item/I = usr.get_active_hand()
-				if (istype(I, /obj/item/card))
+				if(istype(I, /obj/item/card))
 					var/obj/item/card/id/C = I
 					if(access_cent_captain in C.access || (access_hop in C.access) || (access_captain in C.access))
 						access_code = 0
 						to_chat(usr, "\icon[src]<span class='info'>Access code reset to 0.</span>")
-				else if (istype(I, /obj/item/card/emag))
+				else if(istype(I, /obj/item/card/emag))
 					access_code = 0
 					to_chat(usr, "\icon[src]<span class='info'>Access code reset to 0.</span>")
 
 	src.attack_self(usr)
 
 /obj/item/device/eftpos/proc/scan_card(var/obj/item/card/I, var/obj/item/ID_container)
-	if (istype(I, /obj/item/card/id))
+	if(istype(I, /obj/item/card/id))
 		var/obj/item/card/id/C = I
 		if(I==ID_container || ID_container == null)
 			usr.visible_message("<span class='info'>\The [usr] swipes a card through \the [src].</span>")

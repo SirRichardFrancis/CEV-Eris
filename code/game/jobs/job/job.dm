@@ -4,7 +4,7 @@
 	var/title = "NOPE"
 	var/list/access = list()				// Useful for servers which either have fewer players, so each person needs to fill more than one role, or servers which like to give more access, so players can't hide forever in their super secure departments (I'm looking at you, chemistry!)
 	var/list/cruciform_access = list()		// Assign this access into cruciform if target has it
-	var/security_clearance = CLEARANCE_NONE	// Cruciform-specific access type, used by Neotheology doors
+	var/security_clearance = CLEARANCE_NONE	// Cruciform-specific access type, used by NeoTheology doors
 	var/list/software_on_spawn = list()		// Defines the software files that spawn on tablets and labtops
 	var/list/core_upgrades = list()			// Defines the upgrades that would be installed into core implant on spawn, if any.
 	var/flag = NONE							// Bitflags for the job
@@ -28,7 +28,7 @@
 	var/list/also_known_languages = list()	// additional chance based languages to all jobs.
 
 	var/account_allowed = 1					// Does this job type come with a station account?
-	var/wage = WAGE_LABOUR					// How much base wage does this job recieve per payday
+	var/wage = WAGE_LABOUR					// How much base wage does this job receive per payday
 	var/initial_balance	=	-1				// If set to a value other than -1, overrides the wage based initial balance calculation
 
 	var/outfit_type							// The outfit the employee will be dressed in, if any
@@ -190,19 +190,19 @@
 /datum/job/proc/get_description_blurb()
 	var/job_desc = ""
 	//Here's the actual content of the description
-	if (description)
+	if(description)
 		job_desc += "<h1>Overview:</h1>"
 		job_desc += "<hr>"
 		job_desc += description
 		job_desc += "<br>"
 
-	if (duties)
+	if(duties)
 		job_desc += "<h1>Duties:</h1>"
 		job_desc += "<hr>"
 		job_desc += duties
 		job_desc += "<br>"
 
-	if (loyalties)
+	if(loyalties)
 		job_desc += "<h1>Loyalties:</h1>"
 		job_desc += "<hr>"
 		job_desc += loyalties

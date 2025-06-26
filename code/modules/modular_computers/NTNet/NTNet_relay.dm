@@ -65,7 +65,7 @@
 	data["dos_crashed"] = dos_failure
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "ntnet_relay.tmpl", "NTNet Quantum Relay", 500, 300, state = state)
 		ui.set_initial_data(data)
 		ui.open()
@@ -116,7 +116,7 @@
 		D.error = "Connection to quantum relay severed"
 	..()
 
-/obj/machinery/ntnet_relay/attackby(var/obj/item/W as obj, var/mob/user as mob)
+/obj/machinery/ntnet_relay/attackby(var/obj/item/W as obj, var/mob/user)
 	if(default_deconstruction(W, user))
 		return
 	if(default_part_replacement(W, user))

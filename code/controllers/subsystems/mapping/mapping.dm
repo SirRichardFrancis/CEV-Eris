@@ -49,7 +49,6 @@ SUBSYSTEM_DEF(mapping)
 	var/shuttle_recall_message = "Jump sequence aborted, return to normal operating conditions."
 
 	var/list/usable_email_tlds = list("cev_eris.hanza","eris.scg","eris.net")
-	var/path = "eris"
 
 	// Moved here from a deprecated datum along with code related to mapping
 	// Gonna be removed later
@@ -175,21 +174,6 @@ SUBSYSTEM_DEF(mapping)
 	LIBCALL(RUST_G, "file_write")("[map_path]", "config/next_map.txt")
 
 
-// Moved two following procs from /datum/maps_data as-is just to be safe
-/datum/controller/subsystem/mapping/proc/character_load_path(savefile/S, slot)
-	var/original_cd = S.cd
-	S.cd = "/"
-	. = private_use_legacy_saves(S, slot) ? "/character[slot]" : "/eris/character[slot]"
-	S.cd = original_cd // Attempting to make this call as side-effect free as possible
-
-/datum/controller/subsystem/mapping/proc/private_use_legacy_saves(savefile/S, slot)
-	if(!S.dir.Find(path)) // If we cannot find the map path folder, load the legacy save
-		return TRUE
-	S.cd = "/eris" // Finally, if we cannot find the character slot in the map path folder, load the legacy save
-	return !S.dir.Find("character[slot]")
-
-
-
 /datum/controller/subsystem/mapping/proc/HasAbove(z_level_of_origin)
 	if(z_level_of_origin < 1) // Objects at 0,0,0 occasionally call this proc too
 		return FALSE
@@ -235,7 +219,7 @@ SUBSYSTEM_DEF(mapping)
 /datum/controller/subsystem/mapping/proc/get_zstep(ref, dir)
 	if(dir == UP)
 		. = GetAbove(ref)
-	else if (dir == DOWN)
+	else if(dir == DOWN)
 		. = GetBelow(ref)
 	else
 		. = get_step(ref, dir)

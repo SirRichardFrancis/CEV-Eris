@@ -59,8 +59,8 @@
 					teleport_back(M)
 					mobs += M
 	if(length(mobs) == 0)
-		playsound(src.loc, 'sound/machines/buzz-sigh.ogg')
-		playsound(src.loc, 'sound/voice/bfreeze.ogg', 50, 1)
+		playsound(loc, 'sound/machines/buzz-sigh.ogg')
+		playsound(loc, 'sound/voice/bfreeze.ogg', 50, 1)
 		audible_message(SPAN_WARNING("The [src.name] buzzes and state \'SNARE EITHER DISABLED OR NOT AVAILABLE, TRY TO PROBE IT AGAIN, IF YOU ARE SURE THAT THE SNARE IN A GOOD CONDITION OR CONNECTED TO USER.\'"),
 						SPAN_WARNING("The [src.name] buzzes and state something."),
 						hearing_distance = 5
@@ -119,7 +119,7 @@
 		data["snare_id"] = connected_hub.silk_id
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "bs_snare_controller.tmpl", "BS Snare Control", 440, 600)
 		ui.set_initial_data(data)
 		ui.open()

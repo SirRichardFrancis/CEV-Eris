@@ -88,14 +88,14 @@ var/intercom_range_display_status = 0
 			if(!(locate(/obj/structure/grille,T)))
 				var/window_check = 0
 				for(var/obj/structure/window/W in T)
-					if (W.dir == turn(C1.dir,180) || (W.dir in list(NORTHEAST, SOUTHEAST, NORTHWEST, SOUTHWEST)))
+					if(W.dir == turn(C1.dir,180) || (W.dir in list(NORTHEAST, SOUTHEAST, NORTHWEST, SOUTHWEST)))
 						window_check = 1
 						break
 				if(!window_check)
 					output += "<li><font color='red'>Camera not connected to wall at \[[C1.x], [C1.y], [C1.z]\] ([C1.loc.loc]) Network: [C1.network]</color></li>"
 
 	output += "</ul>"
-	usr << browse(output,"window=airreport;size=1000x500")
+	usr << browse(HTML_SKELETON(output), "window=airreport;size=1000x500")
 
 
 /client/proc/intercom_view()
@@ -114,7 +114,7 @@ var/intercom_range_display_status = 0
 		for(var/obj/item/device/radio/intercom/I in world)
 			for(var/turf/T in RANGE_TURFS(7, I))
 				var/obj/effect/debugging/marker/F = new(T)
-				if (!(F in view(7, I.loc)))
+				if(!(F in view(7, I.loc)))
 					qdel(F)
 
 

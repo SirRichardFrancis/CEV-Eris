@@ -1,3 +1,11 @@
+#define SECBOT_IDLE 		0		// idle
+#define SECBOT_HUNT 		1		// found target, hunting
+#define SECBOT_ARREST		2		// arresting target
+#define SECBOT_START_PATROL	3		// start patrol
+#define SECBOT_WAIT_PATROL	4		// waiting for signals
+#define SECBOT_PATROL		5		// patrolling
+#define SECBOT_SUMMON		6		// summoned by PDA
+
 /mob/living/bot/secbot
 	name = "Securitron"
 	desc = "A little security robot.  He looks less than thrilled."
@@ -17,13 +25,6 @@
 	var/auto_patrol = 0 // If true, patrols on its own
 
 	var/mode = 0
-#define SECBOT_IDLE 		0		// idle
-#define SECBOT_HUNT 		1		// found target, hunting
-#define SECBOT_ARREST		2		// arresting target
-#define SECBOT_START_PATROL	3		// start patrol
-#define SECBOT_WAIT_PATROL	4		// waiting for signals
-#define SECBOT_PATROL		5		// patrolling
-#define SECBOT_SUMMON		6		// summoned by PDA
 	var/is_attacking = 0
 	var/is_ranged = 0
 	var/awaiting_surrender = 0
@@ -75,23 +76,22 @@
 		set_light(0)
 	..()
 
-/mob/living/bot/secbot/attack_hand(var/mob/user)
+/mob/living/bot/secbot/attack_hand(mob/user)
 	user.set_machine(src)
 	var/dat
 	dat += "<TT><B>Automatic Security Unit v[bot_version]</B></TT><BR><BR>"
-	dat += "Status: <A href='?src=\ref[src];power=1'>[on ? "On" : "Off"]</A><BR>"
+	dat += "Status: <a href='byond://?src=\ref[src];power=1'>[on ? "On" : "Off"]</A><BR>"
 	dat += "Behaviour controls are [locked ? "locked" : "unlocked"]<BR>"
 	dat += "Maintenance panel is [open ? "opened" : "closed"]"
 	if(!locked || issilicon(user))
-		dat += "<BR>Check for Weapon Authorization: <A href='?src=\ref[src];operation=idcheck'>[idcheck ? "Yes" : "No"]</A><BR>"
-		dat += "Check Security Records: <A href='?src=\ref[src];operation=ignorerec'>[check_records ? "Yes" : "No"]</A><BR>"
-		dat += "Check Arrest Status: <A href='?src=\ref[src];operation=ignorearr'>[check_arrest ? "Yes" : "No"]</A><BR>"
-		dat += "Operating Mode: <A href='?src=\ref[src];operation=switchmode'>[arrest_type ? "Detain" : "Arrest"]</A><BR>"
-		dat += "Report Arrests: <A href='?src=\ref[src];operation=declarearrests'>[declare_arrests ? "Yes" : "No"]</A><BR>"
-		dat += "Auto Patrol: <A href='?src=\ref[src];operation=patrol'>[auto_patrol ? "On" : "Off"]</A>"
-	user << browse("<HEAD><TITLE>Securitron v[bot_version] controls</TITLE></HEAD>[dat]", "window=autosec")
+		dat += "<BR>Check for Weapon Authorization: <a href='byond://?src=\ref[src];operation=idcheck'>[idcheck ? "Yes" : "No"]</A><BR>"
+		dat += "Check Security Records: <a href='byond://?src=\ref[src];operation=ignorerec'>[check_records ? "Yes" : "No"]</A><BR>"
+		dat += "Check Arrest Status: <a href='byond://?src=\ref[src];operation=ignorearr'>[check_arrest ? "Yes" : "No"]</A><BR>"
+		dat += "Operating Mode: <a href='byond://?src=\ref[src];operation=switchmode'>[arrest_type ? "Detain" : "Arrest"]</A><BR>"
+		dat += "Report Arrests: <a href='byond://?src=\ref[src];operation=declarearrests'>[declare_arrests ? "Yes" : "No"]</A><BR>"
+		dat += "Auto Patrol: <a href='byond://?src=\ref[src];operation=patrol'>[auto_patrol ? "On" : "Off"]</A>"
+	user << browse(HTML_SKELETON("<HEAD><TITLE>Securitron v[bot_version] controls</TITLE></HEAD>[dat]"), "window=autosec")
 	onclose(user, "autosec")
-	return
 
 /mob/living/bot/secbot/Topic(href, href_list)
 	if(..())
@@ -123,7 +123,7 @@
 			declare_arrests = !declare_arrests
 	attack_hand(usr)
 
-/mob/living/bot/secbot/attackby(var/obj/item/O, var/mob/user)
+/mob/living/bot/secbot/attackby(obj/item/O, mob/user)
 	var/curhealth = health
 	..()
 	if(health < curhealth)
@@ -251,7 +251,7 @@
 				patrol_step()
 			return
 
-/mob/living/bot/secbot/UnarmedAttack(var/mob/M, var/proximity)
+/mob/living/bot/secbot/UnarmedAttack(mob/M, proximity)
 	if(!..())
 		return
 
@@ -336,12 +336,12 @@
 			break
 	return
 
-/mob/living/bot/secbot/proc/calc_path(var/turf/avoid = null)
+/mob/living/bot/secbot/proc/calc_path(turf/avoid)
 	path = AStar(loc, patrol_target, /turf/proc/CardinalTurfsWithAccess, /turf/proc/Distance, 0, 120, id=botcard, exclude=avoid)
 	if(!path)
 		path = list()
 
-/mob/living/bot/secbot/proc/check_threat(var/mob/living/M)
+/mob/living/bot/secbot/proc/check_threat(mob/living/M)
 	if(!M || !istype(M) || M.stat || src == M)
 		return 0
 
@@ -397,10 +397,10 @@
 /obj/secbot_listener
 	var/mob/living/bot/secbot/secbot = null
 
-/obj/secbot_listener/proc/post_signal(var/freq, var/key, var/value) // send a radio signal with a single data key/value pair
+/obj/secbot_listener/proc/post_signal(freq, key, value) // send a radio signal with a single data key/value pair
 	post_signal_multiple(freq, list("[key]" = value))
 
-/obj/secbot_listener/proc/post_signal_multiple(var/freq, var/list/keyval) // send a radio signal with multiple data key/values
+/obj/secbot_listener/proc/post_signal_multiple(freq, list/keyval) // send a radio signal with multiple data key/values
 	var/datum/radio_frequency/frequency = SSradio.return_frequency(freq)
 	if(!frequency)
 		return
@@ -477,7 +477,7 @@
 
 //Secbot Construction
 
-/obj/item/clothing/head/armor/helmet/attackby(var/obj/item/device/assembly/signaler/S, mob/user as mob)
+/obj/item/clothing/head/armor/helmet/attackby(obj/item/device/assembly/signaler/S, mob/user)
 	..()
 	if(!issignaler(S))
 		..()
@@ -491,7 +491,7 @@
 		var/obj/item/secbot_assembly/A = new /obj/item/secbot_assembly
 		user.put_in_hands(A)
 		to_chat(user, "You add the signaler to the helmet.")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		user.drop_from_inventory(src)
 		qdel(src)
 	else
@@ -518,7 +518,7 @@
 		user.drop_item()
 		build_step = 2
 		to_chat(user, "You add \the [I] to [src].")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		overlays += image('icons/obj/aibots.dmi', "hs_eye")
 		name = "helmet/signaler/prox sensor assembly"
 		qdel(I)
@@ -527,7 +527,7 @@
 		user.drop_item()
 		build_step = 3
 		to_chat(user, "You add \the [I] to [src].")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		name = "helmet/signaler/prox sensor/robot arm assembly"
 		overlays += image('icons/obj/aibots.dmi', "hs_arm")
 		qdel(I)
@@ -535,7 +535,7 @@
 	else if(istype(I, /obj/item/melee/baton) && build_step == 3)
 		user.drop_item()
 		to_chat(user, "You complete the Securitron! Beep boop.")
-		playsound(src.loc, 'sound/effects/insert.ogg', 50, 1)
+		playsound(loc, 'sound/effects/insert.ogg', 50, 1)
 		var/mob/living/bot/secbot/S = new /mob/living/bot/secbot(get_turf(src))
 		S.name = created_name
 		qdel(I)

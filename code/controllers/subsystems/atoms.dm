@@ -34,7 +34,7 @@ SUBSYSTEM_DEF(atoms)
 		previous_state = initialized
 		initialized = INITIALIZATION_INNEW_MAPLOAD
 
-	if (atoms_to_return)
+	if(atoms_to_return)
 		LAZYINITLIST(created_atoms)
 
 	var/count
@@ -71,7 +71,7 @@ SUBSYSTEM_DEF(atoms)
 		testing("Late initialized [late_loaders.len] atoms")
 		late_loaders.Cut()
 
-	if (created_atoms)
+	if(created_atoms)
 		atoms_to_return += created_atoms
 		created_atoms = null
 
@@ -159,4 +159,4 @@ SUBSYSTEM_DEF(atoms)
 	if(!LAZYLEN(SSatoms.BadInitializeCalls))
 		to_chat(usr, SPAN_NOTICE("BadInit list is empty."))
 	else
-		usr << browse(replacetext(SSatoms.InitLog(), "\n", "<br>"), "window=initlog")
+		usr << browse(HTML_SKELETON(replacetext(SSatoms.InitLog(), "\n", "<br>")), "window=initlog")

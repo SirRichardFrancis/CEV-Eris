@@ -123,7 +123,7 @@
 
 /obj/item/book/manual/nuclear
 	name = "Fission Mailed: Nuclear Sabotage 101"
-	desc = "An information manual for Syndicate operatives on the usage of nuclear devices to destroy Nanotrasen facilities, a throwback to the past."
+	desc = "An information manual for Syndicate operatives on the usage of nuclear devices to destroy NanoTrasen facilities, a throwback to the past."
 	icon_state = "book_nuclear"
 	author = "Syndicate"
 	title = "Fission Mailed: Nuclear Sabotage 101"
@@ -199,7 +199,7 @@
 				function pageloaded(myframe) {
 					document.getElementById("loading").style.display = "none";
 					myframe.style.display = "inline";
-    			}
+				}
 			</script>
 			<p id='loading'>You start skimming through the manual...</p>
 			<iframe width='100%' height='97%' onload="pageloaded(this)" src="[config.wikiurl]/[page_link]_Eris[config.language]?printable=yes&remove_links=1" frameborder="0" id="main_frame"></iframe>
@@ -267,11 +267,11 @@
 
 //security
 /obj/item/book/manual/wiki/security_ironparagraphs
-	name = "Ironhammer Paragraphs"
+	name = "IronHammer Paragraphs"
 	desc = "A set of corporate guidelines for keeping order on privately-owned space assets."
 	icon_state = "book_ironparagraphs"
-	author = "Ironhammer Security"
-	title = "Ironhammer Paragraphs"
+	author = "IronHammer Security"
+	title = "IronHammer Paragraphs"
 	page_link = "Agreement"
 
 /obj/item/book/manual/wiki/security_detective

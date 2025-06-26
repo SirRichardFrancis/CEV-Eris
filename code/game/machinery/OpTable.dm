@@ -12,34 +12,25 @@
 	active_power_usage = 5
 
 	var/mob/living/carbon/victim
-
 	var/obj/machinery/computer/operating/computer
 	can_buckle = TRUE
 	buckle_dir = SOUTH
 	buckle_lying = TRUE //bed-like behavior, forces mob.lying = buckle_lying if != -1
-
 	var/y_offset = 0
+
 /obj/machinery/optable/New()
 	..()
 	for(var/dir in list(NORTH,EAST,SOUTH,WEST))
 		computer = locate(/obj/machinery/computer/operating, get_step(src, dir))
-		if (computer)
+		if(computer)
 			computer.table = src
 			break
-//	spawn(100) //Wont the MC just call this process() before and at the 10 second mark anyway?
-//		Process()
 
-
-/obj/machinery/optable/attack_hand(mob/user as mob)
-	if (user.incapacitated(INCAPACITATION_DEFAULT))
+/obj/machinery/optable/attack_hand(mob/user)
+	if(user.incapacitated(INCAPACITATION_DEFAULT))
 		return
-	if (victim)
+	if(victim)
 		user_unbuckle_mob(user)
-		return
-//	if (HULK in usr.mutations)
-//		visible_message(SPAN_DANGER("\The [usr] destroys \the [src]!"))
-//		density = FALSE
-//		qdel(src)
 
 /obj/machinery/optable/unbuckle_mob()
 	. = ..()
@@ -55,7 +46,7 @@
 		return 0
 
 /obj/machinery/optable/proc/check_victim()
-	if (istype(buckled_mob,/mob/living/carbon))
+	if(istype(buckled_mob,/mob/living/carbon))
 		victim = buckled_mob
 		if(ishuman(buckled_mob))
 			var/mob/living/carbon/human/M = buckled_mob
@@ -69,14 +60,14 @@
 /obj/machinery/optable/Process()
 	check_victim()
 
-/obj/machinery/optable/proc/take_victim(mob/living/carbon/C, mob/living/carbon/user as mob)
-	if (C == user)
+/obj/machinery/optable/proc/take_victim(mob/living/carbon/C, mob/living/carbon/user)
+	if(C == user)
 		user.visible_message("[user] climbs on \the [src].","You climb on \the [src].")
 	else
 		visible_message(SPAN_NOTICE("\The [C] has been laid on \the [src] by [user]."), 3)
-		if (user.pulling == C)
+		if(user.pulling == C)
 			user.stop_pulling() //Lets not drag your patient off the table after you just put them there
-	if (C.client)
+	if(C.client)
 		C.client.perspective = EYE_PERSPECTIVE
 		C.client.eye = src
 	C.loc = loc
@@ -85,7 +76,6 @@
 	add_fingerprint(user)
 	buckle_mob(C)
 	set_power_use(ACTIVE_POWER_USE)
-
 
 /obj/machinery/optable/MouseDrop_T(mob/target, mob/user)
 
@@ -104,14 +94,13 @@
 
 	if(usr.stat || !ishuman(usr) || usr.restrained() || !check_table(usr))
 		return
+	take_victim(usr, usr)
 
-	take_victim(usr,usr)
-
-/obj/machinery/optable/affect_grab(var/mob/user, var/mob/target)
+/obj/machinery/optable/affect_grab(mob/user, mob/target)
 	take_victim(target,user)
 	return TRUE
 
-/obj/machinery/optable/proc/check_table(mob/living/carbon/patient as mob)
+/obj/machinery/optable/proc/check_table(mob/living/carbon/patient)
 	check_victim()
 	if(victim)
 		to_chat(usr, SPAN_WARNING("\The [src] is already occupied!"))
@@ -121,10 +110,9 @@
 		return 0
 	return 1
 
-/obj/machinery/optable/post_buckle_mob(mob/living/M as mob)
+/obj/machinery/optable/post_buckle_mob(mob/living/M)
 	if(M == buckled_mob)
 		M.pixel_y = y_offset
 	else
 		M.pixel_y = 0
-
 	check_victim()

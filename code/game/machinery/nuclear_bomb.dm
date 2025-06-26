@@ -44,17 +44,15 @@ var/bomb_set
 	return ..()
 
 /obj/machinery/nuclearbomb/Process()
-	if (src.timing)
+	if(src.timing)
 		src.timeleft = max(timeleft - 2, 0) // 2 seconds per process()
-		if (timeleft <= 0)
+		if(timeleft <= 0)
 			spawn
 				explode()
 		SSnano.update_uis(src)
-	return
 
 /obj/machinery/nuclearbomb/attackby(obj/item/I, mob/user, params)
-	src.add_fingerprint(user)
-
+	add_fingerprint(user)
 	var/list/usable_qualities = list(QUALITY_SCREW_DRIVING)
 	if(anchored && (removal_stage == 0 || removal_stage == 2))
 		usable_qualities.Add(QUALITY_WELDING)
@@ -65,11 +63,10 @@ var/bomb_set
 
 	var/tool_type = I.get_tool_type(user, usable_qualities, src)
 	switch(tool_type)
-
 		if(QUALITY_SCREW_DRIVING)
 			if(I.use_tool(user, src, WORKTIME_FAST, tool_type, FAILCHANCE_VERY_EASY, required_stat = STAT_MEC))
-				if (src.auth)
-					if (panel_open == 0)
+				if(src.auth)
+					if(panel_open == 0)
 						panel_open = 1
 						overlays += image(icon, "npanel_open")
 						to_chat(user, SPAN_NOTICE("You unscrew the control panel of [src]."))
@@ -78,9 +75,9 @@ var/bomb_set
 						overlays -= image(icon, "npanel_open")
 						to_chat(user, SPAN_NOTICE("You screw the control panel of [src] back on."))
 				else
-					if (panel_open == 0)
+					if(panel_open == 0)
 						to_chat(user, SPAN_NOTICE("\The [src] emits a buzzing noise, the panel staying locked in."))
-					if (panel_open == 1)
+					if(panel_open == 1)
 						panel_open = 0
 						overlays -= image(icon, "npanel_open")
 						to_chat(user, SPAN_NOTICE("You screw the control panel of \the [src] back on."))
@@ -127,29 +124,28 @@ var/bomb_set
 		if(ABORT_CHECK)
 			return
 
-	if (panel_open && (istool(I)))
+	if(panel_open && (istool(I)))
 		return attack_hand(user)
 
-	if (src.extended)
-		if (istype(I, /obj/item/disk/nuclear))
+	if(extended)
+		if(istype(I, /obj/item/disk/nuclear))
 			usr.drop_item()
 			I.loc = src
-			src.auth = I
-			src.add_fingerprint(user)
+			auth = I
+			add_fingerprint(user)
 			return attack_hand(user)
-
 	..()
 
-/obj/machinery/nuclearbomb/attack_ghost(mob/user as mob)
+/obj/machinery/nuclearbomb/attack_ghost(mob/user)
 	attack_hand(user)
 
-/obj/machinery/nuclearbomb/attack_hand(mob/user as mob)
-	if (extended)
-		if (panel_open)
+/obj/machinery/nuclearbomb/attack_hand(mob/user)
+	if(extended)
+		if(panel_open)
 			wires.Interact(user)
 		else
 			nano_ui_interact(user)
-	else if (deployable)
+	else if(deployable)
 		if(removal_stage < 5)
 			src.anchored = TRUE
 			visible_message(SPAN_WARNING("With a steely snap, bolts slide out of [src] and anchor it to the flooring!"))
@@ -159,19 +155,18 @@ var/bomb_set
 		if(!src.lighthack)
 			flick("nuclearbombc", src)
 			update_icon()
-	return
 
-/obj/machinery/nuclearbomb/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
+/obj/machinery/nuclearbomb/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui, force_open = NANOUI_FOCUS)
 	var/data[0]
 	data["hacking"] = 0
 	data["auth"] = is_auth(user)
-	if (is_auth(user))
-		if (yes_code)
+	if(is_auth(user))
+		if(yes_code)
 			data["authstatus"] = timing ? "Functional/Set" : "Functional"
 		else
 			data["authstatus"] = "Auth. S2"
 	else
-		if (timing)
+		if(timing)
 			data["authstatus"] = "Set"
 		else
 			data["authstatus"] = "Auth. S1"
@@ -182,13 +177,13 @@ var/bomb_set
 	data["anchored"] = anchored
 	data["yescode"] = yes_code
 	data["message"] = "AUTH"
-	if (is_auth(user))
+	if(is_auth(user))
 		data["message"] = code
-		if (yes_code)
+		if(yes_code)
 			data["message"] = "*****"
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "nuclear_bomb.tmpl", "Nuke Control Panel", 300, 510)
 		ui.set_initial_data(data)
 		ui.open()
@@ -202,15 +197,15 @@ var/bomb_set
 	if(usr.incapacitated())
 		return
 
-	if (src.deployable)
+	if(deployable)
 		to_chat(usr, SPAN_WARNING("You close several panels to make [src] undeployable."))
-		src.deployable = 0
+		deployable = 0
 	else
 		to_chat(usr, SPAN_WARNING("You adjust some panels to make [src] deployable."))
-		src.deployable = 1
-	return
+		deployable = 1
 
-/obj/machinery/nuclearbomb/proc/is_auth(var/mob/user)
+
+/obj/machinery/nuclearbomb/proc/is_auth(mob/user)
 	if(auth)
 		return 1
 	if(user.can_admin_interact())
@@ -221,27 +216,28 @@ var/bomb_set
 	if(..())
 		return 1
 
-	if (href_list["auth"])
-		if (auth)
+	if(href_list["auth"])
+		if(auth)
 			auth.loc = loc
 			yes_code = 0
 			auth = null
 		else
 			var/obj/item/I = usr.get_active_hand()
-			if (istype(I, /obj/item/disk/nuclear))
+			if(istype(I, /obj/item/disk/nuclear))
 				usr.drop_item()
 				I.loc = src
 				auth = I
-	if (is_auth(usr))
-		if (href_list["type"])
-			if (href_list["type"] == "E")
-				if (code == r_code)
+
+	if(is_auth(usr))
+		if(href_list["type"])
+			if(href_list["type"] == "E")
+				if(code == r_code)
 					yes_code = 1
 					code = null
 				else
 					code = "ERROR"
 			else
-				if (href_list["type"] == "R")
+				if(href_list["type"] == "R")
 					yes_code = 0
 					code = null
 				else
@@ -249,37 +245,37 @@ var/bomb_set
 						SSnano.update_uis(src)
 						return // - so we force user to press R before entering new code as it was with 5-digit codes.
 					lastentered = text("[]", href_list["type"])
-					if (text2num(lastentered) == null)
+					if(text2num(lastentered) == null)
 						var/turf/LOC = get_turf(usr)
-						message_admins("[key_name_admin(usr)] tried to exploit a nuclear bomb by entering non-numerical codes: <a href='?_src_=vars;Vars=\ref[src]'>[lastentered]</a>! ([LOC ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[LOC.x];Y=[LOC.y];Z=[LOC.z]'>JMP</a>" : "null"])", 0)
+						message_admins("[key_name_admin(usr)] tried to exploit a nuclear bomb by entering non-numerical codes: <a href='byond://?_src_=vars;Vars=\ref[src]'>[lastentered]</a>! ([LOC ? "<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[LOC.x];Y=[LOC.y];Z=[LOC.z]'>JMP</a>" : "null"])", 0)
 						log_admin("EXPLOIT: [key_name(usr)] tried to exploit a nuclear bomb by entering non-numerical codes: [lastentered]!")
 					else
 						code += lastentered
-						if (length(code) > length(r_code))
+						if(length(code) > length(r_code))
 							code = "ERROR"
-		if (yes_code)
-			if (href_list["time"])
+		if(yes_code)
+			if(href_list["time"])
 				var/time = text2num(href_list["time"])
 				timeleft += time
 				timeleft = CLAMP(timeleft, 120, 600)
-			if (href_list["timer"])
-				if (timing == -1)
+			if(href_list["timer"])
+				if(timing == -1)
 					SSnano.update_uis(src)
 					return
-				if (!anchored)
+				if(!anchored)
 					to_chat(usr, SPAN_WARNING("\The [src] needs to be anchored."))
 					SSnano.update_uis(src)
 					return
-				if (safety)
+				if(safety)
 					to_chat(usr, SPAN_WARNING("The safety is still on."))
 					SSnano.update_uis(src)
 					return
-				if (wires.IsIndexCut(NUCLEARBOMB_WIRE_TIMING))
+				if(wires.IsIndexCut(NUCLEARBOMB_WIRE_TIMING))
 					to_chat(usr, SPAN_WARNING("Nothing happens, something might be wrong with the wiring."))
 					SSnano.update_uis(src)
 					return
 
-				if (!timing && !safety)
+				if(!timing && !safety)
 					timing = 1
 					log_and_message_admins("engaged a nuclear bomb")
 					bomb_set++ //There can still be issues with this resetting when there are multiple bombs. Not a big deal though for Nuke/N
@@ -290,15 +286,15 @@ var/bomb_set
 					update_icon()
 				else
 					secure_device()
-			if (href_list["safety"])
-				if (wires.IsIndexCut(NUCLEARBOMB_WIRE_SAFETY))
+			if(href_list["safety"])
+				if(wires.IsIndexCut(NUCLEARBOMB_WIRE_SAFETY))
 					to_chat(usr, SPAN_WARNING("Nothing happens, something might be wrong with the wiring."))
 					SSnano.update_uis(src)
 					return
 				safety = !safety
 				if(safety)
 					secure_device()
-			if (href_list["anchor"])
+			if(href_list["anchor"])
 				if(removal_stage == 5)
 					anchored = FALSE
 					visible_message(SPAN_WARNING("\The [src] makes a highly unpleasant crunching noise. It looks like the anchoring bolts have been cut."))
@@ -314,7 +310,6 @@ var/bomb_set
 						visible_message(SPAN_WARNING("The anchoring bolts slide back into the depths of [src]."))
 				else
 					to_chat(usr, SPAN_WARNING("There is nothing to anchor to!"))
-
 	SSnano.update_uis(src)
 
 /obj/machinery/nuclearbomb/proc/secure_device()
@@ -333,7 +328,7 @@ var/bomb_set
 
 #define NUKERANGE 80
 /obj/machinery/nuclearbomb/proc/explode()
-	if (src.safety)
+	if(src.safety)
 		timing = 0
 		return
 	src.timing = -1
@@ -363,10 +358,7 @@ var/bomb_set
 
 		SSticker.ship_was_nuked = (off_station<2)	//offstation==1 is a draw. the station becomes irradiated and needs to be evacuated.
 														//kinda shit but I couldn't  get permission to do what I wanted to do.
-
 		SSticker.station_explosion_cinematic(off_station)
-
-	return
 
 /obj/machinery/nuclearbomb/update_icon()
 	if(lighthack)
@@ -381,11 +373,6 @@ var/bomb_set
 		icon_state = "nuclearbomb1"
 	else
 		icon_state = "nuclearbomb0"
-/*
-if(!N.lighthack)
-	if (N.icon_state == "nuclearbomb2")
-		N.icon_state = "nuclearbomb1"
-		*/
 
 //====The nuclear authentication disc====
 /obj/item/disk/nuclear

@@ -29,8 +29,7 @@
 #define RANGE_TURFS(RADIUS, CENTER) \
 	block(\
 	locate(max(CENTER.x-(RADIUS),1),			max(CENTER.y-(RADIUS),1),			CENTER.z),\
-	locate(min(CENTER.x+(RADIUS),world.maxx),	min(CENTER.y+(RADIUS),world.maxy),	CENTER.z)\
-  )
+	locate(min(CENTER.x+(RADIUS),world.maxx),	min(CENTER.y+(RADIUS),world.maxy),	CENTER.z))
 
 #define get_turf(atom) get_step(atom, 0)
 
@@ -38,7 +37,7 @@
 	var/turf/a = get_turf(A)
 	var/turf/b = get_turf(B)
 
-	if (!a || !b)
+	if(!a || !b)
 		return 0
 
 	var/vecX = A.x - B.x

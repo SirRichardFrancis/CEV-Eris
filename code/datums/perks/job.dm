@@ -224,7 +224,7 @@
 /datum/perk/greenthumb
 	name = "Green Thumb"
 	desc = "After growing plants for years you have become a botanical expert. You can get all information about plants, from stats \
-	        to harvest reagents, by examining them. Gathering plants relaxes you and thus restores sanity."
+			to harvest reagents, by examining them. Gathering plants relaxes you and thus restores sanity."
 	icon_state = "greenthumb" // https://game-icons.net/1x1/delapouite/farmer.html
 
 	var/obj/item/device/scanner/plant/virtual_scanner = new
@@ -255,7 +255,7 @@
 
 /datum/perk/codespeak
 	name = "Codespeak"
-	desc = "You know Ironhammer PMC's code language, adapted to use aboard of CEV Eris."
+	desc = "You know IronHammer PMC's code language, adapted to use aboard of CEV Eris."
 	icon_state = "codespeak" // https://game-icons.net/1x1/delapouite/police-officer-head.html
 	var/list/codespeak_procs = list(
 		/mob/living/carbon/human/proc/codespeak_help,

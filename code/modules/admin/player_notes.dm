@@ -13,19 +13,19 @@ datum/admins/proc/notes_gethtml(var/ckey)
 	var/savefile/notesfile = new(NOTESFILE)
 	if(!notesfile)	return "<font color='red'>Error: Cannot access [NOTESFILE]</font>"
 	if(ckey)
-		. = "<b>Notes for <a href='?src=\ref[src];notes=show'>[ckey]</a>:</b> <a href='?src=\ref[src];notes=add;ckey=[ckey]'>\[+\]</a> <a href='?src=\ref[src];notes=remove;ckey=[ckey]'>\[-\]</a><br>"
+		. = "<b>Notes for <a href='byond://?src=\ref[src];notes=show'>[ckey]</a>:</b> <a href='byond://?src=\ref[src];notes=add;ckey=[ckey]'>\[+\]</a> <a href='byond://?src=\ref[src];notes=remove;ckey=[ckey]'>\[-\]</a><br>"
 		notesfile.cd = "/[ckey]"
 		var/index = 1
 		while( !notesfile.eof )
 			var/note
 			notesfile >> note
-			. += "[note] <a href='?src=\ref[src];notes=remove;ckey=[ckey];from=[index]'>\[-\]</a><br>"
+			. += "[note] <a href='byond://?src=\ref[src];notes=remove;ckey=[ckey];from=[index]'>\[-\]</a><br>"
 			index++
 	else
-		. = "<b>All Notes:</b> <a href='?src=\ref[src];notes=add'>\[+\]</a> <a href='?src=\ref[src];notes=remove'>\[-\]</a><br>"
+		. = "<b>All Notes:</b> <a href='byond://?src=\ref[src];notes=add'>\[+\]</a> <a href='byond://?src=\ref[src];notes=remove'>\[-\]</a><br>"
 		notesfile.cd = "/"
 		for(var/dir in notesfile.dir)
-			. += "<a href='?src=\ref[src];notes=show;ckey=[dir]'>[dir]</a><br>"
+			. += "<a href='byond://?src=\ref[src];notes=show;ckey=[dir]'>[dir]</a><br>"
 	return
 
 
@@ -79,6 +79,5 @@ datum/admins/proc/notes_gethtml(var/ckey)
 		notesfile.cd = "/"
 		if(alert(usr,"Are you sure you want to remove all their notes?","Confirmation","No","Yes - Remove all notes") == "Yes - Remove all notes")
 			notesfile.dir.Remove(ckey)
-	return
 
 #undef NOTESFILE

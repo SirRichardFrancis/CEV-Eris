@@ -43,26 +43,25 @@ The "dust" will damage the hull of the station causin minor hull breaches.
 	return "weak"
 
 
-/proc/dust_swarm(var/strength = "weak")
+/proc/dust_swarm(strength = "weak")
 	var/numbers = 1
 	switch(strength)
 		if("weak")
-		 numbers = rand(8,15)
-		 for(var/i = 0 to numbers)
-		 	new/obj/effect/space_dust/weak()
+			numbers = rand(8,15)
+			for(var/i = 0 to numbers)
+				new/obj/effect/space_dust/weak()
 		if("norm")
-		 numbers = rand(20,40)
-		 for(var/i = 0 to numbers)
-		 	new/obj/effect/space_dust()
+			numbers = rand(20,40)
+			for(var/i = 0 to numbers)
+				new/obj/effect/space_dust()
 		if("strong")
-		 numbers = rand(40,60)
-		 for(var/i = 0 to numbers)
-		 	new/obj/effect/space_dust/strong()
+			numbers = rand(40,60)
+			for(var/i = 0 to numbers)
+				new/obj/effect/space_dust/strong()
 		if("super")
-		 numbers = rand(60,100)
-		 for(var/i = 0 to numbers)
-		 	new/obj/effect/space_dust/super()
-	return
+			numbers = rand(60,100)
+			for(var/i = 0 to numbers)
+				new/obj/effect/space_dust/super()
 
 
 /obj/effect/space_dust
@@ -135,7 +134,7 @@ The "dust" will damage the hull of the station causin minor hull breaches.
 					if(!M.stat && !isAI(M))
 						shake_camera(M, 3, 1)
 			if(A)
-				playsound(src.loc, 'sound/effects/meteorimpact.ogg', 40, 1)
+				playsound(loc, 'sound/effects/meteorimpact.ogg', 40, 1)
 
 				if(ismob(A))
 					A.explosion_act(explosion_power, null)//This should work for now I guess

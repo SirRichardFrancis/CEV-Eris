@@ -84,7 +84,7 @@
 				return FALSE
 			if(merging_casing.mergeCasing(src, null, user))
 				return TRUE
-		else if (mergeCasing(I, 1, user))
+		else if(mergeCasing(I, 1, user))
 			return TRUE
 
 /obj/item/ammo_casing/proc/mergeCasing(var/obj/item/ammo_casing/AC, var/amountToMerge, var/mob/living/user, var/noMessage = FALSE, var/noIconUpdate = FALSE)
@@ -225,7 +225,7 @@
 	QDEL_LIST(stored_ammo)
 	return ..()
 
-/obj/item/ammo_magazine/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/ammo_magazine/attackby(obj/item/W as obj, mob/user)
 	if(istype(W, /obj/item/ammo_casing))
 		var/obj/item/ammo_casing/C = W
 		if(stored_ammo.len >= max_ammo)

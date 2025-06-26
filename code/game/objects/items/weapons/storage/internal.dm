@@ -30,35 +30,34 @@
 //items that use internal storage have the option of calling this to emulate default storage MouseDrop behaviour.
 //returns TRUE if the master item's parent's MouseDrop() shouldn't be called, FALSE otherwise.
 /obj/item/storage/internal/proc/handle_mousedrop(mob/living/carbon/human/user, obj/over_object)
-
-	if (istype(user))
-		if (user.incapacitated())
+	if(istype(user))
+		if(user.incapacitated())
 			return FALSE
 
 		if(over_object == user && Adjacent(user))
-			src.open(user)
+			open(user)
 			return TRUE
 
 //items that use internal storage have the option of calling this to emulate default storage attack_hand behaviour.
 //returns 1 if the master item's parent's attack_hand() should be called, 0 otherwise.
 //It's strange, but no other way of doing it without the ability to call another proc's parent, really.
-/obj/item/storage/internal/proc/handle_attack_hand(mob/user as mob)
-	if (openable_location(user))
+/obj/item/storage/internal/proc/handle_attack_hand(mob/user)
+	if(openable_location(user))
 		src.open(user)
 		return 0
 
 	close_all()
 	return 1
 
-/obj/item/storage/internal/Adjacent(var/atom/neighbor)
+/obj/item/storage/internal/Adjacent(atom/neighbor)
 	return master_item.Adjacent(neighbor)
 
 //Returns true if the thing is in a suitable location
 //If its worn and not in a pocket, its suitable
 //If its on a turf next to the user, its also suitable
-/obj/item/storage/internal/proc/openable_location(var/mob/user)
+/obj/item/storage/internal/proc/openable_location(mob/user)
 	.=FALSE
-	if (master_item.loc == user)
+	if(master_item.loc == user)
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
 			if(H.l_store == master_item)	//Prevents opening if it's in a pocket.
@@ -66,10 +65,9 @@
 			if(H.r_store == master_item)
 				return
 		return TRUE
-	else if (isturf(master_item.loc) && Adjacent(user))
+	else if(isturf(master_item.loc) && Adjacent(user))
 		return TRUE
 
 /obj/item/storage/internal/updating/update_icon()
 	if(master_item)
 		master_item.update_icon()
-

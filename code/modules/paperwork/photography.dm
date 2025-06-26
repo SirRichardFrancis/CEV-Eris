@@ -40,7 +40,7 @@ var/global/photo_count = 0
 /obj/item/photo/update_icon()
 	.=..()
 	//When the photo updates, update its container too. This will often be an album or paper bundle
-	if (istype(loc, /obj))
+	if(istype(loc, /obj))
 		var/obj/O = loc
 		O.update_icon()
 
@@ -48,10 +48,10 @@ var/global/photo_count = 0
 	. = ..()
 	id = photo_count++
 
-/obj/item/photo/attack_self(mob/user as mob)
+/obj/item/photo/attack_self(mob/user)
 	user.examinate(src)
 
-/obj/item/photo/attackby(obj/item/P as obj, mob/user as mob)
+/obj/item/photo/attackby(obj/item/P as obj, mob/user)
 	if(istype(P, /obj/item/pen))
 		var/txt = sanitize(input(user, "What would you like to write on the back?", "Photo Writing", null)  as text, 128)
 		if(loc == user && user.stat == 0)
@@ -65,13 +65,13 @@ var/global/photo_count = 0
 		extra_description += SPAN_NOTICE("It is too far away.")
 	..(user, extra_description)
 
-/obj/item/photo/proc/show(mob/user as mob)
+/obj/item/photo/proc/show(mob/user)
 	user << browse_rsc(img, "tmp_photo_[id].png")
-	user << browse("<html><head><title>[name]</title></head>" \
+	user << browse(HTML_SKELETON("<html><head><title>[name]</title></head>" \
 		+ "<body style='overflow:hidden;margin:0;text-align:center'>" \
 		+ "<img src='tmp_photo_[id].png' width='[64*photo_size]' style='-ms-interpolation-mode:nearest-neighbor' />" \
 		+ "[scribble ? "<br>Written on the back:<br><i>[scribble]</i>" : ""]"\
-		+ "</body></html>", "window=book;size=[64*photo_size]x[scribble ? 400 : 64*photo_size]")
+		+ "</body></html>"), "window=book;size=[64*photo_size]x[scribble ? 400 : 64*photo_size]")
 	onclose(user, "[name]")
 	return
 
@@ -130,10 +130,10 @@ var/global/photo_count = 0
 		radius = (nsize - 1) * 0.5
 		to_chat(usr, SPAN_NOTICE("Camera will now take [(radius*2)+1]x[(radius*2)+1] photos."))
 
-/obj/item/device/camera/attack(mob/living/carbon/human/M as mob, mob/user as mob)
+/obj/item/device/camera/attack(mob/living/carbon/human/M as mob, mob/user)
 	return
 
-/obj/item/device/camera/attack_self(mob/user as mob)
+/obj/item/device/camera/attack_self(mob/user)
 	on = !on
 	if(on)
 		src.icon_state = icon_on
@@ -142,7 +142,7 @@ var/global/photo_count = 0
 	to_chat(user, "You switch the camera [on ? "on" : "off"].")
 	return
 
-/obj/item/device/camera/attackby(obj/item/I as obj, mob/user as mob)
+/obj/item/device/camera/attackby(obj/item/I as obj, mob/user)
 	if(istype(I, /obj/item/device/camera_film))
 		if(pictures_left)
 			to_chat(user, SPAN_NOTICE("[src] still has some film in it!"))
@@ -174,7 +174,7 @@ var/global/photo_count = 0
 			mob_detail += "You can also see [A] on the photo[A:health < 75 ? " - [A] looks hurt":""].[holding ? " [holding]":"."]."
 	return mob_detail
 
-/obj/item/device/camera/afterattack(atom/target as mob|obj|turf|area, mob/user as mob, flag)
+/obj/item/device/camera/afterattack(atom/target as mob|obj|turf|area, mob/user, flag)
 	if(!on || !pictures_left || ismob(target.loc)) return
 	set_light(light_range + flash_power)
 	spawn(3)
@@ -250,7 +250,7 @@ var/global/photo_count = 0
 		tiny_img.Scale(4, 4)
 		ic.Blend(small_img,ICON_OVERLAY, 10, 13)
 		pc.Blend(tiny_img,ICON_OVERLAY, 12, 19)
-		if (!QDELETED(p))
+		if(!QDELETED(p))
 			p.img = photoimage
 			p.icon = ic
 			p.tiny = pc
@@ -260,7 +260,7 @@ var/global/photo_count = 0
 	return p
 
 /obj/item/device/camera/proc/printpicture(mob/user, obj/item/photo/p)
-	if (user)
+	if(user)
 		user.put_in_hands(p)
 	else
 		p.forceMove(get_turf(src))

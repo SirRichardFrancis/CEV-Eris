@@ -41,7 +41,7 @@
 
 /datum/category_item/player_setup_item/content(mob/user)
 	if(option_category)
-		return "<b>[option_category]:</b><a href='?src=\ref[src];options_popup=1'>[get_pref()]</a><br>"
+		return "<b>[option_category]:</b><a href='byond://?src=\ref[src];options_popup=1'>[get_pref()]</a><br>"
 	return ..()
 
 /datum/category_item/player_setup_item/OnTopic(href, list/href_list, mob/user)
@@ -79,7 +79,7 @@
 		if(option == selected_option)
 			dat += "<a class='white [img && "icon"]'>[img][option]</a><br>"
 		else
-			dat += "<a href='?src=[REF(src)];option_select=[option]' class='[option == get_pref_option() && "linkOn"] [img && "icon"]'>[img][option]</a><br>"
+			dat += "<a href='byond://?src=[REF(src)];option_select=[option]' class='[option == get_pref_option() && "linkOn"] [img && "icon"]'>[img][option]</a><br>"
 
 	dat += "</td><td>"
 
@@ -123,15 +123,15 @@
 	if(get_pref_option() == selected_option)
 		dat += "<a class='linkOff'>Selected</a>"
 	else
-		dat += "<a href='?src=\ref[src];option_set=[selected_option]'>Select</a>"
+		dat += "<a href='byond://?src=\ref[src];option_set=[selected_option]'>Select</a>"
 
 	dat += "</td></tr></table>"
 
 	var/client/C = pref.client
 
-	if (C)
+	if(C)
 		var/datum/asset/simple/perkasset = get_asset_datum(/datum/asset/simple/perks)
-		if (perkasset.send(C))
+		if(perkasset.send(C))
 			C.browse_queue_flush() // stall loading nanoui until assets actualy gets sent
 
 	var/datum/browser/popup = new(preference_mob(), name, get_title(), 640, 480, src)

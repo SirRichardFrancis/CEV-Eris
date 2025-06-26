@@ -7,7 +7,7 @@
 	update_explanation()
 
 /datum/objective/download/check_completion()
-	if (failed)
+	if(failed)
 		return FALSE
 	if(owner && (!owner.current || owner.current.stat == DEAD))
 		return FALSE
@@ -16,7 +16,7 @@
 	var/current_amount = 0
 
 	//Check rig suits for data, in future this needs to check disks and computer files too
-	for (var/obj/item/rig/S in contents)
+	for(var/obj/item/rig/S in contents)
 		var/obj/item/rig_module/datajack/stolen_data = locate() in S.installed_modules
 		if(!istype(stolen_data))
 			continue
@@ -31,7 +31,7 @@
 	explanation_text = "Download [target_amount] research levels."
 
 /datum/objective/download/get_panel_entry()
-	return "Download <a href='?src=\ref[src];set_target=1'>[target_amount]</a> research levels."
+	return "Download <a href='byond://?src=\ref[src];set_target=1'>[target_amount]</a> research levels."
 
 /datum/objective/download/Topic(href, href_list)
 	if(..())

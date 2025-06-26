@@ -130,9 +130,9 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 		else
 			html += "<td[row_options1]><font color='[colour]'>[capitalize(colour)]</font></td>"
 		html += "<td[row_options2]>"
-		html += "<A href='?src=\ref[src];action=1;cut=[colour]'>[IsColourCut(colour) ? "Mend" :  "Cut"]</A>"
-		html += " <A href='?src=\ref[src];action=1;pulse=[colour]'>Pulse</A>"
-		html += " <A href='?src=\ref[src];action=1;attach=[colour]'>[IsAttached(colour) ? "Detach" : "Attach"] Signaller</A>"
+		html += "<a href='byond://?src=\ref[src];action=1;cut=[colour]'>[IsColourCut(colour) ? "Mend" :  "Cut"]</A>"
+		html += " <a href='byond://?src=\ref[src];action=1;pulse=[colour]'>Pulse</A>"
+		html += " <a href='byond://?src=\ref[src];action=1;attach=[colour]'>[IsAttached(colour) ? "Detach" : "Attach"] Signaller</A>"
 	html += "</table>"
 	html += "</div>"
 
@@ -151,7 +151,7 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 				var/mob/living/exosuit/mech = L.loc
 				I = mech.get_active_hand()
 			if(href_list["cut"]) // Toggles the cut/mend status
-				if (!istype(I))
+				if(!istype(I))
 					return
 				var/tool_type = null
 				if(QUALITY_CUTTING in I.tool_qualities)
@@ -167,7 +167,7 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 					to_chat(L, SPAN_WARNING("You need something that can cut!"))
 
 			else if(href_list["pulse"])
-				if (!istype(I))
+				if(!istype(I))
 					return
 				if(I.get_tool_type(usr, list(QUALITY_PULSING), holder))
 					if(I.use_tool(L, holder, WORKTIME_INSTANT, QUALITY_PULSING, FAILCHANCE_ZERO))
@@ -284,13 +284,13 @@ var/const/POWER = 8
 	return null
 
 /datum/wires/proc/Attach(var/colour, var/obj/item/device/assembly/signaler/S)
-    var/obj/item/implant/carrion_spider/spark/I = S
-    if(istype(S) || istype(I))
-        if(!IsAttached(colour))
-            signallers[colour] = S
-            S.loc = holder
-            S.connected = src
-            return S
+	var/obj/item/implant/carrion_spider/spark/I = S
+	if(istype(S) || istype(I))
+		if(!IsAttached(colour))
+			signallers[colour] = S
+			S.loc = holder
+			S.connected = src
+			return S
 
 /datum/wires/proc/Detach(var/colour)
 	if(colour)

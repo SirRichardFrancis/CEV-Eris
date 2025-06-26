@@ -173,7 +173,7 @@
 			metrics["wires"] = FALSE
 
 
-/obj/machinery/multistructure/biogenerator_part/console/attack_hand(mob/user as mob)
+/obj/machinery/multistructure/biogenerator_part/console/attack_hand(mob/user)
 	if(MS)
 		return nano_ui_interact(user)
 
@@ -187,7 +187,7 @@
 	var/list/data = nano_ui_data()
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "nt_biogen.tmpl", src.name, 400, 400, state = state)
 		ui.set_initial_data(data)
 		ui.open()
@@ -500,7 +500,7 @@
 	update_icon()
 
 
-/obj/machinery/power/biogenerator_core/attack_hand(mob/user as mob)
+/obj/machinery/power/biogenerator_core/attack_hand(mob/user)
 	var/datum/multistructure/biogenerator/biogenerator = generator.MS
 	if(biogenerator && biogenerator.working && !coil_frame)
 		shock(user, 100)

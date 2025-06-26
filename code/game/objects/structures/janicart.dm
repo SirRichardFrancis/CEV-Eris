@@ -19,8 +19,6 @@
 	var/dismantled = TRUE
 	var/signs = 0	//maximum capacity hardcoded below
 
-
-
 /obj/structure/janitorialcart/Destroy()
 	QDEL_NULL(mybag)
 	QDEL_NULL(mymop)
@@ -39,7 +37,7 @@
 	..(user, extra_description)
 
 /obj/structure/janitorialcart/MouseDrop_T(atom/movable/O as mob|obj, mob/living/user as mob)
-	if (istype(O, /obj/structure/mopbucket) && !mybucket)
+	if(istype(O, /obj/structure/mopbucket) && !mybucket)
 		O.forceMove(src)
 		mybucket = O
 		to_chat(user, "You mount the [O] on the janicart.")
@@ -49,7 +47,7 @@
 
 /obj/structure/janitorialcart/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/mop) || istype(I, /obj/item/reagent_containers/glass/rag) || istype(I, /obj/item/soap))
-		if (mybucket)
+		if(mybucket)
 			if(I.reagents.total_volume < I.reagents.maximum_volume)
 				if(mybucket.reagents.total_volume < 1)
 					to_chat(user, "<span class='notice'>[mybucket] is empty!</span>")
@@ -63,7 +61,7 @@
 			to_chat(user, "<span class='notice'>There is no bucket mounted here to dip [I] into!</span>")
 		return 1
 
-	else if (istype(I, /obj/item/reagent_containers/glass/bucket) && mybucket)
+	else if(istype(I, /obj/item/reagent_containers/glass/bucket) && mybucket)
 		I.afterattack(mybucket, usr, 1)
 		update_icon()
 		return 1
@@ -108,9 +106,9 @@
 		//This return will prevent afterattack from executing if the object goes into the trashbag,
 		//This prevents dumb stuff like splashing the cart with the contents of a container, after putting said container into trash
 
-	else if (!has_items)
-		if (I.has_quality(QUALITY_BOLT_TURNING))
-			if (I.use_tool(user, src, WORKTIME_SLOW, QUALITY_BOLT_TURNING, FAILCHANCE_EASY, STAT_MEC))
+	else if(!has_items)
+		if(I.has_quality(QUALITY_BOLT_TURNING))
+			if(I.use_tool(user, src, WORKTIME_SLOW, QUALITY_BOLT_TURNING, FAILCHANCE_EASY, STAT_MEC))
 				dismantle(user)
 			return
 	..()
@@ -120,7 +118,8 @@
 //Altclick the cart with a mop to stow the mop away
 //Altclick the cart with a reagent container to pour things into the bucket without putting the bottle in trash
 /obj/structure/janitorialcart/AltClick(mob/living/user)
-	if(user.incapacitated() || !Adjacent(user))	return
+	if(user.incapacitated() || !Adjacent(user))
+		return
 	var/obj/I = usr.get_active_hand()
 	if(istype(I, /obj/item/mop))
 		if(!mymop)
@@ -143,7 +142,7 @@
 	nano_ui_interact(user)
 	return
 
-/obj/structure/janitorialcart/nano_ui_interact(var/mob/user, var/ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
+/obj/structure/janitorialcart/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui, force_open = NANOUI_FOCUS)
 	var/data[0]
 	data["name"] = capitalize(name)
 	data["bag"] = mybag ? capitalize(mybag.name) : null
@@ -166,7 +165,6 @@
 	if(!isliving(usr))
 		return
 	var/mob/living/user = usr
-
 	if(href_list["take"])
 		switch(href_list["take"])
 			if("garbage")
@@ -204,15 +202,11 @@
 					mybucket.forceMove(get_turf(user))
 					to_chat(user, "<span class='notice'>You unmount [mybucket] from [src].</span>")
 					mybucket = null
-
 	update_icon()
 	updateUsrDialog()
 
-
-
 /obj/structure/janitorialcart/update_icon()
 	overlays.Cut()
-
 	if(mybucket)
 		overlays += "cart_bucket"
 		if(mybucket.reagents.total_volume >= 1)
@@ -228,46 +222,41 @@
 	if(signs)
 		overlays += "cart_sign[signs]"
 
-
-
-
-
-
 //This is called if the cart is caught in an explosion, or destroyed by weapon fire
-/obj/structure/janitorialcart/proc/spill(var/chance = 100)
+/obj/structure/janitorialcart/proc/spill(chance = 100)
 	var/turf/dropspot = get_turf(src)
-	if (mymop && prob(chance))
+	if(mymop && prob(chance))
 		mymop.forceMove(dropspot)
 		mymop.tumble(2)
 		mymop = null
 
-	if (myspray && prob(chance))
+	if(myspray && prob(chance))
 		myspray.forceMove(dropspot)
 		myspray.tumble(3)
 		myspray = null
 
-	if (myreplacer && prob(chance))
+	if(myreplacer && prob(chance))
 		myreplacer.forceMove(dropspot)
 		myreplacer.tumble(3)
 		myreplacer = null
 
-	if (mybucket && prob(chance*0.5))//bucket is heavier, harder to knock off
+	if(mybucket && prob(chance*0.5))//bucket is heavier, harder to knock off
 		mybucket.forceMove(dropspot)
 		mybucket.tumble(1)
 		mybucket = null
 
-	if (signs)
-		for (var/obj/item/caution/Sign in src)
-			if (prob(min((chance*2),100)))
+	if(signs)
+		for(var/obj/item/caution/Sign in src)
+			if(prob(min((chance*2),100)))
 				signs--
 				Sign.forceMove(dropspot)
 				Sign.tumble(3)
-				if (signs < 0)//safety for something that shouldn't happen
+				if(signs < 0)//safety for something that shouldn't happen
 					signs = 0
 					update_icon()
 					return
 
-	if (mybag && prob(min((chance*2),100)))//Bag is flimsy
+	if(mybag && prob(min((chance*2),100)))//Bag is flimsy
 		mybag.forceMove(dropspot)
 		mybag.tumble(1)
 		mybag.spill()//trashbag spills its contents too
@@ -275,13 +264,10 @@
 
 	update_icon()
 
-
-
-/obj/structure/janitorialcart/proc/dismantle(var/mob/user = null)
-	if (!dismantled)
-		if (has_items)
+/obj/structure/janitorialcart/proc/dismantle(mob/user)
+	if(!dismantled)
+		if(has_items)
 			spill()
-
 		new /obj/item/stack/material/steel(src.loc, 10)
 		new /obj/item/stack/material/plastic(src.loc, 10)
 		new /obj/item/stack/rods(src.loc, 20)
@@ -306,11 +292,9 @@
 	var/callme = "pimpin' ride"	//how do people refer to it?
 	applies_material_colour = 0
 
-
 /obj/structure/bed/chair/janicart/New()
 	..()
 	create_reagents(100)
-
 
 /obj/structure/bed/chair/janicart/examine(mob/user, extra_description = "")
 	if(get_dist(user, src) < 2 && mybag)
@@ -326,7 +310,6 @@
 		I.loc = src
 		mybag = I
 
-
 /obj/structure/bed/chair/janicart/attack_hand(mob/user)
 	if(mybag)
 		mybag.loc = get_turf(user)
@@ -334,7 +317,6 @@
 		mybag = null
 	else
 		..()
-
 
 /obj/structure/bed/chair/janicart/relaymove(mob/user, direction)
 	if(user.stat || user.stunned || user.weakened || user.paralysis)
@@ -345,18 +327,15 @@
 	else
 		to_chat(user, SPAN_NOTICE("You'll need the keys in one of your hands to drive this [callme]."))
 
-
 /obj/structure/bed/chair/janicart/Move(NewLoc, Dir = 0, step_x = 0, step_y = 0, var/glide_size_override = 0)
 	. = ..()
 	if(buckled_mob)
 		if(buckled_mob.buckled == src)
 			buckled_mob.forceMove(glide_size_override=glide_size_override)
 
-
 /obj/structure/bed/chair/janicart/post_buckle_mob(mob/living/M)
 	update_mob()
 	return ..()
-
 
 /obj/structure/bed/chair/janicart/unbuckle_mob()
 	var/mob/living/M = ..()
@@ -365,16 +344,13 @@
 		M.pixel_y = 0
 	return M
 
-
 /obj/structure/bed/chair/janicart/set_dir()
 	..()
 	if(buckled_mob)
 		if(buckled_mob.loc != loc)
 			buckled_mob.buckled = null //Temporary, so Move() succeeds.
 			buckled_mob.buckled = src //Restoring
-
 	update_mob()
-
 
 /obj/structure/bed/chair/janicart/proc/update_mob()
 	if(buckled_mob)
@@ -393,13 +369,11 @@
 				buckled_mob.pixel_x = -13
 				buckled_mob.pixel_y = 7
 
-
-/obj/structure/bed/chair/janicart/bullet_act(var/obj/item/projectile/Proj)
+/obj/structure/bed/chair/janicart/bullet_act(obj/item/projectile/Proj)
 	if(buckled_mob)
 		if(prob(85))
 			return buckled_mob.bullet_act(Proj)
 	visible_message(SPAN_WARNING("[Proj] ricochets off the [callme]!"))
-
 
 /obj/item/key
 	name = "key"

@@ -32,7 +32,7 @@
 	QDEL_NULL(keyslot2)
 	return ..()
 
-/obj/item/device/radio/headset/list_channels(var/mob/user)
+/obj/item/device/radio/headset/list_channels(mob/user)
 	return list_secure_channels()
 
 /obj/item/device/radio/headset/examine(mob/user, extra_description = "")
@@ -41,20 +41,19 @@
 		extra_description += radio_desc
 	..(user, extra_description)
 
-/obj/item/device/radio/headset/handle_message_mode(mob/living/M as mob, message, channel)
-	if (channel == "special")
-		if (translate_binary)
+/obj/item/device/radio/headset/handle_message_mode(mob/living/M, message, channel)
+	if(channel == "special")
+		if(translate_binary)
 			var/datum/language/binary = all_languages[LANGUAGE_ROBOT]
 			binary.broadcast(M, message)
-		if (translate_hive)
+		if(translate_hive)
 			var/datum/language/hivemind = all_languages[LANGUAGE_HIVEMIND]
 			hivemind.broadcast(M, message)
 		return null
-
 	return ..()
 
 /obj/item/device/radio/headset/receive_range(freq, level, aiOverride = 0)
-	if (aiOverride)
+	if(aiOverride)
 		playsound(loc, 'sound/effects/radio_common.ogg', 25, 1, 1)
 		return ..(freq, level)
 	if(ishuman(src.loc))
@@ -148,8 +147,8 @@
 	var/disabledAi = 0 // Atlantis: Used to manually disable AI's integrated radio via intellicard menu.
 
 /obj/item/device/radio/headset/heads/ai_integrated/receive_range(freq, level)
-	if (disabledAi)
-		return -1 //Transciever Disabled.
+	if(disabledAi)
+		return -1
 	return ..(freq, level, 1)
 
 /obj/item/device/radio/headset/heads/rd
@@ -195,7 +194,7 @@
 	ks2type = /obj/item/device/encryptionkey/heads/merchant
 
 /obj/item/device/radio/headset/heads/preacher
-	name = "neotheology preacher's headset"
+	name = "NeoTheology preacher's headset"
 	desc = "The headset of the man who leads you to god."
 	icon_state = "nt_com_headset"
 	item_state = "headset"
@@ -223,7 +222,7 @@
 	ks2type = /obj/item/device/encryptionkey/heads/hos
 
 /obj/item/device/radio/headset/church
-	name = "neotheology headset"
+	name = "NeoTheology headset"
 	desc = "If you listen closely you can hear God."
 	icon_state = "nt_headset"
 	item_state = "headset"
@@ -270,66 +269,63 @@
 		recalculateChannels()
 
 
-/obj/item/device/radio/headset/proc/recalculateChannels(var/setDescription = 0)
-	src.channels = list()
-	src.translate_binary = FALSE
-	src.translate_hive = FALSE
-	src.syndie = FALSE
-	src.merc = FALSE
-	src.pirate = FALSE
+/obj/item/device/radio/headset/proc/recalculateChannels(setDescription = 0)
+	channels = list()
+	translate_binary = FALSE
+	translate_hive = FALSE
+	syndie = FALSE
+	merc = FALSE
+	pirate = FALSE
 
 	if(keyslot1)
 		for(var/ch_name in keyslot1.channels)
-			if(ch_name in src.channels)
+			if(ch_name in channels)
 				continue
-			src.channels += ch_name
-			src.channels[ch_name] = keyslot1.channels[ch_name]
+			channels += ch_name
+			channels[ch_name] = keyslot1.channels[ch_name]
 
 		if(keyslot1.translate_binary)
-			src.translate_binary = TRUE
+			translate_binary = TRUE
 
 		if(keyslot1.translate_hive)
-			src.translate_hive = TRUE
+			translate_hive = TRUE
 
 		if(keyslot1.syndie)
-			src.syndie = TRUE
+			syndie = TRUE
 
 		if(keyslot1.merc)
-			src.merc = TRUE
+			merc = TRUE
 
 		if(keyslot1.pirate)
-			src.pirate = TRUE
+			pirate = TRUE
 
 	if(keyslot2)
 		for(var/ch_name in keyslot2.channels)
-			if(ch_name in src.channels)
+			if(ch_name in channels)
 				continue
-			src.channels += ch_name
-			src.channels[ch_name] = keyslot2.channels[ch_name]
+			channels += ch_name
+			channels[ch_name] = keyslot2.channels[ch_name]
 
 		if(keyslot2.translate_binary)
-			src.translate_binary = TRUE
+			translate_binary = TRUE
 
 		if(keyslot2.translate_hive)
-			src.translate_hive = TRUE
+			translate_hive = TRUE
 
 		if(keyslot2.syndie)
-			src.syndie = TRUE
+			syndie = TRUE
 
 		if(keyslot2.merc)
-			src.merc = TRUE
+			merc = TRUE
 
 		if(keyslot2.pirate)
-			src.pirate = TRUE
+			pirate = TRUE
 
-
-	for (var/ch_name in channels)
+	for(var/ch_name in channels)
 		secure_radio_connections[ch_name] = SSradio.add_object(src, radiochannels[ch_name],  RADIO_CHAT)
 
 	if(setDescription)
 		setupRadioDescription()
-
-	return
 
 /obj/item/device/radio/headset/proc/setupRadioDescription()
 	var/radio_text = ""
@@ -339,5 +335,4 @@
 		radio_text += "[key] - [channel]"
 		if(i != channels.len)
 			radio_text += ", "
-
 	radio_desc = radio_text

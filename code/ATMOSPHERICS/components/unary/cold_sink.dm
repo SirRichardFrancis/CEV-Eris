@@ -54,7 +54,7 @@
 		icon_state = "freezer_0"
 	return
 
-/obj/machinery/atmospherics/unary/freezer/attack_hand(mob/user as mob)
+/obj/machinery/atmospherics/unary/freezer/attack_hand(mob/user)
 	nano_ui_interact(user)
 
 /obj/machinery/atmospherics/unary/freezer/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
@@ -79,7 +79,7 @@
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
-        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "freezer.tmpl", "Gas Cooling System", 440, 300)
 		// when the ui is first opened this is the data it will use
 		ui.set_initial_data(data)

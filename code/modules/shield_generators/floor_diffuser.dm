@@ -20,7 +20,7 @@
 //Updates the turfs we're affecting, called when moved, placed, or destroyed
 /obj/machinery/shield_diffuser/proc/update_turfs()
 	//Remove our diffusal from the turfs we affected
-	for (var/turf/T in diffused_turfs)
+	for(var/turf/T in diffused_turfs)
 		T.diffused--
 
 	//Empty our list ..but firstly check if we need to regen shields
@@ -36,17 +36,17 @@
 		return
 	if(!istype(loc, /turf))
 		return
-	if (enabled)
+	if(enabled)
 		diffuse(loc)
-		for (var/d in GLOB.cardinal)
+		for(var/d in GLOB.cardinal)
 			diffuse(get_step(src, d))
 
 
 /obj/machinery/shield_diffuser/proc/diffuse(var/turf/T)
-	if (!T)
+	if(!T)
 		return
 
-	if (!(T in diffused_turfs))
+	if(!(T in diffused_turfs))
 		diffused_turfs.Add(T)
 		T.diffused++
 
@@ -80,7 +80,7 @@
 	update_turfs()
 	return ..()
 
-/obj/machinery/shield_diffuser/attackby(obj/item/O as obj, mob/user as mob)
+/obj/machinery/shield_diffuser/attackby(obj/item/O as obj, mob/user)
 	if(default_deconstruction(O, user))
 		return
 	if(default_part_replacement(O, user))

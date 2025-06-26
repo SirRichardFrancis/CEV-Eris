@@ -12,14 +12,14 @@
 	var/list/papers = new/list()	//List of papers put in the bin for reference.
 
 
-/obj/item/paper_bin/MouseDrop(mob/user as mob)
+/obj/item/paper_bin/MouseDrop(mob/user)
 	if((user == usr && (!( usr.restrained() ) && (!( usr.stat ) && (usr.contents.Find(src) || in_range(src, usr))))))
 		if(!isslime(usr) && !isanimal(usr))
 			if( !usr.get_active_hand() )		//if active hand is empty
 				var/mob/living/carbon/human/H = user
 				var/obj/item/organ/external/temp = H.organs_by_name[BP_R_ARM]
 
-				if (H.hand)
+				if(H.hand)
 					temp = H.organs_by_name[BP_L_ARM]
 				if(temp && !temp.is_usable())
 					to_chat(user, SPAN_NOTICE("You try to move your [temp.name], but cannot!"))
@@ -30,12 +30,12 @@
 
 	return
 
-/obj/item/paper_bin/attack_hand(mob/user as mob)
-	if (istype(loc, /turf))
+/obj/item/paper_bin/attack_hand(mob/user)
+	if(istype(loc, /turf))
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
 			var/obj/item/organ/external/temp = H.organs_by_name[BP_R_ARM]
-			if (H.hand)
+			if(H.hand)
 				temp = H.organs_by_name[BP_L_ARM]
 			if(temp && !temp.is_usable())
 				to_chat(user, SPAN_NOTICE("You try to move your [temp.name], but cannot!"))
@@ -43,7 +43,7 @@
 		var/response = ""
 		if(!papers.len > 0)
 			response = alert(user, "Do you take regular paper, or Carbon copy paper?", "Paper type request", "Regular", "Carbon-Copy", "Cancel")
-			if (response != "Regular" && response != "Carbon-Copy")
+			if(response != "Regular" && response != "Carbon-Copy")
 				add_fingerprint(user)
 				return
 		if(amount >= 1)
@@ -58,7 +58,7 @@
 			else
 				if(response == "Regular")
 					P = new /obj/item/paper
-				else if (response == "Carbon-Copy")
+				else if(response == "Carbon-Copy")
 					P = new /obj/item/paper/carbon
 
 			user.put_in_hands(P)
@@ -72,7 +72,7 @@
 
 //Pickup paperbins with drag n drop
 obj/item/paper_bin/MouseDrop(over_object)
-	if (usr == over_object && usr.Adjacent(src))
+	if(usr == over_object && usr.Adjacent(src))
 		if(pre_pickup(usr))
 			pickup(usr)
 			return TRUE
@@ -80,7 +80,7 @@ obj/item/paper_bin/MouseDrop(over_object)
 	.=..()
 
 
-/obj/item/paper_bin/attackby(obj/item/paper/i as obj, mob/user as mob)
+/obj/item/paper_bin/attackby(obj/item/paper/i as obj, mob/user)
 	if(!istype(i))
 		return
 
@@ -103,7 +103,7 @@ obj/item/paper_bin/MouseDrop(over_object)
 	..(user, extra_description)
 
 /obj/item/paper_bin/update_icon()
-	if (amount < 1)
+	if(amount < 1)
 		icon_state = "paper_bin0"
 	else
 		icon_state = "paper_bin1"

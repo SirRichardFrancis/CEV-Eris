@@ -64,24 +64,24 @@
 	..()
 	internal_channels[num2text(SYND_FREQ)] = list(access_syndicate)
 
-/obj/item/device/radio/intercom/attack_ai(mob/user as mob)
-	src.add_fingerprint(user)
+/obj/item/device/radio/intercom/attack_ai(mob/user)
+	add_fingerprint(user)
 	spawn (0)
 		attack_self(user)
 
-/obj/item/device/radio/intercom/attack_hand(mob/user as mob)
-	src.add_fingerprint(user)
+/obj/item/device/radio/intercom/attack_hand(mob/user)
+	add_fingerprint(user)
 	spawn (0)
 		attack_self(user)
 
 /obj/item/device/radio/intercom/receive_range(freq, level)
-	if (!on)
+	if(!on)
 		return -1
 	if(!(0 in level))
 		var/turf/position = get_turf(src)
 		if(isnull(position) || !(position.z in level))
 			return -1
-	if (!src.listening)
+	if(!src.listening)
 		return -1
 	if(freq in ANTAG_FREQS)
 		if(!(src.syndie))
@@ -116,7 +116,7 @@
 	broadcasting = 1
 
 /obj/item/device/radio/intercom/locked
-    var/locked_frequency
+	var/locked_frequency
 
 /obj/item/device/radio/intercom/locked/set_frequency(var/frequency)
 	if(frequency == locked_frequency)

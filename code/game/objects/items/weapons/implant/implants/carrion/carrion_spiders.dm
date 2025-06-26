@@ -1,7 +1,7 @@
- #define SPIDER_GROUP_1 1
- #define SPIDER_GROUP_2 2
- #define SPIDER_GROUP_3 4
- #define SPIDER_GROUP_4 8
+#define SPIDER_GROUP_1 1
+#define SPIDER_GROUP_2 2
+#define SPIDER_GROUP_3 4
+#define SPIDER_GROUP_4 8
 
 /obj/item/implant/carrion_spider
 	name = "spooky spider"
@@ -86,7 +86,7 @@
 	..()
 
 /obj/item/implant/carrion_spider/proc/toggle_attack(mob/user)
-	if (ready_to_attack)
+	if(ready_to_attack)
 		ready_to_attack = FALSE
 		to_chat(user, SPAN_NOTICE("\The [src] won't attack nearby creatures anymore."))
 	else

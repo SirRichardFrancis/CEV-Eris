@@ -78,7 +78,7 @@
 		T.ChangeTurf(/turf/floor/asteroid) //turn it back into an asteroid, otherwise things like platings become underplatings which makes no sense
 
 
-/obj/machinery/mining/deep_drill/attackby(obj/item/I, mob/user as mob)
+/obj/machinery/mining/deep_drill/attackby(obj/item/I, mob/user)
 
 	if(!cave_connected)
 		var/tool_type = I.get_tool_type(user, list(QUALITY_SCREW_DRIVING), src)
@@ -95,12 +95,12 @@
 			return
 
 	// Attack the drill
-	if (user.a_intent == I_HURT && user.Adjacent(src))
+	if(user.a_intent == I_HURT && user.Adjacent(src))
 		if(!(I.flags & NOBLUDGEON))
 			user.do_attack_animation(src)
 			var/damage = I.force * I.structure_damage_factor
 			var/volume =  min(damage * 3.5, 15)
-			if (I.hitsound)
+			if(I.hitsound)
 				playsound(src, I.hitsound, volume, 1, -1)
 			visible_message(SPAN_DANGER("[src] has been hit by [user] with [I]."))
 			take_damage(damage)
@@ -114,7 +114,7 @@
 		else if(cave_gen.is_collapsing() || cave_gen.is_cleaning())
 			to_chat(user, SPAN_WARNING("The cave system is being collapsed!"))
 			return
-		else if (!anchored && check_surroundings()) // we only care about the terrain when anchoring, not the other way around, otherwise the drill gets stuck if the terrain under it changes (like if someone RCDs the asteroid tile under it)
+		else if(!anchored && check_surroundings()) // we only care about the terrain when anchoring, not the other way around, otherwise the drill gets stuck if the terrain under it changes (like if someone RCDs the asteroid tile under it)
 			to_chat(user, SPAN_WARNING("The space around \the [src] has to be clear of obstacles!"))
 			return
 
@@ -142,7 +142,7 @@
 
 	..()
 
-/obj/machinery/mining/deep_drill/attack_hand(mob/user as mob)
+/obj/machinery/mining/deep_drill/attack_hand(mob/user)
 
 	if(!panel_open)
 		if(cave_connected) //there are no restrictions on turning off the drill besides the panel being shut.
@@ -216,7 +216,8 @@
 		shutdown_drill("critical damage")
 		if(prob(10)) // Some chance that the drill completely blows up
 			var/turf/O = get_turf(src)
-			if(!O) return
+			if(!O)
+				return
 			explosion(get_turf(src), 800, 50)
 			qdel(src)
 

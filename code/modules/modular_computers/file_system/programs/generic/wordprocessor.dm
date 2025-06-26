@@ -74,7 +74,7 @@
 		\[logo\] - Inserts corporate logo image.
 		\[guild\] - Inserts Guild logo image.
 		\[moebius\] - Inserts Moebius logo image.
-		\[ironhammer\] - Inserts Ironhammer logo image.
+		\[ironhammer\] - Inserts IronHammer logo image.
 		\[bluelogo\] - Inserts blue corporate logo image.
 		\[solcrest\] - Inserts SCG crest image.
 		\[terraseal\] - Inserts TCC seal"}
@@ -208,7 +208,7 @@
 		data["filename"] = "UNNAMED"
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "word_processor.tmpl", "Word Processor", 575, 700, state = state)
 		ui.auto_update_layout = TRUE
 		ui.set_initial_data(data)

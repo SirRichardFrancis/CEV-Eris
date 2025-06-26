@@ -330,7 +330,7 @@ semi accepts weird caliber - +1 points
 	matter = list(MATERIAL_WOOD = 5)
 	type_of_grip = "wood"
 
-/obj/item/part/gun/modular/grip/black //Nanotrasen, Moebius, Syndicate, Oberth
+/obj/item/part/gun/modular/grip/black //NanoTrasen, Moebius, Syndicate, Oberth
 	name = "plastic grip"
 	desc = "A black plastic firearm grip, unattached from a firearm. For sleekness and decorum."
 	icon_state = "grip_black"
@@ -691,7 +691,7 @@ semi accepts weird caliber - +1 points
 /obj/item/part/gun/modular/barrel/srifle/steel
 	name = "cheap .20 barrel"
 	desc = "A gun barrel, which keeps the bullet going in the right direction. Chambered in .20 caliber. \
-			 This one does not look as high quality."
+			This one does not look as high quality."
 	matter = list(MATERIAL_STEEL = 5)
 
 /obj/item/part/gun/modular/barrel/clrifle/steel

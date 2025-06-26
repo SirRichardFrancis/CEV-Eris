@@ -4,8 +4,8 @@
 /obj/item/gun/projectile/automatic/modular // Parent type
 	name = "\"Kalashnikov\"" // Names are also used by vendors. When making a specific gun, make sure it contains the right name.
 	desc = "Weapon of the oppressed, oppressors, and extremists of all flavours. \
-		 This is a copy of an ancient semi-automatic rifle. If it won't fire, percussive maintenance should get it working again. \
-		 It is known for its easy maintenance, and low price."
+		This is a copy of an ancient semi-automatic rifle. If it won't fire, percussive maintenance should get it working again. \
+		It is known for its easy maintenance, and low price."
 	icon = 'icons/obj/guns/projectile/modular/ak.dmi'
 	icon_state = "frame"
 	item_state = "" // I do not believe this affects anything
@@ -112,7 +112,7 @@
 			if(gun_part.part_itemstring && !(PARTMOD_FRAME_SPRITE & spriteTags)) // Part also wants to modify itemstring, and is allowed to
 				itemstring = "_" + gun_part.part_overlay + itemstring // Add their overlay name
 
-	if (ammo_magazine) // Warning! If a sprite is missing from the DMI despite being possible to insert ingame, it might have unforeseen consequences (no magazine showing up)
+	if(ammo_magazine) // Warning! If a sprite is missing from the DMI despite being possible to insert ingame, it might have unforeseen consequences (no magazine showing up)
 		itemstring += "_full"
 		overlays += "mag_[ammo_magazine.mag_well][caliber]" + dashTag
 

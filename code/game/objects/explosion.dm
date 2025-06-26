@@ -29,7 +29,7 @@ proc/explosion(turf/epicenter, power, falloff, explosion_flags, adminlog = TRUE)
 		if(M.ear_deaf <= 0 || !M.ear_deaf) if(!istype(M.loc,/turf/space))
 			M << 'sound/effects/explosionfar.ogg'
 	if(adminlog)
-		message_admins("Explosion with power:[power] and falloff:[falloff] in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[epicenter.x];Y=[epicenter.y];Z=[epicenter.z]'>JMP</a>)")
+		message_admins("Explosion with power:[power] and falloff:[falloff] in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]) (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[epicenter.x];Y=[epicenter.y];Z=[epicenter.z]'>JMP</a>)")
 		log_game("Explosion with size power:[power] and falloff:[falloff] in area [epicenter.loc.name] ")
 
 	/*
@@ -88,7 +88,7 @@ proc/explosion(turf/epicenter, power, falloff, explosion_flags, adminlog = TRUE)
 			if(M.ear_deaf <= 0 || !M.ear_deaf) if(!istype(M.loc,/turf/space))
 				M << 'sound/effects/explosionfar.ogg'
 		if(adminlog)
-			message_admins("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range], [singe_impact_range]) in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[epicenter.x];Y=[epicenter.y];Z=[epicenter.z]'>JMP</a>)")
+			message_admins("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range], [singe_impact_range]) in area [epicenter.loc.name] ([epicenter.x],[epicenter.y],[epicenter.z]) (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[epicenter.x];Y=[epicenter.y];Z=[epicenter.z]'>JMP</a>)")
 			log_game("Explosion with size ([devastation_range], [heavy_impact_range], [light_impact_range], [singe_impact_range]) in area [epicenter.loc.name] ")
 
 		var/approximate_intensity = (devastation_range * 3) + (heavy_impact_range * 2) + light_impact_range + round(singe_impact_range / 2)
@@ -160,7 +160,7 @@ proc/fragment_explosion(var/turf/epicenter, var/range, var/f_type, var/f_amount 
 		//sleep(0)
 		var/obj/item/projectile/bullet/pellet/fragment/P = new f_type(epicenter)
 
-		if (!isnull(f_damage))
+		if(!isnull(f_damage))
 			P.damage_types[BRUTE] = f_damage
 		P.pellets = fragments_per_projectile
 		P.range_step = f_step
@@ -170,7 +170,7 @@ proc/fragment_explosion(var/turf/epicenter, var/range, var/f_type, var/f_amount 
 		P.launch(T)
 
 		//Some of the fragments will hit mobs in the same turf
-		if (prob(same_turf_hit_chance))
+		if(prob(same_turf_hit_chance))
 			for(var/mob/living/M in epicenter)
 				P.attack_mob(M, 0, 100)
 
@@ -188,21 +188,21 @@ proc/fragment_explosion_angled(atom/epicenter, turf/origin , projectile_type, pr
 
 //Generic proc for spread of any projectile type.
 proc/projectile_explosion(turf/epicenter, range, p_type, p_amount = 10, list/p_damage = list())
-    if(!istype(epicenter))
-        epicenter = get_turf(epicenter)
+	if(!istype(epicenter))
+		epicenter = get_turf(epicenter)
 
-    if(!epicenter || !p_type)
-        return
+	if(!epicenter || !p_type)
+		return
 
-    var/list/target_turfs = getcircle(epicenter, range)
-    while(p_amount)
-        sleep(0)
-        var/obj/item/projectile/P = new p_type(epicenter)
+	var/list/target_turfs = getcircle(epicenter, range)
+	while(p_amount)
+		sleep(0)
+		var/obj/item/projectile/P = new p_type(epicenter)
 
-        if(length(p_damage))
-            P.damage_types = p_damage
+		if(length(p_damage))
+			P.damage_types = p_damage
 
-        P.shot_from = epicenter
+		P.shot_from = epicenter
 
-        P.launch(pick(target_turfs))
-        p_amount--
+		P.launch(pick(target_turfs))
+		p_amount--

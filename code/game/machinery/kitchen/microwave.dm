@@ -34,14 +34,14 @@
 	create_reagents(100)
 	if(!available_recipes)
 		available_recipes = new
-		for (var/type in (typesof(/datum/recipe)-/datum/recipe))
+		for(var/type in (typesof(/datum/recipe)-/datum/recipe))
 			available_recipes+= new type
 		acceptable_items = new
 		acceptable_reagents = new
-		for (var/datum/recipe/recipe in available_recipes)
-			for (var/item in recipe.items)
+		for(var/datum/recipe/recipe in available_recipes)
+			for(var/item in recipe.items)
 				acceptable_items |= item
-			for (var/reagent in recipe.reagents)
+			for(var/reagent in recipe.reagents)
 				acceptable_reagents |= reagent
 			if(recipe.items)
 				max_n_of_items = max(max_n_of_items,recipe.items.len)
@@ -55,9 +55,8 @@
 *   Item Adding
 ********************/
 
-/obj/machinery/microwave/attackby(var/obj/item/I, var/mob/user)
-	if(src.broken > 0)
-
+/obj/machinery/microwave/attackby(obj/item/I, mob/user)
+	if(broken > 0)
 		var/list/usable_qualities = list()
 		if(broken == 2)
 			usable_qualities.Add(QUALITY_SCREW_DRIVING)
@@ -67,7 +66,6 @@
 
 		var/tool_type = I.get_tool_type(user, usable_qualities, src)
 		switch(tool_type)
-
 			if(QUALITY_SCREW_DRIVING)
 				if(broken == 2)
 					user.visible_message( \
@@ -79,10 +77,9 @@
 							SPAN_NOTICE("\The [user] fixes part of the [src]."), \
 							SPAN_NOTICE("You have fixed part of the [src].") \
 						)
-						src.broken = 1
+						broken = 1
 						return
 					return
-
 			if(QUALITY_BOLT_TURNING)
 				if(broken == 1)
 					user.visible_message( \
@@ -94,21 +91,18 @@
 							SPAN_NOTICE("\The [user] fixes the [src]."), \
 							SPAN_NOTICE("You have fixed the [src].") \
 						)
-						src.icon_state = "mw"
-						src.broken = 0 // Fix it!
-						src.dirty = 0 // just to be sure
-						src.reagent_flags = OPENCONTAINER
+						icon_state = "mw"
+						broken = 0 // Fix it!
+						dirty = 0 // just to be sure
+						reagent_flags = OPENCONTAINER
 						return
 					return
-
 			if(ABORT_CHECK)
 				return
-
 //If we dont fix it with code above - return
 		to_chat(user, SPAN_WARNING("It's broken!"))
 		return
-
-	else if(src.dirty==100) // The microwave is all dirty so can't be used!
+	else if(dirty==100) // The microwave is all dirty so can't be used!
 		if(istype(I, /obj/item/soap) || istype(I, /obj/item/reagent_containers/glass/rag)) // If they're trying to clean it then let them
 			user.visible_message( \
 				SPAN_NOTICE("\The [user] starts to clean the [src]."), \
@@ -119,10 +113,10 @@
 					SPAN_NOTICE("\The [user] has cleaned the [src]."), \
 					SPAN_NOTICE("You have cleaned the [src].") \
 				)
-				src.dirty = 0 // It's clean!
-				src.broken = 0 // just to be sure
-				src.icon_state = "mw"
-				src.reagent_flags = OPENCONTAINER
+				dirty = 0 // It's clean!
+				broken = 0 // just to be sure
+				icon_state = "mw"
+				reagent_flags = OPENCONTAINER
 		else //Otherwise bad luck!!
 			to_chat(user, SPAN_WARNING("It's dirty!"))
 			return 1
@@ -149,12 +143,12 @@
 			return
 
 	else if(istype(I,/obj/item/reagent_containers/glass) || \
-	        istype(I,/obj/item/reagent_containers/food/drinks) || \
-	        istype(I,/obj/item/reagent_containers/food/condiment) \
+			istype(I,/obj/item/reagent_containers/food/drinks) || \
+			istype(I,/obj/item/reagent_containers/food/condiment) \
 		)
 		if(!I.reagents)
 			return 1
-		for (var/datum/reagent/R in I.reagents.reagent_list)
+		for(var/datum/reagent/R in I.reagents.reagent_list)
 			if(!acceptable_reagents.Find(R.id))
 				to_chat(user, SPAN_WARNING("Your [I] contains components unsuitable for cookery."))
 				return 1
@@ -162,38 +156,33 @@
 
 	if(QUALITY_BOLT_TURNING in I.tool_qualities)
 		user.visible_message( \
-		"<span class='notice'>\The [user] begins [src.anchored ? "unsecuring" : "securing"] the [src].</span>", \
-		"<span class='notice'>You attempt to [src.anchored ? "unsecure" : "secure"] the [src].</span>"
+		"<span class='notice'>\The [user] begins [anchored ? "unsecuring" : "securing"] the [src].</span>", \
+		"<span class='notice'>You attempt to [anchored ? "unsecure" : "secure"] the [src].</span>"
 		)
 		if(I.use_tool(user, src, WORKTIME_FAST, QUALITY_BOLT_TURNING, FAILCHANCE_EASY,  required_stat = STAT_MEC))
 			user.visible_message( \
-			"<span class='notice'>\The [user] [src.anchored ? "unsecures" : "secures"] the [src].</span>", \
-			"<span class='notice'>You [src.anchored ? "unsecure" : "secure"] the [src].</span>"
+			"<span class='notice'>\The [user] [anchored ? "unsecures" : "secures"] the [src].</span>", \
+			"<span class='notice'>You [anchored ? "unsecure" : "secure"] the [src].</span>"
 			)
-			src.anchored = !src.anchored
-
+			anchored = !anchored
 	else
 		to_chat(user, SPAN_WARNING("You have no idea what you can cook with this [I]."))
 	..()
-	src.updateUsrDialog()
+	updateUsrDialog()
 
-/obj/machinery/microwave/affect_grab(var/mob/user, var/mob/target)
+/obj/machinery/microwave/affect_grab(mob/user, mob/target)
 	to_chat(user, SPAN_WARNING("This is ridiculous. You can not fit \the [target] in this [src]."))
 	return FALSE
 
-/obj/machinery/microwave/attack_ai(mob/user as mob)
+/obj/machinery/microwave/attack_ai(mob/user)
 	if(isrobot(user) && Adjacent(user))
 		attack_hand(user)
 
-/obj/machinery/microwave/attack_hand(mob/user as mob)
+/obj/machinery/microwave/attack_hand(mob/user)
 	user.set_machine(src)
 	interact(user)
 
-/*******************
-*   Microwave Menu
-********************/
-
-/obj/machinery/microwave/interact(mob/user as mob) // The microwave Menu
+/obj/machinery/microwave/interact(mob/user) // The microwave Menu
 	var/dat = ""
 	if(src.broken > 0)
 		dat = {"<TT>Bzzzzttttt</TT>"}
@@ -205,7 +194,7 @@
 		var/list/items_counts = new
 		var/list/items_measures = new
 		var/list/items_measures_p = new
-		for (var/obj/O in contents)
+		for(var/obj/O in contents)
 			var/display_name = O.name
 			if(istype(O,/obj/item/reagent_containers/food/snacks/egg))
 				items_measures[display_name] = "egg"
@@ -224,7 +213,7 @@
 				items_measures[display_name] = "fillet of meat"
 				items_measures_p[display_name] = "fillets of meat"
 			items_counts[display_name]++
-		for (var/O in items_counts)
+		for(var/O in items_counts)
 			var/N = items_counts[O]
 			if(!items_measures.Find(O))
 				dat += {"<B>[capitalize(O)]:</B> [N] [lowertext(O)]\s<BR>"}
@@ -234,7 +223,7 @@
 				else
 					dat += {"<B>[capitalize(O)]:</B> [N] [items_measures_p[O]]<BR>"}
 
-		for (var/datum/reagent/R in reagents.reagent_list)
+		for(var/datum/reagent/R in reagents.reagent_list)
 			var/display_name = R.name
 			if(R.id == "capsaicin")
 				display_name = "Hotsauce"
@@ -247,19 +236,12 @@
 		else
 			dat = {"<b>Ingredients:</b><br>[dat]"}
 		dat += {"<HR><BR>\
-<A href='?src=\ref[src];action=cook'>Turn on!<BR>\
-<A href='?src=\ref[src];action=dispose'>Eject ingredients!<BR>\
-"}
-
-	user << browse("<HEAD><TITLE>[src] Controls</TITLE></HEAD><TT>[dat]</TT>", "window=[src]")
+		<a href='byond://?src=\ref[src];action=cook'>Turn on!<BR>\
+		<a href='byond://?src=\ref[src];action=dispose'>Eject ingredients!<BR>\
+		"}
+	user << browse(HTML_SKELETON("<HEAD><TITLE>[src] Controls</TITLE></HEAD><TT>[dat]</TT>"), "window=[src]")
 	onclose(user, "[src]")
-	return
 
-
-
-/***********************************
-*   Microwave Menu Handling/Cooking
-************************************/
 
 /obj/machinery/microwave/proc/cook()
 	if(stat & (NOPOWER|BROKEN))
@@ -284,13 +266,13 @@
 			wzhzhzh(4)
 			muck_finish()
 			cooked = fail()
-			cooked.loc = src.loc
+			cooked.loc = loc
 			return
 		else if(has_extra_item())
 			if(!wzhzhzh(4))
 				abort()
 			cooked = fail()
-			cooked.loc = src.loc
+			cooked.loc = loc
 			return
 		else
 			if(!wzhzhzh(10))
@@ -298,7 +280,7 @@
 				return
 			stop()
 			cooked = fail()
-			cooked.loc = src.loc
+			cooked.loc = loc
 			return
 	else
 		var/halftime = round(recipe.time/10/2)
@@ -308,16 +290,16 @@
 		if(!wzhzhzh(halftime))
 			abort()
 			cooked = fail()
-			cooked.loc = src.loc
+			cooked.loc = loc
 			return
 		cooked = recipe.make_food(src)
 		stop()
 		if(cooked)
-			cooked.loc = src.loc
-		return
+			cooked.loc = loc
 
-/obj/machinery/microwave/proc/wzhzhzh(var/seconds as num) // Whoever named this proc is fucking literally Satan. ~ Z
-	for (var/i=1 to seconds)
+
+/obj/machinery/microwave/proc/wzhzhzh(seconds as num) // Whoever named this proc is fucking literally Satan. ~ Z
+	for(var/i=1 to seconds)
 		if(stat & (NOPOWER|BROKEN))
 			return 0
 		use_power(500)
@@ -325,7 +307,7 @@
 	return 1
 
 /obj/machinery/microwave/proc/has_extra_item()
-	for (var/obj/O in contents)
+	for(var/obj/O in contents)
 		if(!istype(O,/obj/item/reagent_containers/food) && !istype(O, /obj/item/grown))
 			return 1
 	return 0
@@ -343,13 +325,13 @@
 
 /obj/machinery/microwave/proc/stop()
 	if(dinger)
-		playsound(src.loc, 'sound/machines/ding.ogg', 50, 1)
+		playsound(loc, 'sound/machines/ding.ogg', 50, 1)
 	src.operating = 0 // Turn it off again aferwards
 	src.icon_state = "mw"
 	src.updateUsrDialog()
 
 /obj/machinery/microwave/proc/dispose()
-	for (var/obj/O in contents)
+	for(var/obj/O in contents)
 		O.loc = src.loc
 	if(reagents.total_volume)
 		dirty++
@@ -358,12 +340,12 @@
 	src.updateUsrDialog()
 
 /obj/machinery/microwave/proc/muck_start()
-	playsound(src.loc, 'sound/effects/splat.ogg', 50, 1) // Play a splat sound
+	playsound(loc, 'sound/effects/splat.ogg', 50, 1) // Play a splat sound
 	src.icon_state = "mwbloody1" // Make it look dirty!!
 
 /obj/machinery/microwave/proc/muck_finish()
 	if(dinger)
-		playsound(src.loc, 'sound/machines/ding.ogg', 50, 1)
+		playsound(loc, 'sound/machines/ding.ogg', 50, 1)
 	src.visible_message(SPAN_WARNING("The [src] gets covered in muck!"))
 	src.dirty = 100 // Make it dirty so it can't be used util cleaned
 	src.reagent_flags = NONE //So you can't add condiments
@@ -374,7 +356,7 @@
 /obj/machinery/microwave/proc/fail()
 	var/obj/item/reagent_containers/food/snacks/badrecipe/ffuu = new(src)
 	var/amount = 0
-	for (var/obj/O in contents-ffuu)
+	for(var/obj/O in contents-ffuu)
 		amount++
 		if(O.reagents)
 			var/id = O.reagents.get_master_reagent_id()
@@ -401,7 +383,6 @@
 
 		if("dispose")
 			dispose()
-	return
 
 /obj/machinery/microwave/campfire
 	name = "burn barrel"
@@ -419,11 +400,11 @@
 	set category = "Object"
 	set src in view(1)
 
-	if (!Adjacent(usr))
+	if(!Adjacent(usr))
 		to_chat(usr, SPAN_WARNING("You need to be in arm's reach for that!"))
 		return
 
-	if (usr.incapacitated())
+	if(usr.incapacitated())
 		return
 
 	if(!lit)

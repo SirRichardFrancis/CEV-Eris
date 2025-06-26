@@ -17,11 +17,11 @@
 	/*
 	Filter types:
 	-1: Nothing
-	 0: Plasma: Plasma, Oxygen Agent B
-	 1: Oxygen: Oxygen ONLY
-	 2: Nitrogen: Nitrogen ONLY
-	 3: Carbon Dioxide: Carbon Dioxide ONLY
-	 4: Sleeping Agent (N2O)
+	0: Plasma: Plasma, Oxygen Agent B
+	1: Oxygen: Oxygen ONLY
+	2: Nitrogen: Nitrogen ONLY
+	3: Carbon Dioxide: Carbon Dioxide ONLY
+	4: Sleeping Agent (N2O)
 	*/
 	var/filter_type = -1
 	var/list/filtered_out = list()
@@ -106,7 +106,7 @@
 	var/transfer_moles = (set_flow_rate/air1.volume)*air1.total_moles
 
 	var/power_draw = -1
-	if (transfer_moles > MINIMUM_MOLES_TO_FILTER)
+	if(transfer_moles > MINIMUM_MOLES_TO_FILTER)
 		power_draw = filter_gas(src, filtered_out, air1, air2, air3, transfer_moles, power_rating)
 
 		if(network2)
@@ -118,7 +118,7 @@
 		if(network1)
 			network1.update = 1
 
-	if (power_draw >= 0)
+	if(power_draw >= 0)
 		last_power_draw = power_draw
 		use_power(power_draw)
 
@@ -128,12 +128,12 @@
 	set_frequency(frequency)
 	..()
 
-/obj/machinery/atmospherics/trinary/filter/attackby(var/obj/item/I, var/mob/user)
+/obj/machinery/atmospherics/trinary/filter/attackby(obj/item/I, mob/user)
 	if(!(QUALITY_BOLT_TURNING in I.tool_qualities))
 		return ..()
 	var/datum/gas_mixture/int_air = return_air()
 	var/datum/gas_mixture/env_air = loc.return_air()
-	if ((int_air.return_pressure()-env_air.return_pressure()) > 2*ONE_ATMOSPHERE)
+	if((int_air.return_pressure()-env_air.return_pressure()) > 2*ONE_ATMOSPHERE)
 		to_chat(user, SPAN_WARNING("You cannot unwrench \the [src], it too exerted due to internal pressure."))
 		add_fingerprint(user)
 		return 1
@@ -174,30 +174,29 @@
 			current_filter_type = "ERROR - Report this bug to the admin, please!"
 
 	dat += {"
-			<b>Power: </b><a href='?src=\ref[src];power=1'>[use_power?"On":"Off"]</a><br>
+			<b>Power: </b><a href='byond://?src=\ref[src];power=1'>[use_power?"On":"Off"]</a><br>
 			<b>Filtering: </b>[current_filter_type]<br><HR>
 			<h4>Set Filter Type:</h4>
-			<A href='?src=\ref[src];filterset=0'>Plasma</A><BR>
-			<A href='?src=\ref[src];filterset=1'>Oxygen</A><BR>
-			<A href='?src=\ref[src];filterset=2'>Nitrogen</A><BR>
-			<A href='?src=\ref[src];filterset=3'>Carbon Dioxide</A><BR>
-			<A href='?src=\ref[src];filterset=4'>Nitrous Oxide</A><BR>
-			<A href='?src=\ref[src];filterset=-1'>Nothing</A><BR>
+			<a href='byond://?src=\ref[src];filterset=0'>Plasma</A><BR>
+			<a href='byond://?src=\ref[src];filterset=1'>Oxygen</A><BR>
+			<a href='byond://?src=\ref[src];filterset=2'>Nitrogen</A><BR>
+			<a href='byond://?src=\ref[src];filterset=3'>Carbon Dioxide</A><BR>
+			<a href='byond://?src=\ref[src];filterset=4'>Nitrous Oxide</A><BR>
+			<a href='byond://?src=\ref[src];filterset=-1'>Nothing</A><BR>
 			<HR>
 			<B>Set Flow Rate Limit:</B>
-			[src.set_flow_rate]L/s | <a href='?src=\ref[src];set_flow_rate=1'>Change</a><BR>
+			[src.set_flow_rate]L/s | <a href='byond://?src=\ref[src];set_flow_rate=1'>Change</a><BR>
 			<B>Flow rate: </B>[round(last_flow_rate, 0.1)]L/s
 			"}
 
-	user << browse("<HEAD><TITLE>[src.name] control</TITLE></HEAD><TT>[dat]</TT>", "window=atmo_filter")
+	user << browse(HTML_SKELETON("<HEAD><TITLE>[src.name] control</TITLE></HEAD><TT>[dat]</TT>"), "window=atmo_filter")
 	onclose(user, "atmo_filter")
-	return
 
 /obj/machinery/atmospherics/trinary/filter/Topic(href, href_list) // -- TLE
 	if(..())
 		return 1
 	usr.set_machine(src)
-	src.add_fingerprint(usr)
+	add_fingerprint(usr)
 	if(href_list["filterset"])
 		filter_type = text2num(href_list["filterset"])
 
@@ -214,25 +213,18 @@
 			if(4)//removing N2O
 				filtered_out += "sleeping_agent"
 
-	if (href_list["temp"])
-		src.temp = null
+	if(href_list["temp"])
+		temp = null
 	if(href_list["set_flow_rate"])
-		var/new_flow_rate = input(usr, "Enter new flow rate (0-[air1.volume]L/s)", "Flow Rate Control", src.set_flow_rate) as num
-		src.set_flow_rate = max(0, min(air1.volume, new_flow_rate))
+		var/new_flow_rate = input(usr, "Enter new flow rate (0-[air1.volume]L/s)", "Flow Rate Control", set_flow_rate) as num
+		set_flow_rate = max(0, min(air1.volume, new_flow_rate))
 	if(href_list["power"])
 		use_power=!use_power
-	src.update_icon()
-	src.updateUsrDialog()
-/*
-	for(var/mob/M in viewers(1, src))
-		if ((M.client && M.machine == src))
-			src.attack_hand(M)
-*/
-	return
+	update_icon()
+	updateUsrDialog()
 
 /obj/machinery/atmospherics/trinary/filter/m_filter
 	icon_state = "mmap"
-
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH|EAST
 
@@ -250,13 +242,12 @@ obj/machinery/atmospherics/trinary/filter/m_filter/New()
 
 /obj/machinery/atmospherics/trinary/filter/m_filter/atmos_init()
 	set_frequency(frequency)
-
-	if(node1 && node2 && node3) return
+	if(node1 && node2 && node3)
+		return
 
 	var/node1_connect = turn(dir, -180)
 	var/node2_connect = turn(dir, 90)
 	var/node3_connect = dir
-
 	for(var/obj/machinery/atmospherics/target in get_step(src, node1_connect))
 		if(target.initialize_directions & get_dir(target, src))
 			node1 = target

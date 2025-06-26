@@ -14,7 +14,7 @@
 	..()
 	for(var/dir in list(NORTH,EAST,SOUTH,WEST))
 		table = locate(/obj/machinery/optable, get_step(src, dir))
-		if (table)
+		if(table)
 			table.computer = src
 			break
 
@@ -26,15 +26,15 @@
 
 
 /obj/machinery/computer/operating/interact(mob/user)
-	if ( (get_dist(src, user) > 1 ) || (stat & (BROKEN|NOPOWER)) )
-		if (!issilicon(user))
+	if( (get_dist(src, user) > 1 ) || (stat & (BROKEN|NOPOWER)) )
+		if(!issilicon(user))
 			user.unset_machine()
 			user << browse(null, "window=op")
 			return
 
 	user.set_machine(src)
 	var/dat = "<HEAD><TITLE>Operating Computer</TITLE><META HTTP-EQUIV='Refresh' CONTENT='10'></HEAD><BODY>\n"
-	dat += "<A HREF='?src=\ref[user];mach_close=op'>Close</A><br><br>" //| <A HREF='?src=\ref[user];update=1'>Update</A>"
+	dat += "<a href='byond://?src=\ref[user];mach_close=op'>Close</A><br><br>" //| <a href='byond://?src=\ref[user];update=1'>Update</A>"
 	if(table && (table.check_victim()))
 		victim = table.victim
 		var/internal_health
@@ -69,14 +69,14 @@
 <BR>
 <B>No Patient Detected</B>
 "}
-	user << browse(dat, "window=op")
+	user << browse(HTML_SKELETON(dat), "window=op")
 	onclose(user, "op")
 
 
 /obj/machinery/computer/operating/Topic(href, href_list)
 	if(..())
 		return 1
-	if ((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))) || (issilicon(usr)))
+	if((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))) || (issilicon(usr)))
 		usr.set_machine(src)
 	return
 

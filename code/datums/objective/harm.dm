@@ -3,7 +3,7 @@
 
 /datum/objective/harm/get_panel_entry()
 	var/target = src.target ? "[src.target.current.real_name], the [src.target.assigned_role]" : "no_target"
-	return "Make an example of <a href='?src=\ref[src];switch_target=1'>[target]</a>."
+	return "Make an example of <a href='byond://?src=\ref[src];switch_target=1'>[target]</a>."
 
 /datum/objective/harm/update_explanation()
 	if(target && target.current)
@@ -15,7 +15,7 @@
 	return "([last_harm_points] injure points)"
 
 /datum/objective/harm/update_completion()
-	if (failed)
+	if(failed)
 		return FALSE
 	if(completed)
 		return

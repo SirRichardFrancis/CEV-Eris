@@ -17,7 +17,7 @@
 	icon_state = "nboard0[notices]"
 
 //attaching papers!!
-/obj/structure/noticeboard/attackby(var/obj/item/O as obj, var/mob/user as mob)
+/obj/structure/noticeboard/attackby(obj/item/O, mob/user)
 	if(istype(O, /obj/item/paper))
 		if(notices < 5)
 			O.add_fingerprint(user)
@@ -30,7 +30,7 @@
 		else
 			to_chat(user, SPAN_NOTICE("You reach to pin your paper to the board but hesitate. You are certain your paper will not be seen among the many others already attached."))
 
-/obj/structure/noticeboard/attack_hand(var/mob/user)
+/obj/structure/noticeboard/attack_hand(mob/user)
 	examine(user)
 
 // Since Topic() never seems to interact with usr on more than a superficial
@@ -39,8 +39,8 @@
 	if(get_dist(user, src) < 2)
 		var/dat = "<B>Noticeboard</B><BR>"
 		for(var/obj/item/paper/P in src)
-			dat += "<A href='?src=\ref[src];read=\ref[P]'>[P.name]</A> <A href='?src=\ref[src];write=\ref[P]'>Write</A> <A href='?src=\ref[src];remove=\ref[P]'>Remove</A><BR>"
-		user << browse("<HEAD><TITLE>Notices</TITLE></HEAD>[dat]","window=noticeboard")
+			dat += "<a href='byond://?src=\ref[src];read=\ref[P]'>[P.name]</A> <a href='byond://?src=\ref[src];write=\ref[P]'>Write</A> <a href='byond://?src=\ref[src];remove=\ref[P]'>Remove</A><BR>"
+		user << browse(HTML_SKELETON("<HEAD><TITLE>Notices</TITLE></HEAD>[dat]"),"window=noticeboard")
 		onclose(user, "noticeboard")
 	else
 		..(user, extra_description)
@@ -75,6 +75,5 @@
 	if(href_list["read"])
 		var/obj/item/paper/P = locate(href_list["read"])
 		if((P && P.loc == src))
-			usr << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY><TT>[P.info]</TT></BODY></HTML>", "window=[P.name]")
+			usr << browse(HTML_SKELETON_TITLE(P.name, "<TT>[P.info]</TT>"), "window=[P.name]")
 			onclose(usr, "[P.name]")
-	return

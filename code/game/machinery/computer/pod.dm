@@ -1,5 +1,3 @@
-//This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
-
 /obj/machinery/computer/pod
 	name = "pod launch control console"
 	desc = "A control console for launching pods. Some people prefer firing Mechas."
@@ -12,7 +10,6 @@
 	var/time = 30
 	var/title = "Mass Driver Controls"
 
-
 /obj/machinery/computer/pod/New()
 	..()
 	spawn( 5 )
@@ -20,9 +17,6 @@
 			if(M.id == id)
 				connected = M
 			else
-		return
-	return
-
 
 /obj/machinery/computer/pod/proc/alarm()
 	if(stat & (NOPOWER|BROKEN))
@@ -48,65 +42,6 @@
 		if(M.id == id)
 			M.close()
 			return
-	return
-
-/*
-/obj/machinery/computer/pod/attackby(I as obj, user as mob)
-	if(istype(I, /obj/item/tool/screwdriver))
-		playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			if(stat & BROKEN)
-				to_chat(user, SPAN_NOTICE("The broken glass falls out."))
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-				new /obj/item/material/shard( loc )
-
-				//generate appropriate circuitboard. Accounts for /pod/old computer types
-				var/obj/item/electronics/circuitboard/pod/M = null
-				if(istype(src, /obj/machinery/computer/pod/old))
-					M = new /obj/item/electronics/circuitboard/olddoor( A )
-					if(istype(src, /obj/machinery/computer/pod/old/syndicate))
-						M = new /obj/item/electronics/circuitboard/syndicatedoor( A )
-					if(istype(src, /obj/machinery/computer/pod/old/swf))
-						M = new /obj/item/electronics/circuitboard/swfdoor( A )
-				else //it's not an old computer. Generate standard pod circuitboard.
-					M = new /obj/item/electronics/circuitboard/pod( A )
-
-				for (var/obj/C in src)
-					C.loc = loc
-				M.id = id
-				A.circuit = M
-				A.state = 3
-				A.icon_state = "3"
-				A.anchored = TRUE
-				qdel(src)
-			else
-				to_chat(user, SPAN_NOTICE("You disconnect the monitor."))
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( loc )
-
-				//generate appropriate circuitboard. Accounts for /pod/old computer types
-				var/obj/item/electronics/circuitboard/pod/M = null
-				if(istype(src, /obj/machinery/computer/pod/old))
-					M = new /obj/item/electronics/circuitboard/olddoor( A )
-					if(istype(src, /obj/machinery/computer/pod/old/syndicate))
-						M = new /obj/item/electronics/circuitboard/syndicatedoor( A )
-					if(istype(src, /obj/machinery/computer/pod/old/swf))
-						M = new /obj/item/electronics/circuitboard/swfdoor( A )
-				else //it's not an old computer. Generate standard pod circuitboard.
-					M = new /obj/item/electronics/circuitboard/pod( A )
-
-				for (var/obj/C in src)
-					C.loc = loc
-				M.id = id
-				A.circuit = M
-				A.state = 4
-				A.icon_state = "4"
-				A.anchored = TRUE
-				qdel(src)
-	else
-		attack_hand(user)
-	return
-*/
-
 
 /obj/machinery/computer/pod/attack_hand(mob/user)
 	if(..())
@@ -117,28 +52,26 @@
 	if(connected)
 		var/d2
 		if(timing)	//door controls do not need timers.
-			d2 = "<A href='?src=\ref[src];time=0'>Stop Time Launch</A>"
+			d2 = "<a href='byond://?src=\ref[src];time=0'>Stop Time Launch</A>"
 		else
-			d2 = "<A href='?src=\ref[src];time=1'>Initiate Time Launch</A>"
+			d2 = "<a href='byond://?src=\ref[src];time=1'>Initiate Time Launch</A>"
 		var/second = time % 60
 		var/minute = (time - second) / 60
-		dat += "<HR>\nTimer System: [d2]\nTime Left: [minute ? "[minute]:" : null][second] <A href='?src=\ref[src];tp=-30'>-</A> <A href='?src=\ref[src];tp=-1'>-</A> <A href='?src=\ref[src];tp=1'>+</A> <A href='?src=\ref[src];tp=30'>+</A>"
+		dat += "<HR>\nTimer System: [d2]\nTime Left: [minute ? "[minute]:" : null][second] <a href='byond://?src=\ref[src];tp=-30'>-</A> <a href='byond://?src=\ref[src];tp=-1'>-</A> <a href='byond://?src=\ref[src];tp=1'>+</A> <a href='byond://?src=\ref[src];tp=30'>+</A>"
 		var/temp = ""
 		var/list/L = list( 0.25, 0.5, 1, 2, 4, 8, 16 )
 		for(var/t in L)
 			if(t == connected.power)
 				temp += "[t] "
 			else
-				temp += "<A href = '?src=\ref[src];power=[t]'>[t]</A> "
-		dat += "<HR>\nPower Level: [temp]<BR>\n<A href = '?src=\ref[src];alarm=1'>Firing Sequence</A><BR>\n<A href = '?src=\ref[src];drive=1'>Test Fire Driver</A><BR>\n<A href = '?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
+				temp += "<A href='byond://?src=\ref[src];power=[t]'>[t]</A> "
+		dat += "<HR>\nPower Level: [temp]<BR>\n<A href='byond://?src=\ref[src];alarm=1'>Firing Sequence</A><BR>\n<A href='byond://?src=\ref[src];drive=1'>Test Fire Driver</A><BR>\n<A href='byond://?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
 	else
-		dat += "<BR>\n<A href = '?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
-	dat += "<BR><BR><A href='?src=\ref[user];mach_close=computer'>Close</A></TT></BODY></HTML>"
-	user << browse(dat, "window=computer;size=400x500")
+		dat += "<BR>\n<A href='byond://?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
+	dat += "<BR><BR><a href='byond://?src=\ref[user];mach_close=computer'>Close</A></TT></BODY></HTML>"
+	user << browse(HTML_SKELETON(dat), "window=computer;size=400x500")
 	add_fingerprint(usr)
 	onclose(user, "computer")
-	return
-
 
 /obj/machinery/computer/pod/Process()
 	if(!..())
@@ -151,8 +84,6 @@
 			time = 0
 			timing = 0
 		updateDialog()
-	return
-
 
 /obj/machinery/computer/pod/Topic(href, href_list)
 	if(..())
@@ -186,9 +117,6 @@
 					else
 						M.close()
 		updateUsrDialog()
-	return
-
-
 
 /obj/machinery/computer/pod/old
 	icon_state = "oldcomp"
@@ -197,15 +125,13 @@
 	name = "DoorMex Control Computer"
 	title = "Door Controls"
 
-
-
 /obj/machinery/computer/pod/old/syndicate
 	name = "ProComp Executive IIc"
 	desc = "Criminals often operate on a tight budget. Operates external airlocks."
 	title = "External Airlock Controls"
 	req_access = list(access_syndicate)
 
-/obj/machinery/computer/pod/old/syndicate/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/pod/old/syndicate/attack_hand(mob/user)
 	if(!allowed(user))
 		to_chat(user, SPAN_WARNING("Access Denied"))
 		return

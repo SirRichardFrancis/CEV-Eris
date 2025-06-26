@@ -52,7 +52,7 @@
 **************/
 //These departments are paid out of ship funding
 /datum/department/ironhammer
-	name = "Ironhammer Mercenary Company"
+	name = "IronHammer Mercenary Company"
 	id = DEPARTMENT_SECURITY
 	funding_source = DEPARTMENT_COMMAND
 
@@ -97,7 +97,7 @@
 
 	/*
 		The guild account represents the holdings of the local branch, and merchant.
-		He recieves no funding, infact later he will pay guild fees out of his earnings
+		He receives no funding, infact later he will pay guild fees out of his earnings
 	*/
 	account_initial_balance = 7500
 

@@ -7,24 +7,21 @@
 	light_color = COLOR_LIGHTING_PURPLE_MACHINERY
 	req_access = list(access_robotics)
 	circuit = /obj/item/electronics/circuitboard/robotics
-
 	var/safety = 1
 
-/obj/machinery/computer/robotics/attack_hand(var/mob/user)
+/obj/machinery/computer/robotics/attack_hand(mob/user)
 	if(..())
 		return
 	nano_ui_interact(user)
 
-/obj/machinery/computer/robotics/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
+/obj/machinery/computer/robotics/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui, force_open = NANOUI_FOCUS)
 	var/data[0]
 	data["robots"] = get_cyborgs(user)
 	data["safety"] = safety
 	// Also applies for cyborgs. Hides the manual self-destruct button.
 	data["is_ai"] = issilicon(user)
-
-
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "robot_control.tmpl", "Robotic Control Console", 400, 500)
 		ui.set_initial_data(data)
 		ui.open()
@@ -67,10 +64,8 @@
 			spawn(10)
 				target.self_destruct()
 
-
-
 	// Locks or unlocks the cyborg
-	else if (href_list["lockdown"])
+	else if(href_list["lockdown"])
 		var/mob/living/silicon/robot/target = get_cyborg_by_name(href_list["lockdown"])
 		if(!target || !istype(target))
 			return
@@ -93,7 +88,7 @@
 		message_admins("<span class='notice'>[key_name_admin(usr)] [target.canmove ? "locked down" : "released"] [target.name]!</span>")
 		log_game("[key_name(usr)] [target.canmove ? "locked down" : "released"] [target.name]!")
 		target.canmove = !target.canmove
-		if (target.lockcharge)
+		if(target.lockcharge)
 			target.lockcharge = !target.lockcharge
 			to_chat(target, "Your lockdown has been lifted!")
 		else
@@ -101,7 +96,7 @@
 			to_chat(target, "You have been locked down!")
 
 	// Remotely hacks the cyborg. Only antag AIs can do this and only to linked cyborgs.
-	else if (href_list["hack"])
+	else if(href_list["hack"])
 		var/mob/living/silicon/robot/target = get_cyborg_by_name(href_list["hack"])
 		if(!target || !istype(target))
 			return
@@ -158,13 +153,11 @@
 			spawn(10)
 				R.self_destruct()
 
-
 // Proc: get_cyborgs()
 // Parameters: 1 (operator - mob which is operating the console.)
 // Description: Returns NanoUI-friendly list of accessible cyborgs.
-/obj/machinery/computer/robotics/proc/get_cyborgs(var/mob/operator)
+/obj/machinery/computer/robotics/proc/get_cyborgs(mob/operator)
 	var/list/robots = list()
-
 	for(var/mob/living/silicon/robot/R in SSmobs.mob_list)
 		// Ignore drones
 		if(isdrone(R))
@@ -177,7 +170,7 @@
 		robot["name"] = R.name
 		if(R.stat)
 			robot["status"] = "Not Responding"
-		else if (!R.canmove)
+		else if(!R.canmove)
 			robot["status"] = "Lockdown"
 		else
 			robot["status"] = "Operational"
@@ -203,8 +196,8 @@
 // Proc: get_cyborg_by_name()
 // Parameters: 1 (name - Cyborg we are trying to find)
 // Description: Helper proc for finding cyborg by name
-/obj/machinery/computer/robotics/proc/get_cyborg_by_name(var/name)
-	if (!name)
+/obj/machinery/computer/robotics/proc/get_cyborg_by_name(name)
+	if(!name)
 		return
 	for(var/mob/living/silicon/robot/R in SSmobs.mob_list)
 		if(R.name == name)

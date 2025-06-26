@@ -32,16 +32,16 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	var/author
 	var/SQLquery
 
-/obj/machinery/librarypubliccomp/attack_hand(var/mob/user as mob)
+/obj/machinery/librarypubliccomp/attack_hand(mob/user)
 	usr.set_machine(src)
 	var/dat = "<HEAD><TITLE>Library Visitor</TITLE></HEAD><BODY>\n" // <META HTTP-EQUIV='Refresh' CONTENT='10'>
 	switch(screenstate)
 		if(0)
 			dat += {"<h2>Search Settings</h2><br>
-			<A href='?src=\ref[src];settitle=1'>Filter by Title: [title]</A><BR>
-			<A href='?src=\ref[src];setcategory=1'>Filter by Category: [category]</A><BR>
-			<A href='?src=\ref[src];setauthor=1'>Filter by Author: [author]</A><BR>
-			<A href='?src=\ref[src];search=1'>\[Start Search\]</A><BR>"}
+			<a href='byond://?src=\ref[src];settitle=1'>Filter by Title: [title]</A><BR>
+			<a href='byond://?src=\ref[src];setcategory=1'>Filter by Category: [category]</A><BR>
+			<a href='byond://?src=\ref[src];setauthor=1'>Filter by Author: [author]</A><BR>
+			<a href='byond://?src=\ref[src];search=1'>\[Start Search\]</A><BR>"}
 		if(1)
 			establish_db_connection()
 			if(!dbcon.IsConnected())
@@ -62,8 +62,8 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 					var/id = query.item[4]
 					dat += "<tr><td>[author]</td><td>[title]</td><td>[category]</td><td>[id]</td></tr>"
 				dat += "</table><BR>"
-			dat += "<A href='?src=\ref[src];back=1'>\[Go Back\]</A><BR>"
-	user << browse(dat, "window=publiclibrary")
+			dat += "<a href='byond://?src=\ref[src];back=1'>\[Go Back\]</A><BR>"
+	user << browse(HTML_SKELETON(dat), "window=publiclibrary")
 	onclose(user, "publiclibrary")
 
 /obj/machinery/librarypubliccomp/Topic(href, href_list)
@@ -104,10 +104,8 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	if(href_list["back"])
 		screenstate = 0
 
-	src.updateUsrDialog()
+	updateUsrDialog()
 	keyboardsound(usr)
-	return
-
 
 /*
  * Library Computer
@@ -132,25 +130,25 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 
 	var/bibledelay = 0 // LOL NO SPAM (1 minute delay) -- Doohl
 
-/obj/machinery/librarycomp/attack_hand(var/mob/user as mob)
+/obj/machinery/librarycomp/attack_hand(mob/user)
 	usr.set_machine(src)
 	var/dat = "<HEAD><TITLE>Book Inventory Management</TITLE></HEAD><BODY>\n" // <META HTTP-EQUIV='Refresh' CONTENT='10'>
 	switch(screenstate)
 		if(0)
 			// Main Menu
-			dat += {"<A href='?src=\ref[src];switchscreen=1'>1. View General Inventory</A><BR>
-			<A href='?src=\ref[src];switchscreen=2'>2. View Checked Out Inventory</A><BR>
-			<A href='?src=\ref[src];switchscreen=3'>3. Check out a Book</A><BR>
-			<A href='?src=\ref[src];switchscreen=4'>4. Connect to External Archive</A><BR>
-			<A href='?src=\ref[src];switchscreen=5'>5. Upload New Title to Archive</A><BR>"}
+			dat += {"<a href='byond://?src=\ref[src];switchscreen=1'>1. View General Inventory</A><BR>
+			<a href='byond://?src=\ref[src];switchscreen=2'>2. View Checked Out Inventory</A><BR>
+			<a href='byond://?src=\ref[src];switchscreen=3'>3. Check out a Book</A><BR>
+			<a href='byond://?src=\ref[src];switchscreen=4'>4. Connect to External Archive</A><BR>
+			<a href='byond://?src=\ref[src];switchscreen=5'>5. Upload New Title to Archive</A><BR>"}
 			if(src.emagged)
-				dat += "<A href='?src=\ref[src];switchscreen=6'>6. Access the Forbidden Lore Vault</A><BR>"
+				dat += "<a href='byond://?src=\ref[src];switchscreen=6'>6. Access the Forbidden Lore Vault</A><BR>"
 		if(1)
 			// Inventory
 			dat += "<H3>Inventory</H3><BR>"
 			for(var/obj/item/book/b in inventory)
-				dat += "[b.name] <A href='?src=\ref[src];delbook=\ref[b]'>(Delete)</A><BR>"
-			dat += "<A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
+				dat += "[b.name] <a href='byond://?src=\ref[src];delbook=\ref[b]'>(Delete)</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
 		if(2)
 			// Checked Out
 			dat += "<h3>Checked Out Books</h3><BR>"
@@ -167,29 +165,29 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				else
 					timedue = round(timedue)
 				dat += {"\"[b.bookname]\", Checked out to: [b.mobname]<BR>--- Taken: [timetaken] minutes ago, Due: in [timedue] minutes<BR>
-				<A href='?src=\ref[src];checkin=\ref[b]'>(Check In)</A><BR><BR>"}
-			dat += "<A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
+				<a href='byond://?src=\ref[src];checkin=\ref[b]'>(Check In)</A><BR><BR>"}
+			dat += "<a href='byond://?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
 		if(3)
 			// Check Out a Book
 			dat += {"<h3>Check Out a Book</h3><BR>
 			Book: [src.buffer_book]
-			<A href='?src=\ref[src];editbook=1'>\[Edit\]</A><BR>
+			<a href='byond://?src=\ref[src];editbook=1'>\[Edit\]</A><BR>
 			Recipient: [src.buffer_mob]
-			<A href='?src=\ref[src];editmob=1'>\[Edit\]</A><BR>
+			<a href='byond://?src=\ref[src];editmob=1'>\[Edit\]</A><BR>
 			Checkout Date : [world.time/600]<BR>
 			Due Date: [(world.time + checkoutperiod)/600]<BR>
-			(Checkout Period: [checkoutperiod] minutes) (<A href='?src=\ref[src];increasetime=1'>+</A>/<A href='?src=\ref[src];decreasetime=1'>-</A>)
-			<A href='?src=\ref[src];checkout=1'>(Commit Entry)</A><BR>
-			<A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"}
+			(Checkout Period: [checkoutperiod] minutes) (<a href='byond://?src=\ref[src];increasetime=1'>+</A>/<a href='byond://?src=\ref[src];decreasetime=1'>-</A>)
+			<a href='byond://?src=\ref[src];checkout=1'>(Commit Entry)</A><BR>
+			<a href='byond://?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"}
 		if(4)
 			dat += "<h3>External Archive</h3>"
 			establish_db_connection()
 			if(!dbcon.IsConnected())
 				dat += "<font color=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font>"
 			else
-				dat += {"<A href='?src=\ref[src];orderbyid=1'>(Order book by SS<sup>13</sup>BN)</A><BR><BR>
+				dat += {"<a href='byond://?src=\ref[src];orderbyid=1'>(Order book by SS<sup>13</sup>BN)</A><BR><BR>
 				<table>
-				<tr><td><A href='?src=\ref[src];sort=author>AUTHOR</A></td><td><A href='?src=\ref[src];sort=title>TITLE</A></td><td><A href='?src=\ref[src];sort=category>CATEGORY</A></td><td></td></tr>"}
+				<tr><td><a href='byond://?src=\ref[src];sort=author>AUTHOR</A></td><td><a href='byond://?src=\ref[src];sort=title>TITLE</A></td><td><a href='byond://?src=\ref[src];sort=category>CATEGORY</A></td><td></td></tr>"}
 				var/DBQuery/query = dbcon.NewQuery("SELECT id, author, title, category FROM library ORDER BY [sortby]")
 				query.Execute()
 
@@ -198,9 +196,9 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 					var/author = query.item[2]
 					var/title = query.item[3]
 					var/category = query.item[4]
-					dat += "<tr><td>[author]</td><td>[title]</td><td>[category]</td><td><A href='?src=\ref[src];targetid=[id]'>\[Order\]</A></td></tr>"
+					dat += "<tr><td>[author]</td><td>[title]</td><td>[category]</td><td><a href='byond://?src=\ref[src];targetid=[id]'>\[Order\]</A></td></tr>"
 				dat += "</table>"
-			dat += "<BR><A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
+			dat += "<BR><a href='byond://?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
 		if(5)
 			dat += "<H3>Upload a New Title</H3>"
 			if(!scanner)
@@ -216,31 +214,31 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				<TT>Title: </TT>[scanner.cache.name]<BR>"}
 				if(!scanner.cache.author)
 					scanner.cache.author = "Anonymous"
-				dat += {"<TT>Author: </TT><A href='?src=\ref[src];setauthor=1'>[scanner.cache.author]</A><BR>
-				<TT>Category: </TT><A href='?src=\ref[src];setcategory=1'>[upload_category]</A><BR>
-				<A href='?src=\ref[src];upload=1'>\[Upload\]</A><BR>"}
-			dat += "<A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
+				dat += {"<TT>Author: </TT><a href='byond://?src=\ref[src];setauthor=1'>[scanner.cache.author]</A><BR>
+				<TT>Category: </TT><a href='byond://?src=\ref[src];setcategory=1'>[upload_category]</A><BR>
+				<a href='byond://?src=\ref[src];upload=1'>\[Upload\]</A><BR>"}
+			dat += "<a href='byond://?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
 		if(6)
 			dat += {"<h3>Accessing Forbidden Lore Vault v 1.3</h3>
 			Are you absolutely sure you want to proceed? EldritchTomes Inc. takes no responsibilities for loss of sanity resulting from this action.<p>
-			<A href='?src=\ref[src];arccheckout=1'>Yes.</A><BR>
-			<A href='?src=\ref[src];switchscreen=0'>No.</A><BR>"}
+			<a href='byond://?src=\ref[src];arccheckout=1'>Yes.</A><BR>
+			<a href='byond://?src=\ref[src];switchscreen=0'>No.</A><BR>"}
 
-	//dat += "<A HREF='?src=\ref[user];mach_close=library'>Close</A><br><br>"
-	user << browse(dat, "window=library")
+	//dat += "<a href='byond://?src=\ref[user];mach_close=library'>Close</A><br><br>"
+	user << browse(HTML_SKELETON(dat), "window=library")
 	onclose(user, "library")
 
-/obj/machinery/librarycomp/emag_act(var/remaining_charges, var/mob/user)
-	if (src.density && !src.emagged)
-		src.emagged = 1
+/obj/machinery/librarycomp/emag_act(remaining_charges, mob/user)
+	if(density && !emagged)
+		emagged = 1
 		return 1
 
-/obj/machinery/librarycomp/attackby(obj/item/W as obj, mob/user as mob)
+/obj/machinery/librarycomp/attackby(obj/item/W, mob/user)
 	if(istype(W, /obj/item/barcodescanner))
 		var/obj/item/barcodescanner/scanner = W
 		scanner.computer = src
 		to_chat(user, "[scanner]'s associated machine has been set to [src].")
-		for (var/mob/V in hearers(src))
+		for(var/mob/V in hearers(src))
 			V.show_message("[src] lets out a low, short blip.", 2)
 	else
 		..()
@@ -275,7 +273,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 						bibledelay = 0
 
 				else
-					for (var/mob/V in hearers(src))
+					for(var/mob/V in hearers(src))
 						V.show_message("<b>[src]</b>'s monitor flashes, \"Bible printer currently unavailable, please wait a moment.\"")
 
 			if("7")
@@ -354,7 +352,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		if(!dbcon.IsConnected())
 			alert("Connection to Archive has been severed. Aborting.")
 		if(bibledelay)
-			for (var/mob/V in hearers(src))
+			for(var/mob/V in hearers(src))
 				V.show_message("<b>[src]</b>'s monitor flashes, \"Printer unavailable. Please allow a short time before attempting to print.\"")
 		else
 			bibledelay = 1
@@ -383,8 +381,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				spawn() src.Topic(nhref, params2list(nhref), src)
 	if(href_list["sort"] in list("author", "title", "category"))
 		sortby = href_list["sort"]
-	src.updateUsrDialog()
-	return
+	updateUsrDialog()
 
 /*
  * Library Scanner
@@ -397,24 +394,24 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	density = TRUE
 	var/obj/item/book/cache		// Last scanned book
 
-/obj/machinery/libraryscanner/attackby(var/obj/O as obj, var/mob/user as mob)
+/obj/machinery/libraryscanner/attackby(obj/O, mob/user)
 	if(istype(O, /obj/item/book))
 		user.drop_item()
 		O.loc = src
 
-/obj/machinery/libraryscanner/attack_hand(var/mob/user as mob)
+/obj/machinery/libraryscanner/attack_hand(mob/user)
 	usr.set_machine(src)
 	var/dat = "<HEAD><TITLE>Scanner Control Interface</TITLE></HEAD><BODY>\n" // <META HTTP-EQUIV='Refresh' CONTENT='10'>
 	if(cache)
 		dat += "<FONT color=#005500>Data stored in memory.</FONT><BR>"
 	else
 		dat += "No data stored in memory.<BR>"
-	dat += "<A href='?src=\ref[src];scan=1'>\[Scan\]</A>"
+	dat += "<a href='byond://?src=\ref[src];scan=1'>\[Scan\]</A>"
 	if(cache)
-		dat += "       <A href='?src=\ref[src];clear=1'>\[Clear Memory\]</A><BR><BR><A href='?src=\ref[src];eject=1'>\[Remove Book\]</A>"
+		dat += "       <a href='byond://?src=\ref[src];clear=1'>\[Clear Memory\]</A><BR><BR><a href='byond://?src=\ref[src];eject=1'>\[Remove Book\]</A>"
 	else
 		dat += "<BR>"
-	user << browse(dat, "window=scanner")
+	user << browse(HTML_SKELETON(dat), "window=scanner")
 	onclose(user, "scanner")
 
 /obj/machinery/libraryscanner/Topic(href, href_list)
@@ -432,9 +429,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	if(href_list["eject"])
 		for(var/obj/item/book/B in contents)
 			B.loc = src.loc
-	src.updateUsrDialog()
-	return
-
+	updateUsrDialog()
 
 /*
  * Book binder
@@ -446,14 +441,14 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	anchored = TRUE
 	density = TRUE
 
-/obj/machinery/bookbinder/attackby(var/obj/O as obj, var/mob/user as mob)
+/obj/machinery/bookbinder/attackby(obj/O, mob/user)
 	if(istype(O, /obj/item/paper))
 		user.drop_item()
 		O.loc = src
 		user.visible_message("[user] loads some paper into [src].", "You load some paper into [src].")
-		src.visible_message("[src] begins to hum as it warms up its printing drums.")
+		visible_message("[src] begins to hum as it warms up its printing drums.")
 		sleep(rand(200,400))
-		src.visible_message("[src] whirs as it prints and binds a new book.")
+		visible_message("[src] whirs as it prints and binds a new book.")
 		var/obj/item/book/b = new(src.loc)
 		b.dat = O:info
 		b.name = "Print Job #" + "[rand(100, 999)]"

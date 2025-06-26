@@ -22,7 +22,7 @@
 			contents += O
 			has_extinguisher = O
 			to_chat(user, SPAN_NOTICE("You place [O] in [src]."))
-			playsound(src.loc, 'sound/machines/Custom_extin.ogg', 50, 0)
+			playsound(loc, 'sound/machines/Custom_extin.ogg', 50, 0)
 		else
 			opened = !opened
 	else
@@ -33,10 +33,10 @@
 /obj/structure/extinguisher_cabinet/attack_hand(mob/user)
 	if(isrobot(user))
 		return
-	if (ishuman(user))
+	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		var/obj/item/organ/external/temp = H.organs_by_name[BP_R_ARM]
-		if (user.hand)
+		if(user.hand)
 			temp = H.organs_by_name[BP_L_ARM]
 		if(temp && !temp.is_usable())
 			to_chat(user, SPAN_NOTICE("You try to move your [temp.name], but cannot!"))
@@ -44,7 +44,7 @@
 	if(has_extinguisher)
 		user.put_in_hands(has_extinguisher)
 		to_chat(user, SPAN_NOTICE("You take [has_extinguisher] from [src]."))
-		playsound(src.loc, 'sound/machines/Custom_extout.ogg', 50, 0)
+		playsound(loc, 'sound/machines/Custom_extout.ogg', 50, 0)
 		has_extinguisher = null
 		opened = 1
 	else
@@ -60,7 +60,7 @@
 	if(!in_range(src, user))
 		return
 	else
-		playsound(src.loc, 'sound/machines/Custom_extin.ogg', 50, 0)
+		playsound(loc, 'sound/machines/Custom_extin.ogg', 50, 0)
 		opened = !opened
 		update_icon()
 

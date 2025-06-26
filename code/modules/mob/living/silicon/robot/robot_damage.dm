@@ -67,7 +67,7 @@
 	if(!components.len)
 		return
 
-	 //Combat shielding absorbs a percentage of damage directly into the cell.
+	//Combat shielding absorbs a percentage of damage directly into the cell.
 	if(module_active && istype(module_active,/obj/item/borg/combat/shield))
 		var/obj/item/borg/combat/shield/shield = module_active
 		//Shields absorb a certain percentage of damage based on their power setting.
@@ -112,7 +112,7 @@
 	if(status_flags & GODMODE)	return	//godmode
 	var/list/datum/robot_component/parts = get_damageable_components()
 
-	 //Combat shielding absorbs a percentage of damage directly into the cell.
+	//Combat shielding absorbs a percentage of damage directly into the cell.
 	if(module_active && istype(module_active,/obj/item/borg/combat/shield))
 		var/obj/item/borg/combat/shield/shield = module_active
 		//Shields absorb a certain percentage of damage based on their power setting.
@@ -160,7 +160,7 @@
 	//A percentage is used here to simulate different robots having different masses. The bigger they are, the harder they fall
 
 	//Falling two floors is not an instakill, but it almost is
-	if (from && dest)
+	if(from && dest)
 		damage *= abs(from.z - dest.z)
 
 	return damage
@@ -173,25 +173,25 @@
 	Stun(5)
 	updatehealth()
 	//Wreck the contents of the tile
-	for (var/atom/movable/AM in dest)
-		if (AM != src)
+	for(var/atom/movable/AM in dest)
+		if(AM != src)
 			AM.explosion_act(50, null)
 
 	//Damage the tile itself
 	dest.explosion_act(100,null)
 
 	//Damage surrounding tiles
-	for (var/turf/T in range(1, src))
-		if (T == dest)
+	for(var/turf/T in range(1, src))
+		if(T == dest)
 			continue
 
 		T.explosion_act(50, null)
 
 	//And do some screenshake for everyone in the vicinity
-	for (var/mob/M in range(20, src))
+	for(var/mob/M in range(20, src))
 		var/dist = get_dist(M, src)
 		dist *= 0.5
-		if (dist <= 1)
+		if(dist <= 1)
 			dist = 1 //Prevent runtime errors
 
 		shake_camera(M, 10/dist, 2.5/dist, 0.12)

@@ -61,25 +61,25 @@ Tryed to code it without duplication, but it doesn't worked.
 Another builds like baystation12 also have a duplication.
 */
 
-/obj/item/dice/attack_self(mob/user as mob)
+/obj/item/dice/attack_self(mob/user)
 	var/result = rand(1, sides)
 	var/comment = ""
-	if (result == 1 && sides == 20)
+	if(result == 1 && sides == 20)
 		comment = "Ouch, bad luck."
-	else if (result == 20 && sides == 20)
+	else if(result == 20 && sides == 20)
 		comment = "Nat 20!"
 	icon_state = "[name][result]"
 	user.visible_message(SPAN_NOTICE("[user] has thrown [src]. It lands on [result]. [comment]"), \
-						 SPAN_NOTICE("You throw [src]. It lands on a [result]. [comment]"), \
-						 SPAN_NOTICE("You hear [src] landing on a [result]. [comment]"))
+						SPAN_NOTICE("You throw [src]. It lands on a [result]. [comment]"), \
+						SPAN_NOTICE("You hear [src] landing on a [result]. [comment]"))
 
 /obj/item/dice/throw_impact(atom/hit_atom, var/speed)
 	..()
 	var/result = rand(1,sides)
 	var/comment = ""
-	if (result == 1 && sides == 20)
+	if(result == 1 && sides == 20)
 		comment = "Ouch, bad luck."
-	else if (result == 20 && sides == 20)
+	else if(result == 20 && sides == 20)
 		comment = "Nat 20!"
 	icon_state = "[name][result]"
 	src.visible_message(SPAN_NOTICE("\The [src] lands on [result]. [comment]"))

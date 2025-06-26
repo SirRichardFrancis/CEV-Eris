@@ -2,7 +2,7 @@
 
 /datum/objective/debrain/get_panel_entry()
 	var/target = src.target ? "[src.target.current.real_name], the [src.target.assigned_role]" : "no_target"
-	return "Steal the brain of <a href='?src=\ref[src];switch_target=1'>[target]</a>."
+	return "Steal the brain of <a href='byond://?src=\ref[src];switch_target=1'>[target]</a>."
 
 /datum/objective/debrain/update_explanation()
 	if(target && target.current)
@@ -11,7 +11,7 @@
 		explanation_text = "Target has not arrived today. Did he know that I would come?"
 
 /datum/objective/debrain/check_completion()
-	if (failed)
+	if(failed)
 		return FALSE
 	if(!target) //If it's a free objective.
 		return TRUE
@@ -21,6 +21,6 @@
 		return FALSE
 	var/atom/A = target.current
 	var/list/contents = get_owner_inventory()
-	if ((A in contents))
+	if((A in contents))
 		return TRUE
 	return FALSE

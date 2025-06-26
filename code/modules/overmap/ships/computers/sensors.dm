@@ -20,16 +20,15 @@
 
 /obj/machinery/computer/sensors/proc/find_sensors()
 	for(var/obj/machinery/shipsensors/S in GLOB.machines)
-		if (S.z in SSmapping.GetConnectedZlevels(z))
+		if(S.z in SSmapping.GetConnectedZlevels(z))
 			sensors = S
 			break
 
-/obj/machinery/computer/sensors/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
+/obj/machinery/computer/sensors/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui, force_open = NANOUI_FOCUS)
 	if(!linked)
 		return
 
 	var/data[0]
-
 	data["viewing"] = viewing
 	if(sensors)
 		data["on"] = sensors.use_power
@@ -52,21 +51,21 @@
 		data["on"] = 0
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "shipsensors.tmpl", "[linked.name] Sensors Control", 420, 530)
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/machinery/computer/sensors/check_eye(var/mob/user as mob)
-	if (!viewing)
+/obj/machinery/computer/sensors/check_eye(mob/user)
+	if(!viewing)
 		return -1
-	if (!get_dist(user, src) > 1 || user.blinded || !linked )
+	if(!get_dist(user, src) > 1 || user.blinded || !linked )
 		viewing = 0
 		return -1
 	return 0
 
-/obj/machinery/computer/sensors/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/sensors/attack_hand(mob/user)
 	if(..())
 		user.unset_machine()
 		viewing = 0
@@ -82,28 +81,28 @@
 	if(..())
 		return 1
 
-	if (!linked)
+	if(!linked)
 		return
 
-	if (href_list["viewing"])
+	if(href_list["viewing"])
 		viewing = !viewing
 		if(viewing && usr && !isAI(usr))
 			usr.reset_view(linked)
 		return 1
 
-	if (href_list["link"])
+	if(href_list["link"])
 		find_sensors()
 		return 1
 
 	if(sensors)
-		if (href_list["range"])
+		if(href_list["range"])
 			var/nrange = input("Set new sensors range", "Sensor range", sensors.range) as num|null
 			if(!CanInteract(usr,state))
 				return
-			if (nrange)
+			if(nrange)
 				sensors.set_range(CLAMP(nrange, 1, world.view))
 			return 1
-		if (href_list["toggle"])
+		if(href_list["toggle"])
 			sensors.toggle()
 			return 1
 
@@ -166,7 +165,7 @@
 		extra_description += "\nThe [src] shows signs of damage!"
 	..(user, extra_description)
 
-/obj/machinery/shipsensors/bullet_act(var/obj/item/projectile/Proj)
+/obj/machinery/shipsensors/bullet_act(obj/item/projectile/Proj)
 	take_damage(Proj.get_structure_damage())
 	..()
 
@@ -193,7 +192,7 @@
 			toggle()
 		current_heat += idle_power_usage/15000
 
-	if (current_heat > 0)
+	if(current_heat > 0)
 		current_heat = max(0, current_heat - heat_reduction)
 
 /obj/machinery/shipsensors/power_change()

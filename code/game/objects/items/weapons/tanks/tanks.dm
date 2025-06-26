@@ -43,8 +43,7 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/tank/Initialize(mapload, ...)
 	. = ..()
-
-	if (!item_state)
+	if(!item_state)
 		item_state = icon_state
 
 	air_contents = new /datum/gas_mixture(volume)
@@ -58,11 +57,9 @@ var/list/global/tank_gauge_cache = list()
 		QDEL_NULL(air_contents)
 
 	STOP_PROCESSING(SSobj, src)
-
 	if(istype(loc, /obj/item/device/transfer_valve))
 		var/obj/item/device/transfer_valve/TTV = loc
 		TTV.remove_tank(src)
-
 	. = ..()
 
 // Override in subtypes
@@ -92,23 +89,22 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/tank/attackby(obj/item/W, mob/living/user)
 	..()
-	if (istype(src.loc, /obj/item/assembly))
+	if(istype(src.loc, /obj/item/assembly))
 		icon = src.loc
-	else if (istype(W,/obj/item/latexballon))
+	else if(istype(W,/obj/item/latexballon))
 		var/obj/item/latexballon/LB = W
 		LB.blow(src)
-		src.add_fingerprint(user)
+		add_fingerprint(user)
 
 	if(istype(W, /obj/item/device/assembly_holder))
 		bomb_assemble(W,user)
 
 /obj/item/tank/attack_self(mob/living/user)
-	if (!(src.air_contents))
+	if(!(src.air_contents))
 		return
-
 	nano_ui_interact(user)
 
-/obj/item/tank/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
+/obj/item/tank/nano_ui_interact(mob/user, ui_key = "main", datum/nanoui/ui, force_open = NANOUI_FOCUS)
 	var/mob/living/carbon/location = null
 
 	if(istype(loc, /obj/item/rig))		// check for tanks in rigs
@@ -129,12 +125,9 @@ var/list/global/tank_gauge_cache = list()
 	data["defaultReleasePressure"] = round(TANK_DEFAULT_RELEASE_PRESSURE)
 	data["maxReleasePressure"] = round(TANK_MAX_RELEASE_PRESSURE)
 	data["valveOpen"] = using_internal ? 1 : 0
-
 	data["maskConnected"] = 0
-
 	if(istype(location))
 		var/mask_check = 0
-
 		if(location.internal == src)	// if tank is current internal
 			mask_check = 1
 		else if(src in location)		// or if tank is in the mobs possession
@@ -154,9 +147,9 @@ var/list/global/tank_gauge_cache = list()
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		// the ui does not exist, so we'll create a new() one
-        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "tanks.tmpl", "Tank", 500, 300)
 		// when the ui is first opened this is the data it will use
 		ui.set_initial_data(data)
@@ -167,25 +160,25 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/tank/Topic(href, href_list)
 	..()
-	if (usr.stat|| usr.restrained())
+	if(usr.stat|| usr.restrained())
 		return 0
-	if (src.loc != usr)
+	if(src.loc != usr)
 		return 0
 
-	if (href_list["dist_p"])
-		if (href_list["dist_p"] == "reset")
+	if(href_list["dist_p"])
+		if(href_list["dist_p"] == "reset")
 			src.distribute_pressure = TANK_DEFAULT_RELEASE_PRESSURE
-		else if (href_list["dist_p"] == "max")
+		else if(href_list["dist_p"] == "max")
 			src.distribute_pressure = TANK_MAX_RELEASE_PRESSURE
 		else
 			var/cp = text2num(href_list["dist_p"])
 			src.distribute_pressure += cp
 		src.distribute_pressure = min(max(round(src.distribute_pressure), 0), TANK_MAX_RELEASE_PRESSURE)
-	if (href_list["stat"])
+	if(href_list["stat"])
 		toggle_valve(loc)
 	return 1
 
-/obj/item/tank/proc/toggle_valve(var/mob/user)
+/obj/item/tank/proc/toggle_valve(mob/user)
 	if(iscarbon(loc))
 		var/mob/living/carbon/location = loc
 		if(location.internal == src)
@@ -208,7 +201,7 @@ var/list/global/tank_gauge_cache = list()
 			if(location.HUDneed.Find("internal"))
 				var/obj/screen/HUDelm = location.HUDneed["internal"]
 				HUDelm.update_icon()
-		src.add_fingerprint(usr)
+		add_fingerprint(usr)
 
 /obj/item/tank/remove_air(amount)
 	return air_contents.remove(amount)
@@ -218,7 +211,6 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/tank/assume_air(datum/gas_mixture/giver)
 	air_contents.merge(giver)
-
 	check_status()
 	return 1
 
@@ -231,11 +223,10 @@ var/list/global/tank_gauge_cache = list()
 		distribute_pressure = tank_pressure
 
 	var/moles_needed = distribute_pressure*volume_to_return/(R_IDEAL_GAS_EQUATION*air_contents.temperature)
-
 	return remove_air(moles_needed)
 
 /obj/item/tank/proc/get_total_moles()
-	if (air_contents)
+	if(air_contents)
 		return air_contents.total_moles
 	return 0
 
@@ -255,7 +246,6 @@ var/list/global/tank_gauge_cache = list()
 		return
 
 	last_gauge_pressure = gauge_pressure
-
 	var/indicator
 	if(gauge_pressure > TANK_IDEAL_PRESSURE)
 		indicator = "[gauge_icon]-overload"
@@ -269,7 +259,6 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/tank/proc/check_status()
 	//Handle exploding, leaking, and rupturing of the tank
-
 	if(!air_contents)
 		return 0
 
@@ -283,7 +272,6 @@ var/list/global/tank_gauge_cache = list()
 		air_contents.react()
 		air_contents.react()
 		air_contents.react()
-
 		pressure = air_contents.return_pressure()
 		var/power = (pressure-TANK_FRAGMENT_PRESSURE)/TANK_FRAGMENT_SCALE
 		explosion(get_turf(src), power, 10, EFLAG_ADDITIVEFALLOFF)
@@ -299,7 +287,7 @@ var/list/global/tank_gauge_cache = list()
 			if(!T)
 				return
 			T.assume_air(air_contents)
-			playsound(src.loc, 'sound/effects/spray.ogg', 10, 1, -3)
+			playsound(loc, 'sound/effects/spray.ogg', 10, 1, -3)
 			qdel(src)
 		else
 			integrity--

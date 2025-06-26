@@ -76,7 +76,7 @@
 
 /obj/machinery/atmospherics/pipe/zpipe/proc/burst()
 	src.visible_message(SPAN_WARNING("\The [src] bursts!"));
-	playsound(src.loc, 'sound/effects/bang.ogg', 25, 1)
+	playsound(loc, 'sound/effects/bang.ogg', 25, 1)
 	var/datum/effect/effect/system/smoke_spread/smoke = new
 	smoke.set_up(1,0, src.loc, 0)
 	smoke.start()
@@ -133,12 +133,12 @@
 
 	for(var/direction in cardinal)
 		if(direction&initialize_directions)
-			if (!node1_dir)
+			if(!node1_dir)
 				node1_dir = direction
 
 	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
 		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
+			if(check_connect_types(target,src))
 				node1 = target
 				break
 
@@ -146,7 +146,7 @@
 	if(above)
 		for(var/obj/machinery/atmospherics/target in above)
 			if(target.initialize_directions && istype(target, /obj/machinery/atmospherics/pipe/zpipe/down))
-				if (check_connect_types(target,src))
+				if(check_connect_types(target,src))
 					node2 = target
 					break
 
@@ -174,12 +174,12 @@
 
 	for(var/direction in cardinal)
 		if(direction&initialize_directions)
-			if (!node1_dir)
+			if(!node1_dir)
 				node1_dir = direction
 
 	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
 		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
+			if(check_connect_types(target,src))
 				node1 = target
 				break
 
@@ -187,7 +187,7 @@
 	if(below)
 		for(var/obj/machinery/atmospherics/target in below)
 			if(target.initialize_directions && istype(target, /obj/machinery/atmospherics/pipe/zpipe/up))
-				if (check_connect_types(target,src))
+				if(check_connect_types(target,src))
 					node2 = target
 					break
 

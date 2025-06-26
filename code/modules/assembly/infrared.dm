@@ -99,17 +99,17 @@
 	return
 
 
-/obj/item/device/assembly/infra/interact(mob/user as mob)//TODO: change this this to the wire control panel
+/obj/item/device/assembly/infra/interact(mob/user)//TODO: change this this to the wire control panel
 	if(!secured)
 		return
 	user.set_machine(src)
 	var/dat = {"<tt><b>Infrared Laser</b><br>
-		<b>Status</b>: <a href='?src=\ref[src];state=[!on]'>[on ? "On" : "Off"]</a><br>
-		<b>Visibility</b>: <a href='?src=\ref[src];visible=[!visible]'>[visible ? "Visible" : "Invisible"]</a><br></tt>
-		<br><br><a href='?src=\ref[src];refresh=1'>Refresh</a>
-		<br><br><a href='?src=\ref[src];close=1'>Close</a>
+		<b>Status</b>: <a href='byond://?src=\ref[src];state=[!on]'>[on ? "On" : "Off"]</a><br>
+		<b>Visibility</b>: <a href='byond://?src=\ref[src];visible=[!visible]'>[visible ? "Visible" : "Invisible"]</a><br></tt>
+		<br><br><a href='byond://?src=\ref[src];refresh=1'>Refresh</a>
+		<br><br><a href='byond://?src=\ref[src];close=1'>Close</a>
 	"}
-	user << browse(dat, "window=infra")
+	user << browse(HTML_SKELETON(dat), "window=infra")
 	onclose(user, "infra")
 
 

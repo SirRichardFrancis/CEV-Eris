@@ -31,9 +31,9 @@
 /mob/living/carbon/Move(NewLoc, Dir = 0, step_x = 0, step_y = 0, var/glide_size_override = 0)
 	. = ..()
 	if(.)
-		if (src.nutrition && src.stat != 2)
+		if(src.nutrition && src.stat != 2)
 			src.adjustNutrition(-DEFAULT_HUNGER_FACTOR/10)
-			if (move_intent.flags & MOVE_INTENT_EXERTIVE)
+			if(move_intent.flags & MOVE_INTENT_EXERTIVE)
 				src.adjustNutrition(-DEFAULT_HUNGER_FACTOR/10)
 
 		if(is_watching == TRUE)
@@ -51,7 +51,7 @@
 				if(ishuman(src))
 					var/mob/living/carbon/human/H = src
 					var/obj/item/organ/external/organ = H.get_organ(BP_CHEST)
-					if (istype(organ))
+					if(istype(organ))
 						if(organ.take_damage(d, BRUTE))
 							H.UpdateDamageIcon()
 					H.updatehealth()
@@ -77,10 +77,10 @@
 	..()
 
 /mob/living/carbon/attack_hand(mob/M as mob)
-	if (ishuman(M))
+	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/external/temp = H.organs_by_name[BP_R_ARM]
-		if (H.hand)
+		if(H.hand)
 			temp = H.organs_by_name[BP_L_ARM]
 		if(temp && !temp.is_usable())
 			to_chat(H, "\red You can't use your [temp.name]")
@@ -90,12 +90,12 @@
 /mob/living/carbon/electrocute_act(var/shock_damage, var/obj/source, var/siemens_coeff = 1, var/def_zone = null)
 	if(status_flags & GODMODE)	return 0	//godmode
 	shock_damage *= siemens_coeff
-	if (shock_damage<1)
+	if(shock_damage<1)
 		return 0
 
 	src.apply_damage(shock_damage, BURN, def_zone, used_weapon="Electrocution")
 	playsound(loc, "sparks", 50, 1, -1)
-	if (shock_damage > 15)
+	if(shock_damage > 15)
 		src.visible_message(
 			"\red [src] was shocked by the [source]!", \
 			"\red <B>You feel a powerful shock course through your body!</B>", \
@@ -128,17 +128,17 @@
 
 	//Now we do the hand swapping
 	src.hand = !( src.hand )
-	for (var/obj/screen/inventory/hand/H in src.HUDinventory)
+	for(var/obj/screen/inventory/hand/H in src.HUDinventory)
 		H.update_icon()
 
 	var/obj/item/new_held = get_active_hand()
 
 	//Tell the old and new held items that they've been swapped
 
-	if (prev_held != new_held)
-		if (istype(prev_held))
+	if(prev_held != new_held)
+		if(istype(prev_held))
 			prev_held.swapped_from(src)
-		if (istype(new_held))
+		if(istype(new_held))
 			new_held.swapped_to(src)
 
 	return TRUE
@@ -157,13 +157,13 @@
 		swap_hand()
 
 /mob/living/carbon/proc/help_shake_act(mob/living/carbon/M)
-	if (src.health >= HEALTH_THRESHOLD_CRIT)
+	if(src.health >= HEALTH_THRESHOLD_CRIT)
 		if(src == M && ishuman(src))
 			var/mob/living/carbon/human/H = src
 			H.check_self_for_injuries()
-		else if (on_fire)
-			playsound(src.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
-			if (M.on_fire)
+		else if(on_fire)
+			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
+			if(M.on_fire)
 				M.visible_message(SPAN_WARNING("[M] tries to pat out [src]'s flames, but to no avail!"),
 				SPAN_WARNING("You try to pat out [src]'s flames, but to no avail! Put yourself out first!"))
 			else
@@ -171,26 +171,26 @@
 				SPAN_WARNING("You try to pat out [src]'s flames! Hot!"))
 				if(do_mob(M, src, 15))
 					src.fire_stacks -= 0.5
-					if (prob(10) && (M.fire_stacks <= 0))
+					if(prob(10) && (M.fire_stacks <= 0))
 						M.fire_stacks += 1
 					M.IgniteMob()
-					if (M.on_fire)
+					if(M.on_fire)
 						M.visible_message(SPAN_DANGER("The fire spreads from [src] to [M]!"),
 						SPAN_DANGER("The fire spreads to you as well!"))
 					else
 						src.fire_stacks -= 0.5 //Less effective than stop, drop, and roll - also accounting for the fact that it takes half as long.
-						if (src.fire_stacks <= 0)
+						if(src.fire_stacks <= 0)
 							M.visible_message(SPAN_WARNING("[M] successfully pats out [src]'s flames."),
 							SPAN_WARNING("You successfully pat out [src]'s flames."))
 							src.ExtinguishMob()
 							src.fire_stacks = 0
 		else
 			var/t_him = "it"
-			if (src.gender == MALE)
+			if(src.gender == MALE)
 				t_him = "him"
-			else if (src.gender == FEMALE)
+			else if(src.gender == FEMALE)
 				t_him = "her"
-			if (ishuman(src) && src:w_uniform)
+			if(ishuman(src) && src:w_uniform)
 				var/mob/living/carbon/human/H = src
 				H.w_uniform.add_fingerprint(M)
 
@@ -236,7 +236,7 @@
 			AdjustStunned(-3)
 			AdjustWeakened(-3)
 
-			playsound(src.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
+			playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
 
 /mob/living/carbon/proc/eyecheck()
 	return 0
@@ -270,7 +270,7 @@
 		V.fireAt(target, src)
 		return
 
-	if (istype(item, /obj/item/grab))
+	if(istype(item, /obj/item/grab))
 		var/obj/item/grab/G = item
 		item = G.throw_held() //throw the person instead of the grab
 		if(!item) return
@@ -285,7 +285,7 @@
 
 				M.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been thrown by [usr.name] ([usr.ckey]) from [start_T_descriptor] with the target [end_T_descriptor]</font>")
 				usr.attack_log += text("\[[time_stamp()]\] <font color='red'>Has thrown [M.name] ([M.ckey]) from [start_T_descriptor] with the target [end_T_descriptor]</font>")
-				msg_admin_attack("[usr.name] ([usr.ckey]) has thrown [M.name] ([M.ckey]) from [start_T_descriptor] with the target [end_T_descriptor] (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[usr.x];Y=[usr.y];Z=[usr.z]'>JMP</a>)")
+				msg_admin_attack("[usr.name] ([usr.ckey]) has thrown [M.name] ([M.ckey]) from [start_T_descriptor] with the target [end_T_descriptor] (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[usr.x];Y=[usr.y];Z=[usr.z]'>JMP</a>)")
 				item.throw_at(target, item.throw_range, item.throw_speed, src)
 				return
 
@@ -326,24 +326,24 @@
 	return 1
 
 /mob/living/carbon/restrained()
-	if (handcuffed)
+	if(handcuffed)
 		return 1
 	return
 
 /mob/living/carbon/u_equip(obj/item/W as obj)
 	if(!W)	return 0
 
-	else if (W == handcuffed)
+	else if(W == handcuffed)
 		handcuffed = null
 		update_inv_handcuffed()
 		if(buckled && buckled.buckle_require_restraints)
 			buckled.unbuckle_mob()
 
-	else if (W == legcuffed)
+	else if(W == legcuffed)
 		legcuffed = null
 		update_inv_legcuffed()
 	else
-	 ..()
+		..()
 
 /mob/living/carbon/verb/mob_sleep()
 	set name = "Sleep"
@@ -367,9 +367,9 @@
 	if(buckled)
 		return FALSE
 	stop_pulling()
-	if (slipped_on)
+	if(slipped_on)
 		to_chat(src, SPAN_WARNING("You slipped on [slipped_on]!"))
-		playsound(src.loc, 'sound/misc/slip.ogg', 50, 1, -3)
+		playsound(loc, 'sound/misc/slip.ogg', 50, 1, -3)
 	Weaken(stun_duration)
 
 	return TRUE
@@ -393,19 +393,19 @@
 		return null
 	return species.default_language ? all_languages[species.default_language] : null
 
-/mob/living/carbon/show_inv(mob/user as mob)
+/mob/living/carbon/show_inv(mob/user)
 	user.set_machine(src)
 	var/dat = {"
 	<B><HR><FONT size=3>[name]</FONT></B>
 	<BR><HR>
-	<BR><B>Head(Mask):</B> <A href='?src=\ref[src];item=mask'>[(wear_mask ? wear_mask : "Nothing")]</A>
-	<BR><B>Left Hand:</B> <A href='?src=\ref[src];item=l_hand'>[(l_hand ? l_hand  : "Nothing")]</A>
-	<BR><B>Right Hand:</B> <A href='?src=\ref[src];item=r_hand'>[(r_hand ? r_hand : "Nothing")]</A>
-	<BR><B>Back:</B> <A href='?src=\ref[src];item=back'>[(back ? back : "Nothing")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank) && !( internal )) ? text(" <A href='?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
-	<BR>[(internal ? text("<A href='?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
-	<BR><A href='?src=\ref[src];item=pockets'>Empty Pockets</A>
-	<BR><A href='?src=\ref[user];refresh=1'>Refresh</A>
-	<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>
+	<BR><B>Head(Mask):</B> <a href='byond://?src=\ref[src];item=mask'>[(wear_mask ? wear_mask : "Nothing")]</A>
+	<BR><B>Left Hand:</B> <a href='byond://?src=\ref[src];item=l_hand'>[(l_hand ? l_hand  : "Nothing")]</A>
+	<BR><B>Right Hand:</B> <a href='byond://?src=\ref[src];item=r_hand'>[(r_hand ? r_hand : "Nothing")]</A>
+	<BR><B>Back:</B> <a href='byond://?src=\ref[src];item=back'>[(back ? back : "Nothing")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/tank) && !( internal )) ? text(" <a href='byond://?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
+	<BR>[(internal ? text("<a href='byond://?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
+	<BR><a href='byond://?src=\ref[src];item=pockets'>Empty Pockets</A>
+	<BR><a href='byond://?src=\ref[user];refresh=1'>Refresh</A>
+	<BR><a href='byond://?src=\ref[user];mach_close=mob[name]'>Close</A>
 	<BR>"}
 
 	var/datum/browser/panel = new(user, "mob[name]", "Mob", 325, 400)

@@ -15,7 +15,7 @@
 	var/last_process_worldtime = 0
 	var/report_num = 0
 
-/obj/machinery/dnaforensics/attackby(var/obj/item/W, mob/user as mob)
+/obj/machinery/dnaforensics/attackby(var/obj/item/W, mob/user)
 
 	if(bloodsamp)
 		to_chat(user, SPAN_WARNING("There is already a sample in the machine."))
@@ -46,7 +46,7 @@
 	data["lidstate"] = closed
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "dnaforensics.tmpl", "QuikScan DNA Analyzer", 540, 326)
 		ui.set_initial_data(data)
 		ui.open()

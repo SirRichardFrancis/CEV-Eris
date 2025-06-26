@@ -57,13 +57,13 @@ var/const/GRAV_NEEDS_WRENCH = 3
 /obj/machinery/gravity_generator/part
 	var/obj/machinery/gravity_generator/main/main_part = null
 
-/obj/machinery/gravity_generator/part/attackby(obj/item/I as obj, mob/user as mob, params)
+/obj/machinery/gravity_generator/part/attackby(obj/item/I as obj, mob/user, params)
 	return main_part.attackby(I, user)
 
 /obj/machinery/gravity_generator/part/get_status()
 	return main_part.get_status()
 
-/obj/machinery/gravity_generator/part/attack_hand(mob/user as mob)
+/obj/machinery/gravity_generator/part/attack_hand(mob/user)
 	return main_part.attack_hand(user)
 
 /obj/machinery/gravity_generator/part/set_broken()
@@ -78,7 +78,7 @@ var/const/GRAV_NEEDS_WRENCH = 3
 /obj/machinery/gravity_generator/main/station/Initialize()
 	. = ..()
 	//Set ourselves in the global var
-	if (!GLOB.active_gravity_generator)
+	if(!GLOB.active_gravity_generator)
 		GLOB.active_gravity_generator = src
 
 //
@@ -181,7 +181,7 @@ var/const/GRAV_NEEDS_WRENCH = 3
 			if(PS.amount >= 10)
 				PS.use(10)
 				to_chat(user, SPAN_NOTICE("You add the plating to the framework."))
-				playsound(src.loc, 'sound/machines/click.ogg', 75, 1)
+				playsound(loc, 'sound/machines/click.ogg', 75, 1)
 				broken_state++
 			else
 				to_chat(user, SPAN_WARNING("You need 10 sheets of plasteel!"))
@@ -190,18 +190,18 @@ var/const/GRAV_NEEDS_WRENCH = 3
 	else
 		..()
 
-/obj/machinery/gravity_generator/main/attack_hand(mob/user as mob)
+/obj/machinery/gravity_generator/main/attack_hand(mob/user)
 	if(!..())
 		return interact(user)
 
-/obj/machinery/gravity_generator/main/interact(mob/user as mob)
+/obj/machinery/gravity_generator/main/interact(mob/user)
 	if(stat & BROKEN)
 		return
 	var/dat = "Gravity Generator Breaker: "
 	if(breaker)
-		dat += "<span class='linkOn'>ON</span> <A href='?src=\ref[src];gentoggle=1'>OFF</A>"
+		dat += "<span class='linkOn'>ON</span> <a href='byond://?src=\ref[src];gentoggle=1'>OFF</A>"
 	else
-		dat += "<A href='?src=\ref[src];gentoggle=1'>ON</A> <span class='linkOn'>OFF</span> "
+		dat += "<a href='byond://?src=\ref[src];gentoggle=1'>ON</A> <span class='linkOn'>OFF</span> "
 
 	dat += "<br>Generator Status:<br><div class='statusDisplay'>"
 	if(charging_state != POWER_IDLE)
@@ -283,7 +283,7 @@ var/const/GRAV_NEEDS_WRENCH = 3
 	priority_announcement.Announce("The gravity generator was brought fully operational.")
 	investigate_log("was brought full online and is now producing gravity.", "gravity")
 	var/area/area = get_area(src)
-	message_admins("The gravity generator was brought fully online. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>[area.name]</a>)")
+	message_admins("The gravity generator was brought fully online. (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>[area.name]</a>)")
 
 /obj/machinery/gravity_generator/main/proc/grav_off()
 	if(!LAZYLEN(SSmapping.main_ship_z_levels))
@@ -295,7 +295,7 @@ var/const/GRAV_NEEDS_WRENCH = 3
 	priority_announcement.Announce("The gravity generator was brought offline.")
 	investigate_log("was brought offline and there is now no gravity.", "gravity")
 	var/area/area = get_area(src)
-	message_admins("The gravity generator was brought offline with no backup generator. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>[area.name]</a>)")
+	message_admins("The gravity generator was brought offline with no backup generator. (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>[area.name]</a>)")
 	shake_everyone()
 
 /obj/machinery/gravity_generator/main/proc/update_gravity(var/is_on)
@@ -325,7 +325,7 @@ var/const/GRAV_NEEDS_WRENCH = 3
 				charge_count -= 2
 
 			if(charge_count % 4 == 0 && prob(75)) // Let them know it is charging/discharging.
-				playsound(src.loc, 'sound/effects/EMPulse.ogg', 100, 1)
+				playsound(loc, 'sound/effects/EMPulse.ogg', 100, 1)
 
 			updateDialog()
 			if(prob(25)) // To help stop "Your clothes feel warm." spam.

@@ -41,7 +41,7 @@
 			extra_description += "It's completely empty."
 	..(user, extra_description)
 
-/obj/machinery/cash_register/attack_hand(mob/user as mob)
+/obj/machinery/cash_register/attack_hand(mob/user)
 	// Don't be accessible from the wrong side of the machine
 	if(get_dir(src, user) & reverse_dir[src.dir]) return
 
@@ -61,17 +61,17 @@
 		open_cash_box()
 
 
-/obj/machinery/cash_register/interact(mob/user as mob)
+/obj/machinery/cash_register/interact(mob/user)
 	var/dat = "<h2>Cash Register<hr></h2>"
-	if (locked)
-		dat += "<a href='?src=\ref[src];choice=toggle_lock'>Unlock</a><br>"
+	if(locked)
+		dat += "<a href='byond://?src=\ref[src];choice=toggle_lock'>Unlock</a><br>"
 		dat += "Linked account: <b>[linked_account ? linked_account.owner_name : "None"]</b><br>"
 		dat += "<b>[cash_locked? "Unlock" : "Lock"] Cash Box</b> | "
 	else
-		dat += "<a href='?src=\ref[src];choice=toggle_lock'>Lock</a><br>"
-		dat += "Linked account: <a href='?src=\ref[src];choice=link_account'>[linked_account ? linked_account.owner_name : "None"]</a><br>"
-		dat += "<a href='?src=\ref[src];choice=toggle_cash_lock'>[cash_locked? "Unlock" : "Lock"] Cash Box</a> | "
-	dat += "<a href='?src=\ref[src];choice=custom_order'>Custom Order</a><hr>"
+		dat += "<a href='byond://?src=\ref[src];choice=toggle_lock'>Lock</a><br>"
+		dat += "Linked account: <a href='byond://?src=\ref[src];choice=link_account'>[linked_account ? linked_account.owner_name : "None"]</a><br>"
+		dat += "<a href='byond://?src=\ref[src];choice=toggle_cash_lock'>[cash_locked? "Unlock" : "Lock"] Cash Box</a> | "
+	dat += "<a href='byond://?src=\ref[src];choice=custom_order'>Custom Order</a><hr>"
 
 	if(item_list.len)
 		dat += get_current_transaction()
@@ -81,10 +81,10 @@
 		dat += "[transaction_logs[i]]<br>"
 
 	if(transaction_logs.len)
-		dat += locked ? "<br>" : "<a href='?src=\ref[src];choice=reset_log'>Reset Log</a><br>"
+		dat += locked ? "<br>" : "<a href='byond://?src=\ref[src];choice=reset_log'>Reset Log</a><br>"
 		dat += "<br>"
 	dat += "<i>Device ID:</i> [machine_id]"
-	user << browse(dat, "window=cash_register;size=350x500")
+	user << browse(HTML_SKELETON(dat), "window=cash_register;size=350x500")
 	onclose(user, "cash_register")
 
 
@@ -123,11 +123,11 @@
 					to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 			if("custom_order")
 				var/t_purpose = sanitize(input("Enter purpose", "New purpose") as text)
-				if (!t_purpose || !Adjacent(usr)) return
+				if(!t_purpose || !Adjacent(usr)) return
 				transaction_purpose = t_purpose
 				item_list += t_purpose
 				var/t_amount = round(input("Enter price", "New price") as num)
-				if (!t_amount || !Adjacent(usr)) return
+				if(!t_amount || !Adjacent(usr)) return
 				transaction_amount += t_amount
 				price_list += t_amount
 				playsound(src, 'sound/machines/twobeep.ogg', 25)
@@ -136,7 +136,7 @@
 				var/item_name = locate(href_list["item"])
 				var/n_amount = round(input("Enter amount", "New amount") as num)
 				n_amount = CLAMP(n_amount, 0, 20)
-				if (!item_list[item_name] || !Adjacent(usr)) return
+				if(!item_list[item_name] || !Adjacent(usr)) return
 				transaction_amount += (n_amount - item_list[item_name]) * price_list[item_name]
 				if(!n_amount)
 					item_list -= item_name
@@ -178,10 +178,10 @@
 	var/obj/item/card/id/I = O.GetIdCard()
 	if(I)
 		scan_card(I, O)
-	else if (istype(O, /obj/item/spacecash/ewallet))
+	else if(istype(O, /obj/item/spacecash/ewallet))
 		var/obj/item/spacecash/ewallet/E = O
 		scan_wallet(E)
-	else if (istype(O, /obj/item/spacecash))
+	else if(istype(O, /obj/item/spacecash))
 		var/obj/item/spacecash/SC = O
 		if(cash_open)
 			to_chat(user, "You neatly sort the cash into the box.")
@@ -219,10 +219,10 @@
 
 
 /obj/machinery/cash_register/proc/scan_card(obj/item/card/id/I, obj/item/ID_container)
-	if (!transaction_amount)
+	if(!transaction_amount)
 		return
 
-	if (cash_open)
+	if(cash_open)
 		playsound(src, 'sound/machines/buzz-sigh.ogg', 25)
 		to_chat(usr, "\icon[src]<span class='warning'>The cash box is open.</span>")
 		return
@@ -230,7 +230,7 @@
 	if((item_list.len > 1 || item_list[item_list[1]] > 1) && !confirm(I))
 		return
 
-	if (!linked_account)
+	if(!linked_account)
 		usr.visible_message("\icon[src]<span class='warning'>Unable to connect to linked account.</span>")
 		return
 
@@ -278,10 +278,10 @@
 
 
 /obj/machinery/cash_register/proc/scan_wallet(obj/item/spacecash/ewallet/E)
-	if (!transaction_amount)
+	if(!transaction_amount)
 		return
 
-	if (cash_open)
+	if(cash_open)
 		playsound(src, 'sound/machines/buzz-sigh.ogg', 25)
 		to_chat(usr, "\icon[src]<span class='warning'>The cash box is open.</span>")
 		return
@@ -310,10 +310,10 @@
 
 
 /obj/machinery/cash_register/proc/scan_cash(obj/item/spacecash/SC)
-	if (!transaction_amount)
+	if(!transaction_amount)
 		return
 
-	if (cash_open)
+	if(cash_open)
 		playsound(src, 'sound/machines/buzz-sigh.ogg', 25)
 		to_chat(usr, "\icon[src]<span class='warning'>The cash box is open.</span>")
 		return
@@ -346,7 +346,7 @@
 	if(item_list.len > 10)
 		src.visible_message("\icon[src]<span class='warning'>Only up to ten different items allowed per purchase.</span>")
 		return
-	if (cash_open)
+	if(cash_open)
 		playsound(src, 'sound/machines/buzz-sigh.ogg', 25)
 		to_chat(usr, "\icon[src]<span class='warning'>The cash box is open.</span>")
 		return
@@ -390,9 +390,9 @@
 	var/item_name
 	for(var/i=1, i<=item_list.len, i++)
 		item_name = item_list[i]
-		dat += "<tr><td class=\"tx-name-r\">[item_list[item_name] ? "<a href='?src=\ref[src];choice=subtract;item=\ref[item_name]'>-</a> <a href='?src=\ref[src];choice=set_amount;item=\ref[item_name]'>Set</a> <a href='?src=\ref[src];choice=add;item=\ref[item_name]'>+</a> [item_list[item_name]] x " : ""][item_name] <a href='?src=\ref[src];choice=clear;item=\ref[item_name]'>Remove</a></td><td class=\"tx-data-r\" width=50>[price_list[item_name] * item_list[item_name]] &thorn</td></tr>"
+		dat += "<tr><td class=\"tx-name-r\">[item_list[item_name] ? "<a href='byond://?src=\ref[src];choice=subtract;item=\ref[item_name]'>-</a> <a href='byond://?src=\ref[src];choice=set_amount;item=\ref[item_name]'>Set</a> <a href='byond://?src=\ref[src];choice=add;item=\ref[item_name]'>+</a> [item_list[item_name]] x " : ""][item_name] <a href='byond://?src=\ref[src];choice=clear;item=\ref[item_name]'>Remove</a></td><td class=\"tx-data-r\" width=50>[price_list[item_name] * item_list[item_name]] &thorn</td></tr>"
 	dat += "</table><table width=300>"
-	dat += "<tr><td class=\"tx-name-r\"><a href='?src=\ref[src];choice=clear'>Clear Entry</a></td><td class=\"tx-name-r\" style='text-align: right'><b>Total Amount: [transaction_amount] &thorn</b></td></tr>"
+	dat += "<tr><td class=\"tx-name-r\"><a href='byond://?src=\ref[src];choice=clear'>Clear Entry</a></td><td class=\"tx-name-r\" style='text-align: right'><b>Total Amount: [transaction_amount] &thorn</b></td></tr>"
 	dat += "</table></html>"
 	return dat
 
@@ -424,7 +424,7 @@
 
 
 /obj/machinery/cash_register/proc/check_account()
-	if (!linked_account)
+	if(!linked_account)
 		usr.visible_message("\icon[src]<span class='warning'>Unable to connect to linked account.</span>")
 		return 0
 
@@ -479,27 +479,25 @@
 	manipulating = 1
 	if(!anchored)
 		user.visible_message("\The [user] begins securing \the [src] to the floor.",
-	                         "You begin securing \the [src] to the floor.")
+							"You begin securing \the [src] to the floor.")
 	else
 		user.visible_message(SPAN_WARNING("\The [user] begins unsecuring \the [src] from the floor."),
-	                         "You begin unsecuring \the [src] from the floor.")
-	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+							"You begin unsecuring \the [src] from the floor.")
+	playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
 	if(!do_after(user, 20))
 		manipulating = 0
 		return
 	if(!anchored)
 		user.visible_message(SPAN_NOTICE("\The [user] has secured \the [src] to the floor."),
-	                         SPAN_NOTICE("You have secured \the [src] to the floor."))
+							SPAN_NOTICE("You have secured \the [src] to the floor."))
 	else
 		user.visible_message(SPAN_WARNING("\The [user] has unsecured \the [src] from the floor."),
-	                         SPAN_NOTICE("You have unsecured \the [src] from the floor."))
+							SPAN_NOTICE("You have unsecured \the [src] from the floor."))
 	anchored = !anchored
 	manipulating = 0
-	return
 
 
-
-/obj/machinery/cash_register/emag_act(var/remaining_charges, var/mob/user)
+/obj/machinery/cash_register/emag_act(remaining_charges, mob/user)
 	if(!emagged)
 		src.visible_message(SPAN_DANGER("The [src]'s cash box springs open as [user] swipes the card through the scanner!"))
 		playsound(src, "sparks", 50, 1)

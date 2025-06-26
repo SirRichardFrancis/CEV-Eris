@@ -8,15 +8,14 @@
 	circuit = /obj/item/electronics/circuitboard/prisoner
 	var/locked = TRUE
 
-
-/obj/machinery/computer/prisoner/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/prisoner/attack_hand(mob/user)
 	if(..())
 		return
 	user.set_machine(src)
 	var/dat
 	dat += "<B>Prisoner Implant Manager System</B><BR>"
 	if(locked)
-		dat += "<HR><A href='?src=\ref[src];lock=1'>Unlock Console</A>"
+		dat += "<HR><a href='byond://?src=\ref[src];lock=1'>Unlock Console</A>"
 	else
 		dat += "<HR>Chemical Implants<BR>"
 		var/turf/Tr = null
@@ -25,9 +24,9 @@
 			if((Tr) && !IS_SHIP_LEVEL(Tr.z)) continue //Out of range
 			if(!C.implanted) continue
 			dat += "[C.wearer.name] | Remaining Units: [C.reagents.total_volume] | Inject: "
-			dat += "<A href='?src=\ref[src];inject=\ref[C];amount=1'>(<font color=red>(1)</font>)</A>"
-			dat += "<A href='?src=\ref[src];inject=\ref[C];amount=5'>(<font color=red>(5)</font>)</A>"
-			dat += "<A href='?src=\ref[src];inject=\ref[C];amount=10'>(<font color=red>(10)</font>)</A><BR>"
+			dat += "<a href='byond://?src=\ref[src];inject=\ref[C];amount=1'>(<font color=red>(1)</font>)</A>"
+			dat += "<a href='byond://?src=\ref[src];inject=\ref[C];amount=5'>(<font color=red>(5)</font>)</A>"
+			dat += "<a href='byond://?src=\ref[src];inject=\ref[C];amount=10'>(<font color=red>(10)</font>)</A><BR>"
 			dat += "********************************<BR>"
 		dat += "<HR>Tracking Implants<BR>"
 		for(var/obj/item/implant/tracking/T in world)
@@ -42,20 +41,16 @@
 			if(T.malfunction)
 				loc_display = pick(SSmapping.main_ship_areas_by_name)
 			dat += "ID: [T.gps.serial_number] | Location: [loc_display]<BR>"
-			dat += "<A href='?src=\ref[src];warn=\ref[T]'>(<font color=red><i>Message Holder</i></font>)</A> |<BR>"
+			dat += "<a href='byond://?src=\ref[src];warn=\ref[T]'>(<font color=red><i>Message Holder</i></font>)</A> |<BR>"
 			dat += "********************************<BR>"
-		dat += "<HR><A href='?src=\ref[src];lock=1'>Lock Console</A>"
+		dat += "<HR><a href='byond://?src=\ref[src];lock=1'>Lock Console</A>"
 
-	user << browse(dat, "window=computer;size=400x500")
+	user << browse(HTML_SKELETON(dat), "window=computer;size=400x500")
 	onclose(user, "computer")
-	return
-
 
 /obj/machinery/computer/prisoner/Process()
 	if(!..())
-		src.updateDialog()
-	return
-
+		updateDialog()
 
 /obj/machinery/computer/prisoner/Topic(href, href_list)
 	if(..())
@@ -69,7 +64,7 @@
 			I.activate(amount)
 
 	else if(href_list["lock"])
-		if(src.allowed(usr))
+		if(allowed(usr))
 			locked = !locked
 		else
 			to_chat(usr, "Unauthorized Access.")
@@ -82,6 +77,5 @@
 			var/mob/living/carbon/R = I.wearer
 			to_chat(R, SPAN_NOTICE("You hear a voice in your head saying: '[warning]'"))
 
-	src.add_fingerprint(usr)
-	src.updateUsrDialog()
-	return
+	add_fingerprint(usr)
+	updateUsrDialog()

@@ -197,7 +197,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-/obj/machinery/attack_ai(mob/user as mob)
+/obj/machinery/attack_ai(mob/user)
 	if(isrobot(user))
 		// For some reason attack_robot doesn't work
 		// This is to stop robots from using cameras to remotely control machines.
@@ -206,7 +206,7 @@
 	else
 		return src.attack_hand(user)
 
-/obj/machinery/attack_hand(mob/user as mob)
+/obj/machinery/attack_hand(mob/user)
 	if(inoperable(MAINT))
 		return 1
 	if(user.lying || user.stat)
@@ -224,7 +224,7 @@
 			to_chat(user, SPAN_WARNING("You momentarily forget how to use \the [src]."))
 			return 1
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	return ..()
 
@@ -282,7 +282,7 @@
 
 /obj/machinery/proc/ping(text="\The [src] pings.")
 	state(text, "blue")
-	playsound(src.loc, 'sound/machines/ping.ogg', 50, 0)
+	playsound(loc, 'sound/machines/ping.ogg', 50, 0)
 
 /obj/machinery/proc/shock(mob/user, prb)
 	if(inoperable())

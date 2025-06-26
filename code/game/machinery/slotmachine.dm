@@ -55,7 +55,7 @@
 	for(var/slot in slots)
 		if(win_slot == null)
 			win_slot = slots[slot]
-		else if (win_slot != slots[slot])
+		else if(win_slot != slots[slot])
 			return FALSE
 	return TRUE
 
@@ -84,15 +84,15 @@
 
 		src.visible_message(SPAN_NOTICE("The reel stops at... \the [slots[slot]]!"))
 
-		playsound(src.loc, 'sound/machines/ping.ogg', 50, 1)
+		playsound(loc, 'sound/machines/ping.ogg', 50, 1)
 
 /obj/machinery/slotmachine/proc/check_win(mob/user)
 	if(check_streak())
-		playsound(src.loc, 'sound/machines/ping.ogg', 50, 1)
+		playsound(loc, 'sound/machines/ping.ogg', 50, 1)
 		var/weight = weights[slots["1"]]
 		var/prize = bet * weight
 
-		if (weight == "Seven")//cccccombo win, jackpot!
+		if(weight == "Seven")//cccccombo win, jackpot!
 			prize = jackpot
 			jackpot = 0
 			src.visible_message("<b>[name]</b> states, \"Damn son! JACKPOT!!! Congratulations!\"")
@@ -107,47 +107,47 @@
 /obj/machinery/slotmachine/proc/pull_leaver(mob/user)
 	sleep(5)
 	if(!check_win(user))// if we have not won anything - jackpot or regular bet
-		playsound(src.loc, 'sound/machines/buzz-sigh.ogg', 50, 1)
+		playsound(loc, 'sound/machines/buzz-sigh.ogg', 50, 1)
 		src.visible_message("<b>[name]</b> states, \"Sorry, maybe, next time..\"")
 		jackpot += bet
 
 /obj/machinery/slotmachine/attack_hand(mob/user)
-	if (spinning)
+	if(spinning)
 		to_chat(user, SPAN_WARNING("It is currently spinning."))
 		return
 
-	if (bet == 0)
+	if(bet == 0)
 		to_chat(user, SPAN_NOTICE("Today's jackpot: $[jackpot]. Insert 1-1000 Credits."))
 	else
 		spinning = TRUE
 		plays++
 
 		src.visible_message("<b>[name]</b> states, \"Your bet is $[bet]. Goodluck, buddy!\"")
-		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
+		playsound(loc, 'sound/machines/click.ogg', 50, 1)
 
 		set_spin_ovarlay()
-		
+
 		set_pull_overlay()
 
 		set_slots_overlay()
 
 		pull_leaver(user)
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	update_icon()
 	bet = 0
 	spinning = FALSE
 
 /obj/machinery/slotmachine/attackby(obj/item/S, mob/user)
-	if (spinning)
+	if(spinning)
 		return
 
 	if(default_deconstruction(S, user))
 		return
 
-	if (istype(S, /obj/item/spacecash))
+	if(istype(S, /obj/item/spacecash))
 		var/obj/item/spacecash/cash = S
-		if ((cash.worth > 0) && (bet + cash.worth <= 1000))
+		if((cash.worth > 0) && (bet + cash.worth <= 1000))
 			to_chat(user, SPAN_NOTICE("You insert [cash.worth] Credits into [src]."))
 			bet += cash.worth
 			user.drop_from_inventory(cash)
@@ -155,11 +155,11 @@
 		else
 			to_chat(user, SPAN_WARNING("You must bet 1-[1000 - bet] Credits! Can't insert [cash.worth], that's too much."))
 
-	else if (istype(S, /obj/item/coin))
+	else if(istype(S, /obj/item/coin))
 		to_chat(user, SPAN_NOTICE("You add the [S.name] into the [src]. It will slightly increase chance to win."))
 		user.drop_from_inventory(S)
 		bet = 100
 		plays += 10
 		qdel(S)
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)

@@ -4,7 +4,7 @@
 /datum/admin_secret_item/admin_secret/show_signalers/name()
 	return "Show Last [length(lastsignalers)] Signaler\s"
 
-/datum/admin_secret_item/admin_secret/show_signalers/execute(var/mob/user)
+/datum/admin_secret_item/admin_secret/show_signalers/execute(mob/user)
 	. = ..()
 	if(!.)
 		return
@@ -12,4 +12,4 @@
 	var/dat = "<B>Showing last [length(lastsignalers)] signalers.</B><HR>"
 	for(var/sig in lastsignalers)
 		dat += "[sig]<BR>"
-	user << browse(dat, "window=lastsignalers;size=800x500")
+	user << browse(HTML_SKELETON(dat), "window=lastsignalers;size=800x500")

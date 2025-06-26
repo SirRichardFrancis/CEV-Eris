@@ -28,11 +28,11 @@
 	else
 		src.examine(M)
 
-obj/item/board/attackby(obj/item/I as obj, mob/user as mob)
+obj/item/board/attackby(obj/item/I as obj, mob/user)
 	if(!addPiece(I,user))
 		..()
 
-/obj/item/board/proc/addPiece(obj/item/I as obj, mob/user as mob, var/tile = 0)
+/obj/item/board/proc/addPiece(obj/item/I as obj, mob/user, var/tile = 0)
 	if(I.w_class != ITEM_SIZE_TINY) //only small stuff
 		user.show_message(SPAN_WARNING("\The [I] is too big to be used as a board piece."))
 		return 0
@@ -67,7 +67,7 @@ obj/item/board/attackby(obj/item/I as obj, mob/user as mob)
 	return 1
 
 
-/obj/item/board/interact(mob/user as mob)
+/obj/item/board/interact(mob/user)
 	if(user.is_physically_disabled() || (!isAI(user) && !user.Adjacent(src))) //can't see if you arent conscious. If you are not an AI you can't see it unless you are next to it, either.
 		user << browse(null, "window=boardgame")
 		user.unset_machine()
@@ -98,14 +98,14 @@ obj/item/board/attackby(obj/item/I as obj, mob/user as mob)
 			dat+= ">"
 
 		if(!isobserver(user))
-			dat += "<a href='?src=\ref[src];select=[i];person=\ref[user]'></a>"
+			dat += "<a href='byond://?src=\ref[src];select=[i];person=\ref[user]'></a>"
 		dat += "</td>"
 
 	dat += "</table>"
 
 	if(selected >= 0 && !isobserver(user))
-		dat += "<br><A href='?src=\ref[src];remove=0'>Remove Selected Piece</A>"
-	user << browse(jointext(dat, null),"window=boardgame;size=250x250")
+		dat += "<br><a href='byond://?src=\ref[src];remove=0'>Remove Selected Piece</A>"
+	user << browse(HTML_SKELETON(jointext(dat, null)),"window=boardgame;size=250x250")
 	onclose(usr, "boardgame")
 
 /obj/item/board/Topic(href, href_list)

@@ -14,7 +14,7 @@
 	var/swap_time = 200  // Time from starting until minds are swapped
 	var/swap_range = 1
 	var/list/swap_blacklist = list(/mob/living/simple_animal/hostile/megafauna,
-	                               /mob/living/simple_animal/cat/runtime)
+									/mob/living/simple_animal/cat/runtime)
 
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 2
@@ -23,12 +23,12 @@
 /obj/machinery/mindswapper/update_icon()
 	if(stat & (NOPOWER|BROKEN))
 		return
-	if (operating)
+	if(operating)
 		icon_state = "mindswap_on"
 	else
 		icon_state = "mindswap_off"
 
-/obj/machinery/mindswapper/attack_hand(mob/user as mob)
+/obj/machinery/mindswapper/attack_hand(mob/user)
 	if(stat & (NOPOWER|BROKEN))
 		return
 	if(operating)
@@ -57,7 +57,7 @@
 		swap_time = 200
 	return 1
 
-/obj/machinery/mindswapper/proc/startswapping(mob/user as mob)
+/obj/machinery/mindswapper/proc/startswapping(mob/user)
 	if(operating)
 		return
 
@@ -67,20 +67,20 @@
 	update_icon()
 
 	user.attack_log += "\[[time_stamp()]\] Triggered the mind swapper</b>"
-	msg_admin_attack("[user.name] ([user.ckey]) triggered the mind swapper (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+	msg_admin_attack("[user.name] ([user.ckey]) triggered the mind swapper (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 
 	addtimer(CALLBACK(src, PROC_REF(performswapping)), swap_time, TIMER_STOPPABLE)
 
-/obj/machinery/mindswapper/proc/performswapping(mob/user as mob)
+/obj/machinery/mindswapper/proc/performswapping(mob/user)
 	operating = FALSE
-	playsound(src.loc, 'sound/effects/splat.ogg', 50, 1)
+	playsound(loc, 'sound/effects/splat.ogg', 50, 1)
 	operating = FALSE
 
 	// Get all candidates in range for the mind swapping
 	var/list/swapBoddies = list()
 	var/list/swapMinds = list()
 	for(var/mob/living/M in range(swap_range,src))
-		if (M.stat != DEAD && M.mob_classification != CLASSIFICATION_SYNTHETIC && !(M.type in swap_blacklist))  // candidates should not be dead
+		if(M.stat != DEAD && M.mob_classification != CLASSIFICATION_SYNTHETIC && !(M.type in swap_blacklist))  // candidates should not be dead
 			swapBoddies += M
 			swapMinds += M.ghostize(0)
 	// Shuffle the list containing the candidates' boddies

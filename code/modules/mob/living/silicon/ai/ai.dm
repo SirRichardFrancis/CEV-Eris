@@ -36,10 +36,10 @@ var/list/ai_verbs_default = list(
 //Not sure why this is necessary...
 /proc/AutoUpdateAI(obj/subject)
 	var/is_in_use = 0
-	if (subject!=null)
+	if(subject!=null)
 		for(var/A in ai_list)
 			var/mob/living/silicon/ai/M = A
-			if ((M.client && M.machine == subject))
+			if((M.client && M.machine == subject))
 				is_in_use = 1
 				subject.attack_ai(M)
 	return is_in_use
@@ -124,7 +124,7 @@ var/list/ai_verbs_default = list(
 /mob/living/silicon/ai/proc/remove_ai_verbs()
 	remove_verb(src, ai_verbs_default)
 
-/mob/living/silicon/ai/MiddleClickOn(var/atom/A)
+/mob/living/silicon/ai/MiddleClickOn(atom/A)
 	if(!control_disabled && A.AIMiddleClick(src))
 		return
 
@@ -133,7 +133,7 @@ var/list/ai_verbs_default = list(
 		return
 	. = ..()
 
-/mob/living/silicon/ai/New(loc, var/datum/ai_laws/L, var/obj/item/device/mmi/B, var/safety = 0)
+/mob/living/silicon/ai/New(loc, datum/ai_laws/L, obj/item/device/mmi/B, safety = 0)
 	announcement = new()
 	announcement.title = "A.I. Announcement"
 	announcement.announcement_type = "A.I. Announcement"
@@ -144,8 +144,8 @@ var/list/ai_verbs_default = list(
 	var/pickedName = null
 	while(!pickedName)
 		pickedName = pick(GLOB.ai_names)
-		for (var/mob/living/silicon/ai/A in SSmobs.mob_list)
-			if (A.real_name == pickedName && possibleNames.len > 1) //fixing the theoretically possible infinite loop
+		for(var/mob/living/silicon/ai/A in SSmobs.mob_list)
+			if(A.real_name == pickedName && possibleNames.len > 1) //fixing the theoretically possible infinite loop
 				possibleNames -= pickedName
 				pickedName = null
 
@@ -158,7 +158,7 @@ var/list/ai_verbs_default = list(
 	holo_icon = getHologramIcon(icon('icons/mob/AI.dmi',"holo1"))
 
 	if(L)
-		if (istype(L, /datum/ai_laws))
+		if(istype(L, /datum/ai_laws))
 			laws = L
 	else
 		laws = new base_law_type
@@ -171,7 +171,7 @@ var/list/ai_verbs_default = list(
 
 	aiCamera = new/obj/item/device/camera/siliconcam/ai_camera(src)
 
-	if (istype(loc, /turf))
+	if(istype(loc, /turf))
 		add_ai_verbs(src)
 
 	//Languages
@@ -184,12 +184,12 @@ var/list/ai_verbs_default = list(
 	add_language(LANGUAGE_SERBIAN, 1)
 
 	if(!safety)//Only used by AIize() to successfully spawn an AI.
-		if (!B)//If there is no player/brain inside.
+		if(!B)//If there is no player/brain inside.
 			empty_playable_ai_cores += new/obj/structure/AIcore/deactivated(loc)//New empty terminal.
 			qdel(src)//Delete AI.
 			return
 		else
-			if (B.brainmob.mind)
+			if(B.brainmob.mind)
 				B.brainmob.mind.transfer_to(src)
 
 			on_mob_init()
@@ -239,7 +239,7 @@ var/list/ai_verbs_default = list(
 
 	to_chat(src, radio_text)
 
-	if (!check_special_role(ROLE_MALFUNCTION))
+	if(!check_special_role(ROLE_MALFUNCTION))
 		show_laws()
 		to_chat(src, "<b>These laws may be changed by other players, or by you being the contractor.</b>")
 
@@ -300,7 +300,7 @@ var/list/ai_verbs_default = list(
 	var/mob/living/silicon/ai/powered_ai
 	invisibility = 100
 
-/obj/machinery/ai_powersupply/New(var/mob/living/silicon/ai/ai)
+/obj/machinery/ai_powersupply/New(mob/living/silicon/ai/ai)
 	powered_ai = ai
 	powered_ai.psupply = src
 	forceMove(powered_ai.loc)
@@ -346,7 +346,7 @@ var/list/ai_verbs_default = list(
 	if(stat || aiRestorePowerRoutine)
 		return
 
-	if (!custom_sprite)
+	if(!custom_sprite)
 		var/new_sprite = input("Select an icon!", "AI", selected_sprite) as null|anything in ai_icons
 		if(new_sprite) selected_sprite = new_sprite
 	updateicon()
@@ -403,8 +403,8 @@ var/list/ai_verbs_default = list(
 		emergency_message_cooldown = 0
 
 
-/mob/living/silicon/ai/check_eye(var/mob/user as mob)
-	if (!camera)
+/mob/living/silicon/ai/check_eye(mob/user)
+	if(!camera)
 		return -1
 	return 0
 
@@ -413,7 +413,7 @@ var/list/ai_verbs_default = list(
 
 /mob/living/silicon/ai/emp_act(severity)
 	pull_to_core()  // Pull back mind to core if it is controlling a drone
-	if (prob(30))
+	if(prob(30))
 		view_core()
 	..()
 
@@ -422,25 +422,25 @@ var/list/ai_verbs_default = list(
 		return
 	if(..())
 		return
-	if (href_list["mach_close"])
-		if (href_list["mach_close"] == "aialerts")
+	if(href_list["mach_close"])
+		if(href_list["mach_close"] == "aialerts")
 			viewalerts = 0
 		var/t1 = text("window=[]", href_list["mach_close"])
 		unset_machine()
 		src << browse(null, t1)
-	if (href_list["switchcamera"])
+	if(href_list["switchcamera"])
 		switchCamera(locate(href_list["switchcamera"])) in cameranet.cameras
-	if (href_list["showalerts"])
+	if(href_list["showalerts"])
 		open_subsystem(/datum/nano_module/alarm_monitor/all)
 	//Carn: holopad requests
-	if (href_list["jumptoholopad"])
+	if(href_list["jumptoholopad"])
 		var/obj/machinery/hologram/holopad/H = locate(href_list["jumptoholopad"])
 		if(stat == CONSCIOUS)
 			if(H)
 				H.attack_ai(src) //may as well recycle
 			else
 				to_chat(src, SPAN_NOTICE("Unable to locate the holopad."))
-	if (href_list["track"])
+	if(href_list["track"])
 		var/mob/target = locate(href_list["track"]) in SSmobs.mob_list | SShumans.mob_list
 		if(target && (!ishuman(target) || target.real_name == target.get_face_name()))
 			ai_actual_track(target)
@@ -465,8 +465,8 @@ var/list/ai_verbs_default = list(
 			A.set_light(0)
 
 
-/mob/living/silicon/ai/proc/switchCamera(var/obj/machinery/camera/C)
-	if (!C || stat == DEAD) //C.can_use())
+/mob/living/silicon/ai/proc/switchCamera(obj/machinery/camera/C)
+	if(!C || stat == DEAD) //C.can_use())
 		return 0
 
 	if(!src.eyeobj)
@@ -493,7 +493,7 @@ var/list/ai_verbs_default = list(
 		return
 
 	var/list/cameralist = new()
-	for (var/obj/machinery/camera/C in cameranet.cameras)
+	for(var/obj/machinery/camera/C in cameranet.cameras)
 		if(!C.can_use())
 			continue
 		var/list/tempnetwork = difflist(C.network,restricted_camera_networks,1)
@@ -503,7 +503,7 @@ var/list/ai_verbs_default = list(
 	cameralist = sortAssoc(cameralist)
 	return cameralist
 
-/mob/living/silicon/ai/proc/ai_network_change(var/network in get_camera_network_list())
+/mob/living/silicon/ai/proc/ai_network_change(network in get_camera_network_list())
 	set category = "Silicon Commands"
 	set name = "Jump To Network"
 	unset_machine()
@@ -578,7 +578,6 @@ var/list/ai_verbs_default = list(
 					holo_icon = getHologramIcon(icon('icons/mob/AI.dmi',"holo2"))
 				if("carp")
 					holo_icon = getHologramIcon(icon('icons/mob/AI.dmi',"holo4"))
-	return
 
 //Toggles the luminosity and applies it by re-entereing the camera.
 /mob/living/silicon/ai/proc/toggle_camera_light()
@@ -599,10 +598,8 @@ var/list/ai_verbs_default = list(
 		lightNearbyCamera()
 
 
-
 // Handled camera lighting, when toggled.
 // It will get the nearest camera from the eyeobj, lighting it.
-
 /mob/living/silicon/ai/proc/lightNearbyCamera()
 	if(camera_light_on && camera_light_on < world.timeofday)
 		if(src.camera)
@@ -625,7 +622,7 @@ var/list/ai_verbs_default = list(
 		camera_light_on = world.timeofday + 1 * 20 // Update the light every 2 seconds.
 
 
-/mob/living/silicon/ai/attackby(obj/item/W as obj, mob/user as mob)
+/mob/living/silicon/ai/attackby(obj/item/W , mob/user)
 	if(istype(W, /obj/item/device/aicard))
 		pull_to_core()  // Pull back mind to core if it is controlling a drone
 		var/obj/item/device/aicard/card = W
@@ -661,7 +658,7 @@ var/list/ai_verbs_default = list(
 		return
 
 	to_chat(src, "Accessing Subspace Transceiver control...")
-	if (src.aiRadio)
+	if(src.aiRadio)
 		src.aiRadio.interact(src)
 
 /mob/living/silicon/ai/proc/sensor_mode()
@@ -678,7 +675,7 @@ var/list/ai_verbs_default = list(
 	hologram_follow = !hologram_follow
 	to_chat(usr, "<span class='info'>Your hologram will now [hologram_follow ? "follow" : "no longer follow"] you.</span>")
 
-/mob/living/silicon/ai/proc/check_unable(var/flags = 0, var/feedback = 1)
+/mob/living/silicon/ai/proc/check_unable(flags = 0, feedback = 1)
 	if(stat == DEAD)
 		if(feedback) to_chat(src, SPAN_WARNING("You are dead!"))
 		return 1
@@ -739,7 +736,7 @@ var/list/ai_verbs_default = list(
 
 // Handles all necessary power checks: Area power, inteliCard and Malf AI APU power and manual override.
 //just a plug for now untill baymed arrives
-/mob/living/silicon/ai/proc/has_power(var/respect_override = 1)
+/mob/living/silicon/ai/proc/has_power(respect_override = 1)
 	return 1
 
 // shortcuts for UI
@@ -774,7 +771,7 @@ var/list/ai_verbs_default = list(
 		destroy_drone()
 
 /mob/living/silicon/ai/proc/pull_to_core()
-	if (bound_drone?.mind)  // If drone exists and AI is inside it
+	if(bound_drone?.mind)  // If drone exists and AI is inside it
 		bound_drone.mind.active = 0 // We want to transfer the key manually
 		bound_drone.mind.transfer_to(src) // Pull back mind to AI core
 		key = bound_drone.key // Manually transfer the key to log them in
@@ -782,7 +779,7 @@ var/list/ai_verbs_default = list(
 /mob/living/silicon/ai/proc/go_into_drone()
 	// Switch to drone or spawn a new one
 	if(!bound_drone)
-		if (world.time - time_destroyed > drone_cooldown_time)
+		if(world.time - time_destroyed > drone_cooldown_time)
 			try_drone_spawn(src, aibound = TRUE)
 		else
 			var/remaining = (drone_cooldown_time - (world.time - time_destroyed)) / 10

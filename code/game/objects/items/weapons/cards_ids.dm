@@ -34,11 +34,11 @@
 	set category = "Object"
 	set src in usr
 
-	if (t)
+	if(t)
 		src.name = text("data disk- '[]'", t)
 	else
 		src.name = "data disk"
-	src.add_fingerprint(usr)
+	add_fingerprint(usr)
 	return
 
 /obj/item/card/data/clown
@@ -135,7 +135,7 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/card/id/proc/prevent_tracking()
 	return 0
 
-/obj/item/card/id/proc/show(mob/user as mob)
+/obj/item/card/id/proc/show(mob/user)
 	if(front && side)
 		user << browse_rsc(front, "front.png")
 		user << browse_rsc(side, "side.png")
@@ -179,11 +179,11 @@ var/const/NO_EMAG_ACT = -50
 	dat += "</tr></table>"
 	return dat
 
-/obj/item/card/id/attack_self(mob/user as mob)
+/obj/item/card/id/attack_self(mob/user)
 	user.visible_message("\The [user] shows you: \icon[src] [src.name]. The assignment on the card: [src.assignment]",\
 		"You flash your ID card: \icon[src] [src.name]. The assignment on the card: [src.assignment]")
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	return
 
 /obj/item/card/id/GetAccess()

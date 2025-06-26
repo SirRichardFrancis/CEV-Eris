@@ -1,63 +1,63 @@
 /*
-  HOW IT WORKS
+HOW IT WORKS
 
-  The SSradio is a global object maintaining all radio transmissions, think about it as about "ether".
-  Note that walkie-talkie, intercoms and headsets handle transmission using nonstandard way.
-  procs:
+The SSradio is a global object maintaining all radio transmissions, think about it as about "ether".
+Note that walkie-talkie, intercoms and headsets handle transmission using nonstandard way.
+procs:
 
-    add_object(obj/device as obj, var/new_frequency as num, var/filter as text|null = null)
-      Adds listening object.
-      parameters:
-        device - device receiving signals, must have proc receive_signal (see description below).
-          one device may listen several frequencies, but not same frequency twice.
-        new_frequency - see possibly frequencies below;
-        filter - thing for optimization. Optional, but recommended.
-                 All filters should be consolidated in this file, see defines later.
-                 Device without listening filter will receive all signals (on specified frequency).
-                 Device with filter will receive any signals sent without filter.
-                 Device with filter will not receive any signals sent with different filter.
-      returns:
-       Reference to frequency object.
+	add_object(obj/device as obj, var/new_frequency as num, var/filter as text|null = null)
+	Adds listening object.
+	parameters:
+		device - device receiving signals, must have proc receive_signal (see description below).
+		one device may listen several frequencies, but not same frequency twice.
+		new_frequency - see possibly frequencies below;
+		filter - thing for optimization. Optional, but recommended.
+				All filters should be consolidated in this file, see defines later.
+				Device without listening filter will receive all signals (on specified frequency).
+				Device with filter will receive any signals sent without filter.
+				Device with filter will not receive any signals sent with different filter.
+	returns:
+	Reference to frequency object.
 
-    remove_object (obj/device, old_frequency)
-      Obliviously, after calling this proc, device will not receive any signals on old_frequency.
-      Other frequencies will left unaffected.
+	remove_object (obj/device, old_frequency)
+	Obliviously, after calling this proc, device will not receive any signals on old_frequency.
+	Other frequencies will left unaffected.
 
-   return_frequency(var/frequency as num)
-      returns:
-       Reference to frequency object. Use it if you need to send and do not need to listen.
+	return_frequency(var/frequency as num)
+	returns:
+	Reference to frequency object. Use it if you need to send and do not need to listen.
 
-  radio_frequency is a global object maintaining list of devices that listening specific frequency.
-  procs:
+	radio_frequency is a global object maintaining list of devices that listening specific frequency.
+	procs:
 
-    post_signal(obj/source as obj|null, datum/signal/signal, var/filter as text|null = null, var/range as num|null = null)
-      Sends signal to all devices that wants such signal.
-      parameters:
-        source - object, emitted signal. Usually, devices will not receive their own signals.
-        signal - see description below.
-        filter - described above.
-        range - radius of regular byond's square circle on that z-level. null means everywhere, on all z-levels.
+	post_signal(obj/source as obj|null, datum/signal/signal, var/filter as text|null = null, var/range as num|null = null)
+		Sends signal to all devices that wants such signal.
+		parameters:
+		source - object, emitted signal. Usually, devices will not receive their own signals.
+		signal - see description below.
+		filter - described above.
+		range - radius of regular byond's square circle on that z-level. null means everywhere, on all z-levels.
 
-  obj/proc/receive_signal(datum/signal/signal, var/receive_method as num, var/receive_param)
-    Handler from received signals. By default does nothing. Define your own for your object.
-    Avoid of sending signals directly from this proc, use spawn(-1). DO NOT use sleep() here or call procs that sleep please. If you must, use spawn()
-      parameters:
-        signal - see description below. Extract all needed data from the signal before doing sleep(), spawn() or return!
-        receive_method - may be TRANSMISSION_WIRE or TRANSMISSION_RADIO.
-          TRANSMISSION_WIRE is currently unused.
-        receive_param - for TRANSMISSION_RADIO here comes frequency.
+obj/proc/receive_signal(datum/signal/signal, var/receive_method as num, var/receive_param)
+	Handler from received signals. By default does nothing. Define your own for your object.
+	Avoid of sending signals directly from this proc, use spawn(-1). DO NOT use sleep() here or call procs that sleep please. If you must, use spawn()
+	parameters:
+		signal - see description below. Extract all needed data from the signal before doing sleep(), spawn() or return!
+		receive_method - may be TRANSMISSION_WIRE or TRANSMISSION_RADIO.
+		TRANSMISSION_WIRE is currently unused.
+		receive_param - for TRANSMISSION_RADIO here comes frequency.
 
-  datum/signal
-    vars:
-    source
-      an object that emitted signal. Used for debug and bearing.
-    data
-      list with transmitting data. Usual use pattern:
-        data["msg"] = "hello world"
-    encryption
-      Some number symbolizing "encryption key".
-      Note that game actually do not use any cryptography here.
-      If receiving object don't know right key, it must ignore encrypted signal in its receive_signal.
+datum/signal
+	vars:
+	source
+		an object that emitted signal. Used for debug and bearing.
+	data
+		list with transmitting data. Usual use pattern:
+		data["msg"] = "hello world"
+	encryption
+		Some number symbolizing "encryption key".
+		Note that game actually do not use any cryptography here.
+		If receiving object don't know right key, it must ignore encrypted signal in its receive_signal.
 
 */
 
@@ -162,7 +162,7 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, NT_FREQ, SEC_
 
 /proc/frequency_span_class(var/frequency)
 	// Antags!
-	if (frequency in ANTAG_FREQS)
+	if(frequency in ANTAG_FREQS)
 		return "syndradio"
 	// centcom channels
 	if(frequency in CENT_FREQS)
@@ -176,7 +176,7 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, NT_FREQ, SEC_
 	// department radio formatting (poorly optimized, ugh)
 	if(frequency == SEC_FREQ)
 		return "secradio"
-	if (frequency == ENG_FREQ)
+	if(frequency == ENG_FREQ)
 		return "engradio"
 	if(frequency == SCI_FREQ)
 		return "sciradio"
@@ -198,11 +198,11 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, NT_FREQ, SEC_
 //Other devices can then choose to send signals to only those devices that belong to a particular filter.
 //This is done for performance, so we don't send signals to lots of machines unnecessarily.
 
-//This filter is special because devices belonging to default also recieve signals sent to any other filter.
+//This filter is special because devices belonging to default also receive signals sent to any other filter.
 var/const/RADIO_DEFAULT = "radio_default"
 
 var/const/RADIO_TO_AIRALARM = "radio_airalarm" //air alarms
-var/const/RADIO_FROM_AIRALARM = "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
+var/const/RADIO_FROM_AIRALARM = "radio_airalarm_rcvr" //devices interested in receiving signals from air alarms
 var/const/RADIO_CHAT = "radio_telecoms"
 var/const/RADIO_ATMOSIA = "radio_atmos"
 var/const/RADIO_NAVBEACONS = "radio_navbeacon"
@@ -227,17 +227,17 @@ var/const/RADIO_BLASTDOORS = "radio_blastdoors"
 		if(!start_point)
 			qdel(signal)
 			return 0
-	if (filter)
+	if(filter)
 		send_to_filter(source, signal, filter, start_point, range)
 		send_to_filter(source, signal, RADIO_DEFAULT, start_point, range)
 	else
 		//Broadcast the signal to everyone!
-		for (var/next_filter in devices)
+		for(var/next_filter in devices)
 			send_to_filter(source, signal, next_filter, start_point, range)
 
 //Sends a signal to all machines belonging to a given filter. Should be called by post_signal()
 /datum/radio_frequency/proc/send_to_filter(obj/source, datum/signal/signal, var/filter, var/turf/start_point = null, var/range = null)
-	if (range && !start_point)
+	if(range && !start_point)
 		return
 	for(var/obj/device in devices[filter])
 		if(device == source)
@@ -251,11 +251,11 @@ var/const/RADIO_BLASTDOORS = "radio_blastdoors"
 		device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
 
 /datum/radio_frequency/proc/add_listener(obj/device as obj, var/filter as text|null)
-	if (!filter)
+	if(!filter)
 		filter = RADIO_DEFAULT
 	//log_admin("add_listener(device=[device],filter=[filter]) frequency=[frequency]")
 	var/list/obj/devices_line = devices[filter]
-	if (!devices_line)
+	if(!devices_line)
 		devices_line = new
 		devices[filter] = devices_line
 	devices_line+=device
@@ -265,12 +265,12 @@ var/const/RADIO_BLASTDOORS = "radio_blastdoors"
 	//log_admin("DEBUG: devices(filter_str).len=[l]")
 
 /datum/radio_frequency/proc/remove_listener(obj/device)
-	for (var/devices_filter in devices)
+	for(var/devices_filter in devices)
 		var/list/devices_line = devices[devices_filter]
 		devices_line -= device
-		while (null in devices_line)
+		while(null in devices_line)
 			devices_line -= null
-		if (devices_line.len==0)
+		if(devices_line.len==0)
 			devices -= devices_filter
 			del(devices_line)
 
@@ -295,11 +295,11 @@ var/const/RADIO_BLASTDOORS = "radio_blastdoors"
 	frequency = model.frequency
 
 /datum/signal/proc/debug_print()
-	if (source)
+	if(source)
 		. = "signal = {source = '[source]' ([source:x],[source:y],[source:z])\n"
 	else
 		. = "signal = {source = '[source]' ()\n"
-	for (var/i in data)
+	for(var/i in data)
 		. += "data\[\"[i]\"\] = \"[data[i]]\"\n"
 		if(islist(data[i]))
 			var/list/L = data[i]

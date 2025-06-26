@@ -69,7 +69,7 @@
 	if(loud)
 		visible_message("\The [src] shuts down.")
 
-/obj/machinery/floodlight/attack_ai(mob/user as mob)
+/obj/machinery/floodlight/attack_ai(mob/user)
 	if(isrobot(user) && Adjacent(user))
 		return attack_hand(user)
 
@@ -142,7 +142,7 @@
 		if(ABORT_CHECK)
 			return
 
-	if (istype(I, /obj/item/cell/large))
+	if(istype(I, /obj/item/cell/large))
 		if(open)
 			if(cell)
 				to_chat(user, SPAN_WARNING("There is a power cell already installed."))

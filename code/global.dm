@@ -23,8 +23,8 @@ var/href_logfile
 var/station_name        = "CEV Eris"
 var/station_short       = "Eris"
 var/const/dock_name     = "NTV Faith"
-var/const/boss_name     = "Hansa Trade Union"
-var/const/boss_short    = "Hansa"
+var/const/boss_name     = "Hanza Trade Union"
+var/const/boss_short    = "Hanza"
 var/const/company_name  = "CEV Eris"
 var/const/company_short = "Eris"
 var/game_version        = "Discordia"
@@ -45,7 +45,7 @@ var/list/cardinal    = list(NORTH, SOUTH, EAST, WEST)
 var/list/cornerdirs  = list(NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
 var/list/alldirs     = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
 var/list/reverse_dir = list( // reverse_dir[dir] = reverse of dir
-	 2,  1,  3,  8, 10,  9, 11,  4,  6,  5,  7, 12, 14, 13, 15, 32, 34, 33, 35, 40, 42,
+	2,  1,  3,  8, 10,  9, 11,  4,  6,  5,  7, 12, 14, 13, 15, 32, 34, 33, 35, 40, 42,
 	41, 43, 36, 38, 37, 39, 44, 46, 45, 47, 16, 18, 17, 19, 24, 26, 25, 27, 20, 22, 21,
 	23, 28, 30, 29, 31, 48, 50, 49, 51, 56, 58, 57, 59, 52, 54, 53, 55, 60, 62, 61, 63
 )

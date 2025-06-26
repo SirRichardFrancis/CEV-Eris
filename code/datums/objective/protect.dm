@@ -2,7 +2,7 @@
 
 /datum/objective/protect/get_panel_entry()
 	var/target = src.target ? "[src.target.current.real_name], the [src.target.assigned_role]" : "no_target"
-	return "Protect <a href='?src=\ref[src];switch_target=1'>[target]</a>."
+	return "Protect <a href='byond://?src=\ref[src];switch_target=1'>[target]</a>."
 
 /datum/objective/protect/update_explanation()
 	if(target && target.current)
@@ -11,7 +11,7 @@
 		explanation_text = "Target has not arrived today. Lets hope they are alive."
 
 /datum/objective/protect/check_completion()
-	if (failed)
+	if(failed)
 		return FALSE
 	if(!target)
 		return TRUE

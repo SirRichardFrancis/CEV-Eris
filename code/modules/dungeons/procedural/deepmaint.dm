@@ -54,7 +54,7 @@ var/global/list/big_deepmaint_room_templates = list()
 		while(length > 0) //Iterates from the current adjacent tile through direction chosen in makeNiche to check if the next 4 tiles are walls. If they are, they are returned, otherwise the list is reset and returned.
 			length = length - 1
 			T = get_step(T, direction)
-			if (T.is_wall)
+			if(T.is_wall)
 				walls += T
 				if(walls.len == line.len)
 					return walls
@@ -83,23 +83,23 @@ var/global/list/big_deepmaint_room_templates = list()
 		if(picked_room in done_rooms)
 			continue
 		var/list/turf/viable_turfs = list()
-		for (var/turf/floor/F in range(roomMinSize + 1, picked_room.centre))
+		for(var/turf/floor/F in range(roomMinSize + 1, picked_room.centre))
 			//not under walls
-			if (F.is_wall)
+			if(F.is_wall)
 				continue
 
-			if (F.contents.len > 1) //There's a lot of things rangine from tables to mechs or closets that can be on the chosen turf, so we'll ignore all turfs that have something aside lighting overlay
+			if(F.contents.len > 1) //There's a lot of things rangine from tables to mechs or closets that can be on the chosen turf, so we'll ignore all turfs that have something aside lighting overlay
 				continue
 
 
 			//No turfs in space
-			if (turf_is_external(F))
+			if(turf_is_external(F))
 				continue
 
 			//To be valid, the floor needs to have a wall in a cardinal direction
-			for (var/d in cardinal)
+			for(var/d in cardinal)
 				var/turf/T = get_step(F, d)
-				if (T.is_wall)
+				if(T.is_wall)
 					//Its got a wall!
 					viable_turfs[F] = T //We put this floor and its wall into the possible turfs list
 					break
@@ -137,7 +137,7 @@ var/global/list/big_deepmaint_room_templates = list()
 // If nothing ever fulfills the above requirements, functionally, nothing will happen for the rest of the function
 	var/list/wall_line = list()
 	if(nicheline.len > 3)
-	 wall_line = checkForWalls(nicheline) //Checks whether 4 turf tiles are walls in the chosen direction from tiles adjacent to the second tile. If this is not met in any direction, the function is functionally done
+		wall_line = checkForWalls(nicheline) //Checks whether 4 turf tiles are walls in the chosen direction from tiles adjacent to the second tile. If this is not met in any direction, the function is functionally done
 	if(wall_line.len)
 		for(var/turf/W in nicheline) //Every turf in the path returned by findNicheTurfs has a 30% chance of becoming a random deepmaint machine
 			if(prob(30))
@@ -156,16 +156,16 @@ var/global/list/big_deepmaint_room_templates = list()
 		return FALSE
 
 /obj/procedural/jp_DungeonGenerator/deepmaint/proc/findNicheTurfs(var/list/turfs) //Checks turf type of turf list passed to it to make sure none of them are walls or nonexistant.
-    var/list/L = list()
-    for(var/turf/F in turfs)
-        if(F.is_wall || !(F in path_turfs))
-            if(L.len < 3)  //Why is this check here? The function this list being returned to will discard any list that isn't length 5. Is the < operator meant to be an > operator? But if that was the case, the for loop would have ended before reaching this anyways?
-                L = list() //Resets the list to 0 and returns it if a tile in this direction was a wall or nonexistant, so that the makeNiche function will check another direction
-            break
-        else
-            L += F
+	var/list/L = list()
+	for(var/turf/F in turfs)
+		if(F.is_wall || !(F in path_turfs))
+			if(L.len < 3)  //Why is this check here? The function this list being returned to will discard any list that isn't length 5. Is the < operator meant to be an > operator? But if that was the case, the for loop would have ended before reaching this anyways?
+				L = list() //Resets the list to 0 and returns it if a tile in this direction was a wall or nonexistant, so that the makeNiche function will check another direction
+			break
+		else
+			L += F
 
-    return L //Returns entire list of tiles if none of them were walls or nonexistant.
+	return L //Returns entire list of tiles if none of them were walls or nonexistant.
 
 
 /obj/procedural/jp_DungeonGenerator/deepmaint/proc/populateCorridors()

@@ -399,7 +399,7 @@
 	body += source.formatJobGroup(M, "Antagonist Positions", "ffeeaa", "Syndicate", jobban_list)
 
 	dat = "<head>[header]</head><body><tt><table width='100%'>[body.Join(null)]</table></tt></body>"
-	usr << browse(dat, "window=jobban2;size=800x490")
+	usr << browse(HTML_SKELETON(dat), "window=jobban2;size=800x490")
 
 
 /datum/admin_topic/jobban3
@@ -570,7 +570,7 @@
 
 /datum/admin_topic/boot2/Run(list/input)
 	var/mob/M = locate(input["boot2"])
-	if (ismob(M))
+	if(ismob(M))
 		if(!check_if_greater_rights_than(M.client))
 			return
 		var/reason = sanitize(input("Please enter reason"))
@@ -739,9 +739,9 @@
 /datum/admin_topic/c_mode/Run(list/input)
 	var/dat = {"<B>What storyteller do you wish to install?</B><HR>"}
 	for(var/mode in config.storytellers)
-		dat += {"<A href='?src=\ref[source];c_mode2=[mode]'>[config.storyteller_names[mode]]</A><br>"}
+		dat += {"<a href='byond://?src=\ref[source];c_mode2=[mode]'>[config.storyteller_names[mode]]</A><br>"}
 	dat += {"Now: [master_storyteller]"}
-	usr << browse(dat, "window=c_mode")
+	usr << browse(HTML_SKELETON(dat), "window=c_mode")
 
 
 /datum/admin_topic/c_mode2
@@ -943,11 +943,11 @@
 		var/mob/living/L = M
 		var/status
 		switch (M.stat)
-			if (0)
+			if(0)
 				status = "Alive"
-			if (1)
+			if(1)
 				status = "<font color='orange'><b>Unconscious</b></font>"
-			if (2)
+			if(2)
 				status = "<font color='red'><b>Dead</b></font>"
 		health_description = "Status = [status]"
 		health_description += "<BR>Oxy: [L.getOxyLoss()] - Tox: [L.getToxLoss()] - Fire: [L.getFireLoss()] - Brute: [L.getBruteLoss()] - Clone: [L.getCloneLoss()] - Brain: [L.getBrainLoss()]"
@@ -966,7 +966,7 @@
 	to_chat(source.owner, "Name = <b>[M.name]</b>; Real_name = [M.real_name]; Mind_name = [M.mind?"[M.mind.name]":""]; Key = <b>[M.key]</b>;")
 	to_chat(source.owner, "Location = [location_description];")
 	to_chat(source.owner, "[special_role_description]")
-	to_chat(source.owner, "(<a href='?src=\ref[usr];priv_msg=\ref[M]'>PM</a>) (<A HREF='?src=\ref[source];adminplayeropts=\ref[M]'>PP</A>) (<A HREF='?_src_=vars;Vars=\ref[M]'>VV</A>) (<A HREF='?src=\ref[source];subtlemessage=\ref[M]'>SM</A>) ([admin_jump_link(M, source)]) (<A HREF='?src=\ref[source];secretsadmin=check_antagonist'>CA</A>)")
+	to_chat(source.owner, "(<a href='byond://?src=\ref[usr];priv_msg=\ref[M]'>PM</a>) (<a href='byond://?src=\ref[source];adminplayeropts=\ref[M]'>PP</A>) (<a href='byond://?_src_=vars;Vars=\ref[M]'>VV</A>) (<a href='byond://?src=\ref[source];subtlemessage=\ref[M]'>SM</A>) ([admin_jump_link(M, source)]) (<a href='byond://?src=\ref[source];secretsadmin=check_antagonist'>CA</A>)")
 
 
 /datum/admin_topic/adminspawncookie
@@ -1031,7 +1031,7 @@
 	if(M.health == 1)
 		M.gib()
 	else
-		M.adjustBruteLoss( min( 99 , (M.health - 1) )    )
+		M.adjustBruteLoss(min(99,(M.health - 1)))
 		M.Stun(20)
 		M.Weaken(20)
 		M.stuttering = 20
@@ -1043,23 +1043,23 @@
 /datum/admin_topic/adminfaxview/Run(list/input)
 	var/obj/item/fax = locate(input["AdminFaxView"])
 
-	if (istype(fax, /obj/item/paper))
+	if(istype(fax, /obj/item/paper))
 		var/obj/item/paper/P = fax
 		P.show_content(usr, TRUE)
-	else if (istype(fax, /obj/item/photo))
+	else if(istype(fax, /obj/item/photo))
 		var/obj/item/photo/H = fax
 		H.show(usr)
-	else if (istype(fax, /obj/item/paper_bundle))
+	else if(istype(fax, /obj/item/paper_bundle))
 		//having multiple people turning pages on a paper_bundle can cause issues
 		//open a browse window listing the contents instead
 		var/data = ""
 		var/obj/item/paper_bundle/B = fax
 
-		for (var/page = 1, page <= B.pages.len, page++)
+		for(var/page = 1, page <= B.pages.len, page++)
 			var/obj/pageobj = B.pages[page]
-			data += "<A href='?src=\ref[source];AdminFaxViewPage=[page];paper_bundle=\ref[B]'>Page [page] - [pageobj.name]</A><BR>"
+			data += "<a href='byond://?src=\ref[source];AdminFaxViewPage=[page];paper_bundle=\ref[B]'>Page [page] - [pageobj.name]</A><BR>"
 
-		usr << browse(data, "window=[B.name]")
+		usr << browse(HTML_SKELETON(data), "window=[B.name]")
 	else
 		to_chat(usr, "\red The faxed item is not viewable. This is probably a bug, and should be reported on the tracker: [fax.type]")
 
@@ -1070,13 +1070,13 @@
 	var/page = text2num(input["AdminFaxViewPage"])
 	var/obj/item/paper_bundle/bundle = locate(input["paper_bundle"])
 
-	if (!bundle)
+	if(!bundle)
 		return
 
-	if (istype(bundle.pages[page], /obj/item/paper))
+	if(istype(bundle.pages[page], /obj/item/paper))
 		var/obj/item/paper/P = bundle.pages[page]
 		P.show_content(source.owner, TRUE)
-	else if (istype(bundle.pages[page], /obj/item/photo))
+	else if(istype(bundle.pages[page], /obj/item/photo))
 		var/obj/item/photo/H = bundle.pages[page]
 		H.show(source.owner)
 
@@ -1133,7 +1133,7 @@
 	var/mob/M = locate(input["paralyze"])
 
 	var/msg
-	if (M.paralysis == 0)
+	if(M.paralysis == 0)
 		M.paralysis = 8000
 		msg = "has paralyzed [key_name(M)]."
 	else
@@ -1206,9 +1206,9 @@
 	var/atom/loc = usr.loc
 
 	var/dirty_paths
-	if (istext(input["object_list"]))
+	if(istext(input["object_list"]))
 		dirty_paths = list(input["object_list"])
-	else if (istype(input["object_list"], /list))
+	else if(istype(input["object_list"], /list))
 		dirty_paths = input["object_list"]
 
 	var/paths = list()
@@ -1240,21 +1240,21 @@
 
 	var/atom/target //Where the object will be spawned
 	var/where = input["object_where"]
-	if (!( where in list("onfloor","inhand","inmarked") ))
+	if(!( where in list("onfloor","inhand","inmarked") ))
 		where = "onfloor"
 
 	switch(where)
 		if("inhand")
-			if (!iscarbon(usr) && !isrobot(usr))
+			if(!iscarbon(usr) && !isrobot(usr))
 				to_chat(usr, "Can only spawn in hand when you're a carbon mob or cyborg.")
 				where = "onfloor"
 			target = usr
 
 		if("onfloor")
 			switch(input["offset_type"])
-				if ("absolute")
+				if("absolute")
 					target = locate(0 + X,0 + Y,0 + Z)
-				if ("relative")
+				if("relative")
 					target = locate(loc.x + X,loc.y + Y,loc.z + Z)
 		if("inmarked")
 			if(!source.marked_datum())
@@ -1267,8 +1267,8 @@
 				target = source.marked_datum()
 
 	if(target)
-		for (var/path in paths)
-			for (var/i = 0; i < number; i++)
+		for(var/path in paths)
+			for(var/i = 0; i < number; i++)
 				if(path in typesof(/turf))
 					var/turf/O = target
 					var/turf/N = O.ChangeTurf(path)

@@ -29,7 +29,7 @@
 
 /datum/language/proc/get_random_name(var/gender, name_count=2, syllable_count=4, syllable_divisor=2)
 	//This language has its own name lists
-	if (name_lists)
+	if(name_lists)
 		if(gender==FEMALE)
 			return capitalize(pick(first_names_female)) + " " + capitalize(pick(last_names))
 		else
@@ -54,7 +54,7 @@
 
 /datum/language/proc/get_random_first_name(gender, name_count=1, syllable_count=4, syllable_divisor=2)
 	//This language has its own name lists
-	if (name_lists)
+	if(name_lists)
 		if(gender==FEMALE)
 			return capitalize(pick(first_names_female))
 		else
@@ -79,7 +79,7 @@
 
 /datum/language/proc/get_random_last_name(name_count=1, syllable_count=4, syllable_divisor=2)
 	//This language has its own name lists
-	if (name_lists)
+	if(name_lists)
 		return capitalize(pick(last_names))
 
 	if(!syllables || !syllables.len)
@@ -99,11 +99,11 @@
 //A wrapper for the above that gets a random name and sets it onto the mob
 /datum/language/proc/set_random_name(var/mob/M, name_count=2, syllable_count=4, syllable_divisor=2)
 	var/mob/living/carbon/human/H = null
-	if (ishuman(M))
+	if(ishuman(M))
 		H = M
 
 	var/oldname = M.name
-	if (H)
+	if(H)
 		oldname = H.real_name
 	M.fully_replace_character_name(oldname, get_random_name(M.get_gender(), name_count, syllable_count, syllable_divisor))
 
@@ -268,7 +268,7 @@
 			if(!(L.flags & NONGLOBAL))
 				dat += "<b>[L.name] ([get_language_prefix()][L.key])</b><br/>[L.desc]<br/><br/>"
 
-	src << browse(dat, "window=checklanguage")
+	src << browse(HTML_SKELETON(dat), "window=checklanguage")
 
 
 
@@ -296,7 +296,7 @@
 			else
 				dat += "<b>[L.name] ([get_language_prefix()][L.key])</b> - <a href='byond://?src=\ref[src];default_lang=\ref[L]'>set default</a><br/>[L.desc]<br/><br/>"
 
-	src << browse(dat, "window=checklanguage")
+	src << browse(HTML_SKELETON(dat), "window=checklanguage")
 
 /mob/living/Topic(href, href_list)
 	if(href_list["default_lang"])

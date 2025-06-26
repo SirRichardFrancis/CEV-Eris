@@ -78,7 +78,7 @@
 					dmg = round(dmg * max(0.5, (get_specific_organ_efficiency(OP_NERVE, def_zone) / 100)))
 				if(dmg_type == BRUTE)
 
-					if ( (sharp || edge) && prob ( (1 - dmg / dmg_types[dmg_type]) * 100 ) ) // If enough of the brute damage is blocked, sharpness is lost from all followup attacks, this converts damage into crushing as well
+					if( (sharp || edge) && prob ( (1 - dmg / dmg_types[dmg_type]) * 100 ) ) // If enough of the brute damage is blocked, sharpness is lost from all followup attacks, this converts damage into crushing as well
 						if(wounding_multiplier)
 							wounding_multiplier = step_wounding_double(wounding_multiplier) // Implied piercing damage, degrade by two steps (prevents damage duping from <1 multiplier)
 						else
@@ -98,12 +98,11 @@
 				if(ishuman(src) && def_zone && dmg >= 20)
 					var/mob/living/carbon/human/H = src
 					var/obj/item/organ/external/o = H.get_organ(def_zone)
-					if (o && o.status & ORGAN_SPLINTED)
+					if(o && o.status & ORGAN_SPLINTED)
 						visible_message(SPAN_WARNING("The splints break off [src] after being hit!"),
 								SPAN_WARNING("Your splints break off after being hit!"))
 						o.status &= ~ORGAN_SPLINTED
 	var/effective_armor = round((1 - dealt_damage / total_dmg) * 100)
-
 
 	//Feedback
 	//In order to show both target and everyone around that armor is actually working, we are going to send message for both of them
@@ -121,7 +120,6 @@
 		if(90 to INFINITY)
 			armor_message(SPAN_NOTICE("[src] armor absorbs the blow!"),
 							SPAN_NOTICE("Your armor absorbed the impact!"))
-
 
 	// Deal damage to ablative armour based on how much was used, we multiply armour divisor back so high AP doesn't decrease damage dealt to ADR
 	if(ablative_armor)
@@ -150,17 +148,16 @@
 				remaining_dmg += dmg_types[dmg_type]
 			return ((total_dmg / 2 < remaining_dmg && remaining_dmg > mob_size) ? PROJECTILE_CONTINUE : PROJECTILE_STOP)
 		else return PROJECTILE_STOP
-
 	return dealt_damage
 
 //if null is passed for def_zone, then this should return something appropriate for all zones (e.g. area effect damage)
-/mob/living/proc/getarmor(var/def_zone, var/type)
+/mob/living/proc/getarmor(def_zone, type)
 	return FALSE
 
-/mob/living/proc/getarmorablative(var/def_zone, var/type)
+/mob/living/proc/getarmorablative(def_zone, type)
 	return FALSE
 
-/mob/living/proc/damageablative(var/def_zone, var/damage)
+/mob/living/proc/damageablative(def_zone, damage)
 	return FALSE
 
 /mob/living/proc/hit_impact(damage, dir)
@@ -168,11 +165,10 @@
 		return
 	shake_animation(damage)
 
- // return PROJECTILE_CONTINUE if bullet should continue flying
-/mob/living/bullet_act(obj/item/projectile/P, var/def_zone_hit)
+// return PROJECTILE_CONTINUE if bullet should continue flying
+/mob/living/bullet_act(obj/item/projectile/P, def_zone_hit)
 	var/hit_dir = get_dir(P, src)
-
-	if (P.is_hot() >= HEAT_MOBIGNITE_THRESHOLD)
+	if(P.is_hot() >= HEAT_MOBIGNITE_THRESHOLD)
 		IgniteMob()
 
 	if(config.z_level_shooting && P.height) // If the bullet came from above or below, limit what bodyparts can be hit for consistency
@@ -210,33 +206,30 @@
 	if(!P.nodamage)
 		hit_impact(P.get_structure_damage(), hit_dir)
 		return damage_through_armor(def_zone = def_zone_hit, attack_flag = P.check_armour, armor_divisor = P.armor_divisor, used_weapon = P, sharp = is_sharp(P), edge = has_edge(P), wounding_multiplier = P.wounding_mult, dmg_types = P.damage_types, return_continuation = TRUE)
-
 	return PROJECTILE_CONTINUE
 
 //Handles the effects of "stun" weapons
-/mob/living/proc/stun_effect_act(var/stun_amount, var/agony_amount, var/def_zone, var/used_weapon)
+/mob/living/proc/stun_effect_act(stun_amount, agony_amount, def_zone, used_weapon)
 	flash_pain()
 
 	//For not bloating damage_through_armor here is simple armor calculation for stun time
 	var/armor_coefficient = max(0, 1 - getarmor(def_zone, ARMOR_ENERGY) / 100)
 
 	//If armor is 100 or more, we just skeeping it
-	if (stun_amount && armor_coefficient)
-
+	if(stun_amount && armor_coefficient)
 		Stun(stun_amount * armor_coefficient)
 		Weaken(stun_amount * armor_coefficient)
 		apply_effect(STUTTER, stun_amount * armor_coefficient)
 		apply_effect(EYE_BLUR, stun_amount * armor_coefficient)
 		SEND_SIGNAL_OLD(src, COMSIG_LIVING_STUN_EFFECT)
 
-	if (agony_amount && armor_coefficient)
-
+	if(agony_amount && armor_coefficient)
 		apply_damage(agony_amount * armor_coefficient, HALLOSS, def_zone, FALSE, FALSE, FALSE, used_weapon)
 		apply_effect(STUTTER, agony_amount * armor_coefficient)
 		apply_effect(EYE_BLUR, agony_amount * armor_coefficient)
 
-/mob/living/proc/electrocute_act(var/shock_damage, obj/source, var/siemens_coeff = 1)
-	  return 0 //only carbon liveforms have this proc
+/mob/living/proc/electrocute_act(shock_damage, obj/source, siemens_coeff = 1)
+	return 0 //only carbon liveforms have this proc
 
 /mob/living/emp_act(severity)
 	var/list/L = src.get_contents()
@@ -244,44 +237,36 @@
 		O.emp_act(severity)
 	..()
 
-/mob/living/proc/resolve_item_attack(obj/item/I, mob/living/user, var/target_zone)
+/mob/living/proc/resolve_item_attack(obj/item/I, mob/living/user, target_zone)
 	return target_zone
 
 //Called when the mob is hit with an item in combat.
-/mob/living/proc/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
+/mob/living/proc/hit_with_weapon(obj/item/I, mob/living/user, effective_force, hit_zone)
 	visible_message(SPAN_DANGER("[src] has been [I.attack_verb.len? pick(I.attack_verb) : "attacked"] with [I.name] by [user]!"))
-
 	standard_weapon_hit_effects(I, user, effective_force, hit_zone)
-
 	if(I.damtype == BRUTE && prob(33)) // Added blood for whacking non-humans too
 		var/turf/location = get_turf(src)
 		if(istype(location)) location.add_blood_floor(src)
 
-	return
-
 //returns 0 if the effects failed to apply for some reason, 1 otherwise.
-/mob/living/proc/standard_weapon_hit_effects(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
+/mob/living/proc/standard_weapon_hit_effects(obj/item/I, mob/living/user, effective_force, hit_zone)
 	if(!effective_force)
 		return FALSE
 
-	//Hulk modifier
-//	if(HULK in user.mutations)
-//		effective_force *= 2
-
 	//Apply weapon damage
-	if (damage_through_armor(effective_force, I.damtype, hit_zone, ARMOR_MELEE, I.armor_divisor, used_weapon = I, sharp = is_sharp(I), edge = has_edge(I)))
+	if(damage_through_armor(effective_force, I.damtype, hit_zone, ARMOR_MELEE, I.armor_divisor, used_weapon = I, sharp = is_sharp(I), edge = has_edge(I)))
 		return TRUE
 	else
 		return FALSE
 
 //this proc handles being hit by a thrown atom
-/mob/living/hitby(atom/movable/AM as mob|obj,var/speed = THROWFORCE_SPEED_DIVISOR)//Standardization and logging -Sieve
+/mob/living/hitby(atom/movable/AM as mob|obj, speed = THROWFORCE_SPEED_DIVISOR)//Standardization and logging -Sieve
 	if(istype(AM,/obj))
 		var/obj/O = AM
 		var/dtype = O.damtype
 		var/throw_damage = O.throwforce
 
-		if (O.is_hot() >= HEAT_MOBIGNITE_THRESHOLD)
+		if(O.is_hot() >= HEAT_MOBIGNITE_THRESHOLD)
 			IgniteMob()
 
 		src.visible_message(SPAN_WARNING("[src] has been hit by [O]."))
@@ -297,7 +282,7 @@
 				src.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been hit with a [O], thrown by [M.name] ([assailant.ckey])</font>")
 				M.attack_log += text("\[[time_stamp()]\] <font color='red'>Hit [src.name] ([src.ckey]) with a thrown [O]</font>")
 				if(!ismouse(src))
-					msg_admin_attack("[src.name] ([src.ckey]) was hit by a [O], thrown by [M.name] ([assailant.ckey]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[src.x];Y=[src.y];Z=[src.z]'>JMP</a>)")
+					msg_admin_attack("[src.name] ([src.ckey]) was hit by a [O], thrown by [M.name] ([assailant.ckey]) (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[src.x];Y=[src.y];Z=[src.z]'>JMP</a>)")
 
 		// Begin BS12 momentum-transfer code.
 		var/mass = 1.5
@@ -326,7 +311,7 @@
 					src.anchored = TRUE
 					src.pinned += O
 
-/mob/living/proc/embed(obj/item/O, var/def_zone)
+/mob/living/proc/embed(obj/item/O, def_zone)
 	if(O.wielded)
 		return
 	if(ismob(O.loc))
@@ -340,10 +325,10 @@
 	O.on_embed(src)
 
 //This is called when the mob is thrown into a dense turf
-/mob/living/proc/turf_collision(var/turf/T, var/speed)
-	src.take_organ_damage(speed*5)
+/mob/living/proc/turf_collision(turf/T, speed)
+	take_organ_damage(speed*5)
 
-/mob/living/proc/near_wall(var/direction,var/distance=1)
+/mob/living/proc/near_wall(direction, distance = 1)
 	var/turf/T = get_step(get_turf(src),direction)
 	var/turf/last_turf = src.loc
 	var/i = 1
@@ -354,13 +339,11 @@
 		i++
 		last_turf = T
 		T = get_step(T,direction)
-
 	return 0
 
 // End BS12 momentum-transfer code.
 
-/mob/living/attack_generic(mob/user, var/damage, var/attack_message)
-
+/mob/living/attack_generic(mob/user, damage, attack_message)
 	if(!damage || !istype(user))
 		return
 
@@ -389,7 +372,7 @@
 	return
 
 /mob/living/proc/adjust_fire_stacks(add_fire_stacks) //Adjusting the amount of fire_stacks we have on person
-    fire_stacks = CLAMP(fire_stacks + add_fire_stacks, FIRE_MIN_STACKS, FIRE_MAX_STACKS)
+	fire_stacks = CLAMP(fire_stacks + add_fire_stacks, FIRE_MIN_STACKS, FIRE_MAX_STACKS)
 
 /mob/living/proc/handle_fire()
 	if(fire_stacks < 0)
@@ -421,7 +404,7 @@
 
 //Finds the effective temperature that the mob is burning at.
 /mob/living/proc/fire_burn_temperature()
-	if (fire_stacks <= 0)
+	if(fire_stacks <= 0)
 		return FALSE
 
 	//Scale quadratically so that single digit numbers of fire stacks don't burn ridiculously hot.

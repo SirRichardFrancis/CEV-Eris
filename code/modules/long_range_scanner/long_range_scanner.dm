@@ -61,8 +61,8 @@ var/list/ship_scanners = list()
 		spawn(5)
 			set_light(0)
 
-	for (var/obj/machinery/power/conduit/scanner_conduit/S in tendrils)
-		if (running)
+	for(var/obj/machinery/power/conduit/scanner_conduit/S in tendrils)
+		if(running)
 			S.dim_light()
 			flick("warmup", S)
 			S.icon_state = "speen"
@@ -126,7 +126,7 @@ var/list/ship_scanners = list()
 	update_icon()
 
 /obj/machinery/power/shipside/long_range_scanner/spawn_tendrils(dirs = list(NORTH, EAST, WEST))
-	for (var/D in dirs)
+	for(var/D in dirs)
 		var/turf/T = get_step(src, D)
 		var/obj/machinery/power/conduit/scanner_conduit/tendril = locate(T)
 		if(!tendril)
@@ -142,16 +142,16 @@ var/list/ship_scanners = list()
 	upkeep_power_usage = 0
 	power_usage = 0
 
-	if (!anchored)
+	if(!anchored)
 		return
 	if(offline_for)
 		offline_for = max(0, offline_for - 1)
-		if (offline_for <= 0)
+		if(offline_for <= 0)
 			emergency_shutdown = FALSE
 
 	// We are shutting down, therefore our stored energy disperses faster than usual.
 	else if(running == SCANNER_DISCHARGING)
-		if (offline_for <= 0)
+		if(offline_for <= 0)
 			shutdown_machine() //We've finished the winding down period and now turn off
 			offline_for += 30 //Another minute before it can be turned back on again
 		return
@@ -176,13 +176,12 @@ var/list/ship_scanners = list()
 	offline_for += 150
 	shutdown_machine()
 	emergency_shutdown = TRUE
-	if (current_energy < 0)
+	if(current_energy < 0)
 		current_energy = 0
 
 
 /obj/machinery/power/shipside/long_range_scanner/nano_ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = NANOUI_FOCUS)
 	var/data[0]
-
 	data["running"] = running
 	data["logs"] = get_logs()
 	data["max_energy"] = round(max_energy / 1000000, 0.1)
@@ -195,24 +194,21 @@ var/list/ship_scanners = list()
 
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		ui = new(user, src, ui_key, "lrscanner.tmpl", src.name, 650, 800)
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
 
-
-/obj/machinery/power/shipside/long_range_scanner/attack_hand(var/mob/user)
+/obj/machinery/power/shipside/long_range_scanner/attack_hand(mob/user)
 	nano_ui_interact(user)
 	if(panel_open)
 		wires.Interact(user)
 
-
-/obj/machinery/power/shipside/long_range_scanner/CanUseTopic(var/mob/user)
+/obj/machinery/power/shipside/long_range_scanner/CanUseTopic(mob/user)
 	if(issilicon(user) && !Adjacent(user) && ai_control_disabled)
 		return STATUS_UPDATE
 	return ..()
-
 
 /obj/machinery/power/shipside/long_range_scanner/Topic(href, href_list)
 	if(..())
@@ -234,7 +230,7 @@ var/list/ship_scanners = list()
 	if(href_list["start_generator"])
 		if(tendrils_deployed == FALSE)
 			visible_message(SPAN_DANGER("The [src] buzzes an insistent warning as it needs to have it's conduits deployed first to operate"))
-			playsound(src.loc, 'sound/machines/buzz-sigh.ogg', 100, 1, 5)
+			playsound(loc, 'sound/machines/buzz-sigh.ogg', 100, 1, 5)
 			return
 		running = SCANNER_RUNNING
 		update_icon()
@@ -280,8 +276,6 @@ var/list/ship_scanners = list()
 		return (current_energy / max_energy) * 100
 	return 0
 
-
-
 /obj/machinery/power/shipside/long_range_scanner/proc/get_logs()
 	var/list/all_logs = list()
 	for(var/i = event_log.len; i > 1; i--)
@@ -294,38 +288,36 @@ var/list/ship_scanners = list()
 /obj/machinery/power/shipside/long_range_scanner/log_event(var/event_type, var/atom/origin_atom)
 	var/logstring = "[stationtime2text()]: "
 	switch (event_type)
-
-		if (EVENT_ENABLED to EVENT_RECONFIGURED)
+		if(EVENT_ENABLED to EVENT_RECONFIGURED)
 			switch (event_type)
-				if (EVENT_ENABLED)
+				if(EVENT_ENABLED)
 					logstring += "Scanner powered up"
-				if (EVENT_DISABLED)
+				if(EVENT_DISABLED)
 					logstring += "Scanner powered down"
-				if (EVENT_RECONFIGURED)
+				if(EVENT_RECONFIGURED)
 					logstring += "Configuration altered"
 				else
 					return
 
-			if (origin_atom == src)
+			if(origin_atom == src)
 				logstring += " via Physical Access"
 			else
 				logstring += " from console at"
 				var/area/A = get_area(origin_atom)
-				if (A)
+				if(A)
 					logstring += " [strip_improper(A.name)]"
 				else
 					logstring += " Unknown Area"
 
-				if (origin_atom)
+				if(origin_atom)
 					logstring += ", [origin_atom.x ? origin_atom.x : "unknown"],[origin_atom.y ? origin_atom.y : "unknown"],[origin_atom.z ? origin_atom.z : "unknown"]"
 
-
-	if (logstring != "")
+	if(logstring != "")
 		//Insert this string into the log
 		event_log.Add(logstring)
 
 		//If we're over the limit, cut the oldest entry
-		if (event_log.len > max_log_entries)
+		if(event_log.len > max_log_entries)
 			event_log.Cut(1,2)
 
 /obj/machinery/power/shipside/long_range_scanner/proc/consume_energy_scan()
@@ -333,7 +325,6 @@ var/list/ship_scanners = list()
 		current_energy -= round(ENERGY_PER_SCAN * as_energy_multiplier)
 		return TRUE
 	return FALSE
-
 
 /obj/machinery/power/conduit/scanner_conduit
 	name = "scanner conduit"
@@ -344,7 +335,7 @@ var/list/ship_scanners = list()
 	anchored = FALSE //Will be set true just after deploying
 	circuit = /obj/item/electronics/circuitboard/scanner_conduit
 	var/rating //average rating of all capacitors
-	
+
 /obj/machinery/power/conduit/scanner_conduit/no_light()
 	set_light(0)
 

@@ -6,7 +6,7 @@
 	layer = SIGN_LAYER
 	w_class = ITEM_SIZE_NORMAL
 
-/obj/structure/sign/attackby(obj/item/tool as obj, mob/user as mob)	//deconstruction
+/obj/structure/sign/attackby(obj/item/tool as obj, mob/user)	//deconstruction
 	if(istype(tool, /obj/item/tool/screwdriver) && !istype(src, /obj/structure/sign/double))
 		to_chat(user, "You unfasten the sign with your [tool].")
 		var/obj/item/sign/S = new(src.loc)
@@ -26,7 +26,7 @@
 	w_class = ITEM_SIZE_NORMAL		//big
 	var/sign_state = ""
 
-/obj/item/sign/attackby(obj/item/tool as obj, mob/user as mob)	//construction
+/obj/item/sign/attackby(obj/item/tool as obj, mob/user)	//construction
 	if(istype(tool, /obj/item/tool/screwdriver) && isturf(user.loc))
 		var/direction = input("In which direction?", "Select direction.") in list("North", "East", "South", "West", "Cancel")
 		if(direction == "Cancel") return
@@ -510,8 +510,8 @@
 	desc = "Faction sign of some sort."
 
 /obj/structure/sign/faction/ironhammer
-	name = "Ironhammer Security"
-	desc = "This sign depicts the symbol of Ironhammer Security, the largest security provider within the Hansa Trade Union."
+	name = "IronHammer Security"
+	desc = "This sign depicts the symbol of IronHammer Security, the largest security provider within the Hanza Trade Union."
 	icon_state = "ironhammer"
 
 /obj/structure/sign/faction/one_star
@@ -531,7 +531,7 @@
 
 /obj/structure/sign/faction/frozenstar
 	name = "Frozen Star"
-	desc = "The most popular weapon manufacturer in the Hansa Trade Union."
+	desc = "The most popular weapon manufacturer in the Hanza Trade Union."
 	icon_state = "frozenstar"
 
 /obj/structure/sign/faction/moebius

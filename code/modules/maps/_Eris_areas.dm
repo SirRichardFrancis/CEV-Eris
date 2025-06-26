@@ -364,7 +364,7 @@
 	area_light_color = COLOR_LIGHTING_CREW_SOFT
 
 /area/eris/command/commander
-	name = "Ironhammer Commander's Office"
+	name = "IronHammer Commander's Office"
 	icon_state = "hammerred"
 	sound_env = SMALL_SOFTFLOOR
 	area_light_color = COLOR_LIGHTING_CREW_SOFT
@@ -519,9 +519,9 @@
 	icon_state = "erisblue"
 
 /area/eris/crew_quarters/library
- 	name = "\improper Library"
- 	icon_state = "library"
- 	sound_env = LARGE_SOFTFLOOR
+	name = "\improper Library"
+	icon_state = "library"
+	sound_env = LARGE_SOFTFLOOR
 
 /area/eris/crew_quarters/librarybackroom
 	name = "Library Backroom"
@@ -648,9 +648,9 @@
 	icon_state = "blueold"
 
 /area/eris/engineering/atmos
- 	name = "\improper Atmospherics"
- 	icon_state = "atmos"
- 	sound_env = LARGE_ENCLOSED
+	name = "\improper Atmospherics"
+	icon_state = "atmos"
+	sound_env = LARGE_ENCLOSED
 
 /area/eris/engineering/atmos/monitoring
 	name = "\improper Atmospherics Monitoring Room"
@@ -1040,7 +1040,7 @@
 	is_maintenance = TRUE
 
 /area/eris/security/barracks
-	name = "Ironhammer Barracks"
+	name = "IronHammer Barracks"
 	icon_state = "hammerblue"
 
 /area/eris/security/prisoncells

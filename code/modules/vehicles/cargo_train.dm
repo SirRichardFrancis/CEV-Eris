@@ -62,7 +62,7 @@
 
 	return ..()
 
-/obj/vehicle/train/cargo/engine/attackby(obj/item/W as obj, mob/user as mob)
+/obj/vehicle/train/cargo/engine/attackby(obj/item/W as obj, mob/user)
 	if(istype(W, /obj/item/key/cargo_train))
 		if(!key)
 			user.drop_item()
@@ -166,7 +166,7 @@
 		to_chat(D, "\red \b You ran over [H]!")
 		visible_message("<B>\red \The [src] ran over [H]!</B>")
 		attack_log += text("\[[time_stamp()]\] <font color='red'>ran over [H.name] ([H.ckey]), driven by [D.name] ([D.ckey])</font>")
-		msg_admin_attack("[D.name] ([D.ckey]) ran over [H.name] ([H.ckey]). (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)")
+		msg_admin_attack("[D.name] ([D.ckey]) ran over [H.name] ([H.ckey]). (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)")
 	else
 		attack_log += text("\[[time_stamp()]\] <font color='red'>ran over [H.name] ([H.ckey])</font>")
 
@@ -206,7 +206,7 @@
 		return
 
 	turn_on()
-	if (on)
+	if(on)
 		to_chat(usr, "You start [src]'s engine.")
 	else
 		if(!cell.check_charge(charge_use))
@@ -227,7 +227,7 @@
 		return
 
 	turn_off()
-	if (!on)
+	if(!on)
 		to_chat(usr, "You stop [src]'s engine.")
 
 /obj/vehicle/train/cargo/engine/verb/remove_key()

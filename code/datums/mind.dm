@@ -148,7 +148,7 @@
 
 	var/out = "<B>[name]</B>[(current&&(current.real_name!=name))?" (as [current.real_name])":""]<br>"
 	out += "Mind currently owned by key: [key] [active?"(synced)":"(not synced)"]<br>"
-	out += "Assigned role: [assigned_role]. <a href='?src=\ref[src];role_edit=1'>Edit</a><br>"
+	out += "Assigned role: [assigned_role]. <a href='byond://?src=\ref[src];role_edit=1'>Edit</a><br>"
 	out += "<hr>"
 	out += "Special roles:<br><table>"
 
@@ -156,18 +156,18 @@
 	for(var/A in GLOB.all_antag_selectable_types)
 		var/datum/antagonist/antag = GLOB.all_antag_selectable_types[A]
 		var/antag_name = (antag.bantype in GLOB.all_antag_selectable_types) ? antag.bantype : "<font color='red'>[antag.bantype]</font>"
-		out += "<a href='?src=\ref[src];add_antagonist=[antag.bantype]'>[antag_name]</a><br>"
+		out += "<a href='byond://?src=\ref[src];add_antagonist=[antag.bantype]'>[antag_name]</a><br>"
 	out += "<br>"
 
 	for(var/datum/antagonist/antag in antagonist)
-		out += "<br><b>[antag.role_text]</b> <a href='?src=\ref[antag]'>\[EDIT\]</a> <a href='?src=\ref[antag];remove_antagonist=1'>\[DEL\]</a>"
+		out += "<br><b>[antag.role_text]</b> <a href='byond://?src=\ref[antag]'>\[EDIT\]</a> <a href='byond://?src=\ref[antag];remove_antagonist=1'>\[DEL\]</a>"
 	out += "</table><hr>"
 	out += "<br>[memory]"
 
 	out += print_individualobjectives()
 
-	out += "<br><a href='?src=\ref[src];edit_memory=1'>"
-	usr << browse(out, "window=edit_memory[src]")
+	out += "<br><a href='byond://?src=\ref[src];edit_memory=1'>"
+	usr << browse(HTML_SKELETON(out), "window=edit_memory[src]")
 
 /datum/mind/Topic(href, href_list)
 	if(!check_rights(R_ADMIN))
@@ -202,7 +202,7 @@
 
 	else if(href_list["role_edit"])
 		var/new_role = input("Select new role", "Assigned role", assigned_role) as null|anything in GLOB.joblist
-		if (!new_role) return
+		if(!new_role) return
 		var/datum/job/job = SSjob.GetJob(new_role)
 		if(job)
 			assigned_role = job.title
@@ -210,7 +210,7 @@
 
 	else if(href_list["memory_edit"])
 		var/new_memo = sanitize(input("Write new memory", "Memory", memory) as null|message)
-		if (isnull(new_memo)) return
+		if(isnull(new_memo)) return
 		memory = new_memo
 
 	else if(href_list["silicon"])
@@ -219,9 +219,9 @@
 
 			if("unemag")
 				var/mob/living/silicon/robot/R = current
-				if (istype(R))
+				if(istype(R))
 					R.RemoveTrait(CYBORG_TRAIT_EMAGGED)
-					if (R.activated(R.module.emag))
+					if(R.activated(R.module.emag))
 						R.module_active = null
 					if(R.module_state_1 == R.module.emag)
 						R.module_state_1 = null
@@ -235,12 +235,12 @@
 					log_admin("[key_name_admin(usr)] has unemag'ed [R].")
 
 			if("unemagcyborgs")
-				if (isAI(current))
+				if(isAI(current))
 					var/mob/living/silicon/ai/ai = current
-					for (var/mob/living/silicon/robot/R in ai.connected_robots)
+					for(var/mob/living/silicon/robot/R in ai.connected_robots)
 						R.RemoveTrait(CYBORG_TRAIT_EMAGGED)
-						if (R.module)
-							if (R.activated(R.module.emag))
+						if(R.module)
+							if(R.activated(R.module.emag))
 								R.module_active = null
 							if(R.module_state_1 == R.module.emag)
 								R.module_state_1 = null
@@ -262,22 +262,22 @@
 				take_uplink()
 				memory = null//Remove any memory they may have had.
 			if("crystals")
-				if (usr.client.holder.rights & R_FUN)
+				if(usr.client.holder.rights & R_FUN)
 					var/obj/item/device/uplink/hidden/suplink = find_syndicate_uplink()
 					var/crystals
-					if (suplink)
+					if(suplink)
 						crystals = suplink.uses
 					crystals = input("Amount of telecrystals for [key]", "Operative uplink", crystals) as null|num
-					if (!isnull(crystals))
-						if (suplink)
+					if(!isnull(crystals))
+						if(suplink)
 							suplink.uses = crystals
 
 	edit_memory()
 
 /datum/mind/proc/find_syndicate_uplink()
 	var/list/L = current.get_contents()
-	for (var/obj/item/I in L)
-		if (I.hidden_uplink)
+	for(var/obj/item/I in L)
+		if(I.hidden_uplink)
 			return I.hidden_uplink
 	return null
 
@@ -373,7 +373,7 @@
 
 /datum/mind/proc/manifest_status(var/datum/computer_file/report/crew_record/CR)
 	var/inactive_time = world.time - last_activity
-	if (inactive_time >= 60 MINUTES)
+	if(inactive_time >= 60 MINUTES)
 		return null //The server hasn't seen us alive in an hour.
 		//We will not show on the manifest at all
 
@@ -383,11 +383,11 @@
 
 	//If the records have a specific status set, we'll return that
 	//Active is the default state, it means nothing else has specifically been set.
-	if (status != "Active")
+	if(status != "Active")
 		return
 
 
 	//Ok the records say active, that means nothing.
 	//In that case we'll show as inactive if the mob has been inactive longer than 15 minutes
-	if (inactive_time >= 15 MINUTES)
+	if(inactive_time >= 15 MINUTES)
 		return "Inactive"

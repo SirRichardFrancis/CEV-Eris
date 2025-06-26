@@ -3,7 +3,7 @@
 
 /datum/objective/assassinate/marshal/get_panel_entry()
 	var/target = src.target ? "[src.target.current.real_name], the [src.target.assigned_role]" : "no_target"
-	return "You are after the fugitive <a href='?src=\ref[src];switch_target=1'>[target]</a>."
+	return "You are after the fugitive <a href='byond://?src=\ref[src];switch_target=1'>[target]</a>."
 
 /datum/objective/assassinate/marshal/get_info()
 	if(target)
@@ -26,10 +26,10 @@
 	var/list/possible_targets = list()
 	for(var/datum/mind/possible_target in SSticker.minds)
 		if(possible_target != owner &&\
-		 ishuman(possible_target.current) &&\
-		  (possible_target.current.stat != DEAD) &&\
-		   (player_is_ship_antag(possible_target)))
-			if (!player_is_antag_id(possible_target, ROLE_MARSHAL)) // If player is antag, we can test their antag ID
+			ishuman(possible_target.current) &&\
+			(possible_target.current.stat != DEAD) &&\
+			(player_is_ship_antag(possible_target)))
+			if(!player_is_antag_id(possible_target, ROLE_MARSHAL)) // If player is antag, we can test their antag ID
 				possible_targets.Add(possible_target) // A marshal should not target another marshal
 	return possible_targets
 

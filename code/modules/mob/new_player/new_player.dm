@@ -20,7 +20,7 @@
 	mob_list += src*/
 
 /mob/new_player/say(var/message, var/datum/language/speaking = null, var/verb="says", var/alt_name="")
-	if (client)
+	if(client)
 		client.ooc(message)
 
 /mob/new_player/verb/new_player_panel()
@@ -180,16 +180,16 @@
 		var/datum/body_modification/mod = client.prefs.get_modification(BP_BRAIN)
 		if(istype(mod, /datum/body_modification/limb/amputation))
 			if(alert(src,"Are you sure you wish to spawn without a brain? This will likely cause you to do die immediately. \
-			              If not, go to the Augmentation section of Setup Character and change the \"brain\" slot from Removed to the desired kind of brain.", \
-						  "Player Setup", "Yes", "No") == "No")
+					If not, go to the Augmentation section of Setup Character and change the \"brain\" slot from Removed to the desired kind of brain.", \
+					"Player Setup", "Yes", "No") == "No")
 				return 0
 
 		// Warn the player if they are trying to spawn without eyes
 		mod = client.prefs.get_modification(BP_EYES)
 		if(istype(mod, /datum/body_modification/limb/amputation))
 			if(alert(src,"Are you sure you wish to spawn without eyes? It will likely be difficult to see without them. \
-			              If not, go to the Augmentation section of Setup Character and change the \"eyes\" slot from Removed to the desired kind of eyes.", \
-						  "Player Setup", "Yes", "No") == "No")
+						If not, go to the Augmentation section of Setup Character and change the \"eyes\" slot from Removed to the desired kind of eyes.", \
+						"Player Setup", "Yes", "No") == "No")
 				return 0
 
 		if(!check_rights(R_ADMIN, 0))
@@ -337,7 +337,7 @@
 	dat += "<b>Welcome, [name].<br></b>"
 	dat += "Round Duration: [roundduration2text()]<br>"
 
-	if(evacuation_controller.has_evacuated()) //In case Nanotrasen decides reposess CentCom's shuttles.
+	if(evacuation_controller.has_evacuated()) //In case NanoTrasen decides reposess CentCom's shuttles.
 		dat += "<font color='red'><b>The vessel has been evacuated.</b></font><br>"
 	else if(evacuation_controller.is_evacuating())
 		if(evacuation_controller.emergency_evacuation) // Emergency shuttle is past the point of no recall
@@ -358,7 +358,7 @@
 			dat += "<a href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title] ([job.current_positions]) (Active: [active])</a><br>"
 
 	dat += "</center>"
-	src << browse(dat, "window=latechoices;size=400x640;can_close=1")
+	src << browse(HTML_SKELETON(dat), "window=latechoices;size=400x640;can_close=1")
 
 
 /mob/new_player/proc/create_character()

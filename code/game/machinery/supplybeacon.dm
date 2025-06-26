@@ -11,7 +11,7 @@
 	name = "inactive supermatter supply beacon"
 	deploy_path = /obj/machinery/power/supply_beacon/supermatter
 
-/obj/item/supply_beacon/attack_self(var/mob/user)
+/obj/item/supply_beacon/attack_self(mob/user)
 	user.visible_message(SPAN_NOTICE("\The [user] begins setting up \the [src]."))
 	if(!do_after(user, deploy_time, src))
 		return
@@ -44,7 +44,7 @@
 	name = "supermatter supply beacon"
 	drop_type = "supermatter"
 
-/obj/machinery/power/supply_beacon/attackby(var/obj/item/tool/W, var/mob/user)
+/obj/machinery/power/supply_beacon/attackby(obj/item/tool/W, mob/user)
 	if(!use_power)
 		if(!anchored && !connect_to_network())
 			to_chat(usr, SPAN_WARNING("This device must be placed over an exposed cable."))
@@ -53,10 +53,8 @@
 			return ..()
 		anchored = !anchored
 		user.visible_message(SPAN_NOTICE("\The [user] [anchored ? "secures" : "unsecures"] \the [src]."))
-	return
 
-/obj/machinery/power/supply_beacon/attack_hand(var/mob/user)
-
+/obj/machinery/power/supply_beacon/attack_hand(mob/user)
 	if(expended)
 		set_power_use(NO_POWER_USE)
 		to_chat(user, SPAN_WARNING("\The [src] has used up its charge."))
@@ -68,11 +66,11 @@
 		to_chat(user, SPAN_WARNING("You need to secure the beacon with a wrench first!"))
 		return
 
-/obj/machinery/power/supply_beacon/attack_ai(var/mob/user)
+/obj/machinery/power/supply_beacon/attack_ai(mob/user)
 	if(user.Adjacent(src))
 		attack_hand(user)
 
-/obj/machinery/power/supply_beacon/proc/activate(var/mob/user)
+/obj/machinery/power/supply_beacon/proc/activate(mob/user)
 	if(expended)
 		return
 	if(surplus() < 500)
@@ -83,7 +81,7 @@
 	set_power_use(IDLE_POWER_USE)
 	if(user) to_chat(user, SPAN_NOTICE("You activate the beacon. The supply drop will be dispatched soon."))
 
-/obj/machinery/power/supply_beacon/proc/deactivate(var/mob/user, var/permanent)
+/obj/machinery/power/supply_beacon/proc/deactivate(mob/user, permanent)
 	if(permanent)
 		expended = 1
 		icon_state = "beacon_depleted"
@@ -114,6 +112,6 @@
 		var/drop_x = src.x-2
 		var/drop_y = src.y-2
 		var/drop_z = src.z
-		command_announcement.Announce("Nyx Rapid Fabrication priority supply request #[rand(1000,9999)]-[rand(100,999)] recieved. Shipment dispatched via ballistic supply pod for immediate delivery. Have a nice day.", "Thank You For Your Patronage")
+		command_announcement.Announce("Nyx Rapid Fabrication priority supply request #[rand(1000,9999)]-[rand(100,999)] received. Shipment dispatched via ballistic supply pod for immediate delivery. Have a nice day.", "Thank You For Your Patronage")
 		spawn(rand(100,300))
 			new /datum/random_map/droppod/supply(null, drop_x, drop_y, drop_z, supplied_drop = drop_type) // Splat.

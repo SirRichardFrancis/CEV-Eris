@@ -46,29 +46,28 @@
 		return
 
 	user.set_machine(src)
-	src.add_fingerprint(usr)
+	add_fingerprint(usr)
 
 	var/dat
 
 	dat += "<hr/><br/><b>[storage_name]</b><br/>"
 	dat += "<i>Welcome, [user.real_name].</i><br/><br/><hr/>"
-	dat += "<a href='?src=\ref[src];log=1'>View storage log</a>.<br>"
+	dat += "<a href='byond://?src=\ref[src];log=1'>View storage log</a>.<br>"
 	if(allow_items)
-		dat += "<a href='?src=\ref[src];view=1'>View objects</a>.<br>"
-		dat += "<a href='?src=\ref[src];item=1'>Recover object</a>.<br>"
-		dat += "<a href='?src=\ref[src];allitems=1'>Recover all objects</a>.<br>"
+		dat += "<a href='byond://?src=\ref[src];view=1'>View objects</a>.<br>"
+		dat += "<a href='byond://?src=\ref[src];item=1'>Recover object</a>.<br>"
+		dat += "<a href='byond://?src=\ref[src];allitems=1'>Recover all objects</a>.<br>"
 
-	user << browse(dat, "window=cryopod_console")
+	user << browse(HTML_SKELETON(dat), "window=cryopod_console")
 	onclose(user, "cryopod_console")
 
 /obj/machinery/computer/cryopod/Topic(href, href_list)
-
 	if(..())
 		return
 
 	var/mob/user = usr
 
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 	if(href_list["log"])
 
@@ -77,7 +76,7 @@
 			dat += "[person]<br/>"
 		dat += "<hr/>"
 
-		user << browse(dat, "window=cryolog")
+		user << browse(HTML_SKELETON(dat), "window=cryolog")
 
 	if(href_list["view"])
 		if(!allow_items) return
@@ -87,7 +86,7 @@
 			dat += "[I.name]<br/>"
 		dat += "<hr/>"
 
-		user << browse(dat, "window=cryoitems")
+		user << browse(HTML_SKELETON(dat), "window=cryoitems")
 
 	else if(href_list["item"])
 		if(!allow_items) return
@@ -374,15 +373,15 @@
 	occupant.despawn()
 	set_occupant(null)
 
-/obj/machinery/cryopod/affect_grab(var/mob/user, var/mob/target)
+/obj/machinery/cryopod/affect_grab(mob/user, mob/target)
 	try_put_inside(target, user)
 	return TRUE
 
-/obj/machinery/cryopod/MouseDrop_T(var/mob/living/L, mob/living/user)
+/obj/machinery/cryopod/MouseDrop_T(mob/living/L, mob/living/user)
 	if(istype(L) && istype(user))
 		try_put_inside(L, user)
 
-/obj/machinery/cryopod/proc/try_put_inside(var/mob/living/affecting, var/mob/living/user)
+/obj/machinery/cryopod/proc/try_put_inside(mob/living/affecting, mob/living/user)
 	if(occupant)
 		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
 		return
@@ -394,7 +393,6 @@
 		return
 
 	var/willing = null //We don't want to allow people to be forced into despawning.
-
 	if(affecting != user && affecting.client)
 		if(alert(affecting,"Would you like to enter long-term storage?",,"Yes","No") == "Yes")
 			if(!affecting)
@@ -419,14 +417,13 @@
 
 		// Book keeping!
 		var/turf/location = get_turf(src)
-		log_admin("[key_name_admin(affecting)] has entered a stasis pod. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
+		log_admin("[key_name_admin(affecting)] has entered a stasis pod. (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
 		message_admins("<span class='notice'>[key_name_admin(affecting)] has entered a stasis pod.</span>")
 		if(user == affecting)
-			src.add_fingerprint(affecting)
+			add_fingerprint(affecting)
 
 		//Despawning occurs when process() is called with an occupant without a client.
-		src.add_fingerprint(user)
-
+		add_fingerprint(user)
 
 
 /obj/machinery/cryopod/verb/eject()
@@ -458,7 +455,7 @@
 	add_fingerprint(usr)
 
 	name = initial(name)
-	return
+
 
 /obj/machinery/cryopod/verb/move_inside()
 	set name = "Enter Pod"
@@ -491,9 +488,8 @@
 		usr.stop_pulling()
 		set_occupant(usr)
 
-		src.add_fingerprint(usr)
+		add_fingerprint(usr)
 
-	return
 
 /obj/machinery/cryopod/relaymove(mob/user)
 	/// Why isn't it just eject ? because it somehow breaks SSchunks. ForceMoving out of these does not get registered properly
@@ -510,7 +506,6 @@
 
 
 /obj/machinery/cryopod/proc/go_out()
-
 	if(!occupant)
 		return
 
@@ -525,7 +520,7 @@
 	name = initial(name)
 	if(new_occupant)
 		occupant = new_occupant
-		if (occupant.name)
+		if(occupant.name)
 			name = "[name] ([occupant.name])"
 		else
 			//Name isn't set during spawning, but real_name is. This is used for people spawning in cryopods
@@ -555,7 +550,6 @@
 				to_chat(occupant, SPAN_DANGER("<b>Because you are not in perfect health, respawn time reduction is low. \
 				If you wish to respawn as a different crewmember sooner, you should treat your injuries first</b>"))
 		occupant.forceMove(src)
-
 	else
 		if(!QDELETED(occupant))
 			occupant.forceMove(get_turf(src))
@@ -564,5 +558,4 @@
 				var/mob/living/carbon/human/H = occupant
 				H.ExitStasis()
 		occupant = null
-
 	update_icon()

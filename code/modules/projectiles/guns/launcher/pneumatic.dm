@@ -22,8 +22,9 @@
 	var/pressure_setting = 10                           // Percentage of the gas in the tank used to fire the projectile.
 	var/possible_pressure_amounts = list(5,10,20,25,50) // Possible pressure settings.
 	var/force_divisor = 400                             // Force equates to speed. Speed/5 equates to a damage multiplier for whoever you hit.
-	                                                    // For reference, a fully pressurized oxy tank at 50% gas release firing a health
-	                                                    // analyzer with a force_divisor of 10 hit with a damage multiplier of 3000+.
+	// For reference, a fully pressurized oxy tank at 50% gas release firing a health
+	// analyzer with a force_divisor of 10 hit with a damage multiplier of 3000+.
+
 /obj/item/gun/launcher/pneumatic/New()
 	..()
 	item_storage = new(src)
@@ -37,7 +38,7 @@
 	set category = "Object"
 	set src in range(0)
 	var/N = input("Percentage of tank used per shot:","[src]") as null|anything in possible_pressure_amounts
-	if (N)
+	if(N)
 		pressure_setting = N
 		to_chat(usr, "You dial the pressure valve to [pressure_setting]%.")
 
@@ -60,13 +61,13 @@
 	else
 		to_chat(user, "There is nothing to remove in \the [src].")
 
-/obj/item/gun/launcher/pneumatic/attack_hand(mob/user as mob)
+/obj/item/gun/launcher/pneumatic/attack_hand(mob/user)
 	if(user.get_inactive_hand() == src)
 		unload_hopper(user)
 	else
 		return ..()
 
-/obj/item/gun/launcher/pneumatic/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/gun/launcher/pneumatic/attackby(obj/item/W as obj, mob/user)
 	if(!tank && istype(W,/obj/item/tank))
 		user.drop_from_inventory(W, src)
 		tank = W
@@ -75,13 +76,13 @@
 	else if(istype(W) && item_storage.can_be_inserted(W))
 		item_storage.handle_item_insertion(W)
 
-/obj/item/gun/launcher/pneumatic/attack_self(mob/user as mob)
+/obj/item/gun/launcher/pneumatic/attack_self(mob/user)
 	eject_tank(user)
 
 /obj/item/gun/launcher/pneumatic/consume_next_projectile(mob/user=null)
 	if(!item_storage.contents.len)
 		return null
-	if (!tank)
+	if(!tank)
 		to_chat(user, SPAN_WARNING("There is no gas tank in [src]!"))
 		return null
 

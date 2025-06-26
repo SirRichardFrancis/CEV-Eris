@@ -30,7 +30,7 @@
 		overlays += "folder_paper"
 	return
 
-/obj/item/folder/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/folder/attackby(obj/item/W as obj, mob/user)
 	if(istype(W, /obj/item/paper) || istype(W, /obj/item/photo) || istype(W, /obj/item/paper_bundle))
 		user.drop_item()
 		W.forceMove(src)
@@ -43,16 +43,16 @@
 			name = "folder[(n_name ? text("- '[n_name]'") : null)]"
 	return
 
-/obj/item/folder/attack_self(mob/user as mob)
+/obj/item/folder/attack_self(mob/user)
 	var/dat = "<title>[name]</title>"
 
 	for(var/obj/item/paper/P in src)
-		dat += "<A href='?src=\ref[src];remove=\ref[P]'>Remove</A> <A href='?src=\ref[src];rename=\ref[P]'>Rename</A> - <A href='?src=\ref[src];read=\ref[P]'>[P.name]</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];remove=\ref[P]'>Remove</A> <a href='byond://?src=\ref[src];rename=\ref[P]'>Rename</A> - <a href='byond://?src=\ref[src];read=\ref[P]'>[P.name]</A><BR>"
 	for(var/obj/item/photo/Ph in src)
-		dat += "<A href='?src=\ref[src];remove=\ref[Ph]'>Remove</A> <A href='?src=\ref[src];rename=\ref[Ph]'>Rename</A> - <A href='?src=\ref[src];look=\ref[Ph]'>[Ph.name]</A><BR>"
+		dat += "<a href='byond://?src=\ref[src];remove=\ref[Ph]'>Remove</A> <a href='byond://?src=\ref[src];rename=\ref[Ph]'>Rename</A> - <a href='byond://?src=\ref[src];look=\ref[Ph]'>[Ph.name]</A><BR>"
 	for(var/obj/item/paper_bundle/Pb in src)
-		dat += "<A href='?src=\ref[src];remove=\ref[Pb]'>Remove</A> <A href='?src=\ref[src];rename=\ref[Pb]'>Rename</A> - <A href='?src=\ref[src];browse=\ref[Pb]'>[Pb.name]</A><BR>"
-	user << browse(dat, "window=folder")
+		dat += "<a href='byond://?src=\ref[src];remove=\ref[Pb]'>Remove</A> <a href='byond://?src=\ref[src];rename=\ref[Pb]'>Rename</A> - <a href='byond://?src=\ref[src];browse=\ref[Pb]'>[Pb.name]</A><BR>"
+	user << browse(HTML_SKELETON(dat), "window=folder")
 	onclose(user, "folder")
 	add_fingerprint(usr)
 	return
@@ -76,11 +76,12 @@
 			playsound(src,'sound/effects/Paper_Shake.ogg',40,1)
 			if(P && (P.loc == src) && istype(P))
 				if(!(ishuman(usr) || isghost(usr) || issilicon(usr)))
-					usr << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY>[stars(P.info)][P.stamps]</BODY></HTML>", "window=[P.name]")
+					usr << browse(HTML_SKELETON_TITLE(P.name, "[stars(P.info)][P.stamps]"), "window=[P.name]")
 					onclose(usr, "[P.name]")
 				else
-					usr << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY>[P.info][P.stamps]</BODY></HTML>", "window=[P.name]")
+					usr << browse(HTML_SKELETON_TITLE(P.name,"[P.info][P.stamps]"), "window=[P.name]")
 					onclose(usr, "[P.name]")
+
 		else if(href_list["look"])
 			var/obj/item/photo/P = locate(href_list["look"])
 			if(P && (P.loc == src) && istype(P))

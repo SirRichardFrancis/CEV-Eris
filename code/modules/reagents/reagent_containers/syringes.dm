@@ -1,4 +1,4 @@
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /// Syringes.
 ////////////////////////////////////////////////////////////////////////////////
 #define SYRINGE_DRAW 0
@@ -43,7 +43,7 @@
 	..()
 	update_icon()
 
-/obj/item/reagent_containers/syringe/attack_self(mob/user as mob)
+/obj/item/reagent_containers/syringe/attack_self(mob/user)
 	switch(mode)
 		if(SYRINGE_DRAW)
 			mode = SYRINGE_INJECT
@@ -57,7 +57,7 @@
 	..()
 	update_icon()
 
-/obj/item/reagent_containers/syringe/attackby(obj/item/I as obj, mob/user as mob)
+/obj/item/reagent_containers/syringe/attackby(obj/item/I as obj, mob/user)
 	return
 
 /obj/item/reagent_containers/syringe/afterattack(atom/target, mob/user, proximity)
@@ -104,7 +104,7 @@
 					else
 						B = T.take_blood(src,amount)
 
-					if (B)
+					if(B)
 						reagents.reagent_list += B
 						reagents.update_total()
 						on_reagent_change()
@@ -159,7 +159,7 @@
 							to_chat(user, SPAN_WARNING("Injection port on [target]'s suit is refusing your [src]."))
 							// I think rig is advanced enough for this, and people will learn what causes this error
 							if(RIG)
-								playsound(src.loc, 'sound/machines/buzz-two.ogg', 30, 1, -3)
+								playsound(loc, 'sound/machines/buzz-two.ogg', 30, 1, -3)
 								RIG.visible_message("\icon[RIG]\The [RIG] states \"Attention: User of this suit appears to be synthetic origin\".")
 							return
 					// check without message
@@ -238,9 +238,9 @@
 	if(ismob(loc))
 		var/injoverlay
 		switch(mode)
-			if (SYRINGE_DRAW)
+			if(SYRINGE_DRAW)
 				injoverlay = "draw"
-			if (SYRINGE_INJECT)
+			if(SYRINGE_INJECT)
 				injoverlay = "inject"
 		add_overlay(injoverlay)
 		update_wear_icon()
@@ -253,7 +253,7 @@
 		var/target_zone = ran_zone(check_zone(user.targeted_organ, target))
 		var/obj/item/organ/external/affecting = H.get_organ(target_zone)
 
-		if (!affecting || affecting.is_stump())
+		if(!affecting || affecting.is_stump())
 			to_chat(user, SPAN_DANGER("They are missing that limb!"))
 			return
 
@@ -262,7 +262,7 @@
 		if((user != target) && H.check_shields(7, src, user, "\the [src]"))
 			return
 
-		if (target != user && H.getarmor(target_zone, ARMOR_MELEE) > 5 && prob(50))
+		if(target != user && H.getarmor(target_zone, ARMOR_MELEE) > 5 && prob(50))
 			for(var/mob/O in viewers(world.view, user))
 				O.show_message(text("\red <B>[user] tries to stab [target] in \the [hit_area] with [src.name], but the attack is deflected by armor!</B>"), 1)
 			user.remove_from_mob(src)
@@ -270,7 +270,7 @@
 
 			user.attack_log += "\[[time_stamp()]\]<font color='red'> Attacked [target.name] ([target.ckey]) with \the [src] (INTENT: HARM).</font>"
 			target.attack_log += "\[[time_stamp()]\]<font color='orange'> Attacked by [user.name] ([user.ckey]) with [src.name] (INTENT: HARM).</font>"
-			msg_admin_attack("[key_name_admin(user)] attacked [key_name_admin(target)] with [src.name] (INTENT: HARM) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+			msg_admin_attack("[key_name_admin(user)] attacked [key_name_admin(target)] with [src.name] (INTENT: HARM) (<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 
 			return
 
@@ -362,9 +362,9 @@
 	if(ismob(loc))
 		var/injoverlay
 		switch(mode)
-			if (SYRINGE_DRAW)
+			if(SYRINGE_DRAW)
 				injoverlay = "draw"
-			if (SYRINGE_INJECT)
+			if(SYRINGE_INJECT)
 				injoverlay = "inject"
 		add_overlay(injoverlay)
 		update_wear_icon()

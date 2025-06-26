@@ -113,15 +113,15 @@
 	var/list/missed = req_parts - parts
 	return !missed.len
 
-/obj/item/robot_parts/robot_suit/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/robot_parts/robot_suit/attackby(obj/item/W as obj, mob/user)
 	..()
 	if(istype(W, /obj/item/stack/material) && W.get_material_name() == MATERIAL_STEEL && !parts.len)
 		var/obj/item/stack/material/M = W
-		if (M.use(1))
+		if(M.use(1))
 			var/obj/item/secbot_assembly/ed209_assembly/B = new(loc)
 			B.forceMove(get_turf(src))
 			to_chat(user, SPAN_NOTICE("You armed the robot frame."))
-			if (user.get_inactive_hand() == src)
+			if(user.get_inactive_hand() == src)
 				user.remove_from_mob(src)
 				user.put_in_inactive_hand(B)
 			qdel(src)
@@ -134,7 +134,7 @@
 		var/obj/item/robot_parts/selected = part ? parts[part] : null
 		if(!Adjacent(user) || !selected) return
 
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
+		playsound(loc, 'sound/items/Ratchet.ogg', 100, 1)
 		if(!W.use_tool(user, src, 30, QUALITY_BOLT_TURNING))
 			to_chat(user, SPAN_NOTICE("You stop detaching [selected]."))
 			return
@@ -236,11 +236,11 @@
 
 		qdel(src)
 
-	if (istype(W, /obj/item/pen))
+	if(istype(W, /obj/item/pen))
 		var/t = sanitizeSafe(input(user, "Enter new robot name", src.name, src.created_name), MAX_NAME_LEN)
-		if (!t)
+		if(!t)
 			return
-		if (!Adjacent(user) && src.loc != user)
+		if(!Adjacent(user) && src.loc != user)
 			return
 
 		src.created_name = t
@@ -286,7 +286,7 @@
 				to_chat(user, SPAN_WARNING("There is no wire inside!"))
 
 
-/obj/item/robot_parts/head/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/robot_parts/head/attackby(obj/item/W as obj, mob/user)
 	..()
 	if(istype(W, /obj/item/device/flash))
 		if(isrobot(user))
@@ -320,7 +320,7 @@
 
 
 //Made into a seperate proc to avoid copypasta
-/obj/item/robot_parts/head/proc/add_flashes(obj/item/W as obj, mob/user as mob)
+/obj/item/robot_parts/head/proc/add_flashes(obj/item/W as obj, mob/user)
 	if(src.flash1 && src.flash2)
 		to_chat(user, SPAN_NOTICE("You have already inserted the eyes!"))
 		return

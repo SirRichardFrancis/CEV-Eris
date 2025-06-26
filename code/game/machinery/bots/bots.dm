@@ -29,7 +29,7 @@
 	qdel(src)
 
 /obj/machinery/bot/proc/healthcheck()
-	if (src.health <= 0)
+	if(src.health <= 0)
 		src.explode()
 
 /obj/machinery/bot/emag_act(var/remaining_charges, var/user)
@@ -53,7 +53,7 @@
 			extra_description += SPAN_DANGER("[src]'s parts look very loose!")
 	..(user, extra_description)
 
-/obj/machinery/bot/attackby(obj/item/W as obj, mob/user as mob)
+/obj/machinery/bot/attackby(obj/item/W as obj, mob/user)
 	if(istype(W, /obj/item/tool/screwdriver))
 		if(!locked)
 			open = !open
@@ -103,11 +103,11 @@
 		turn_off()
 	spawn(severity * 300)
 		stat &= ~EMPED
-		if (was_on)
+		if(was_on)
 			turn_on()
 
 
-/obj/machinery/bot/attack_ai(mob/user as mob)
+/obj/machinery/bot/attack_ai(mob/user)
 	src.attack_hand(user)
 
 /obj/machinery/bot/attack_hand(var/mob/living/carbon/human/user)
@@ -118,7 +118,7 @@
 	if(user.species.can_shred(user))
 		src.health -= rand(15,30)*brute_dam_coeff
 		src.visible_message(SPAN_DANGER("[user] has slashed [src]!"))
-		playsound(src.loc, 'sound/weapons/slice.ogg', 25, 1, -1)
+		playsound(loc, 'sound/weapons/slice.ogg', 25, 1, -1)
 		if(prob(10))
 			new /obj/effect/decal/cleanable/blood/oil(src.loc)
 		healthcheck()

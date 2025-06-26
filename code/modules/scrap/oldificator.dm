@@ -40,30 +40,30 @@
 
 /obj/item/gun/make_young()
 	var/list/stored_upgrades = item_upgrades.Copy()
-	for (var/obj/item/toremove in stored_upgrades)
+	for(var/obj/item/toremove in stored_upgrades)
 		var/datum/component/item_upgrade/IU = toremove.GetComponent(/datum/component/item_upgrade)
-		if (IU)
+		if(IU)
 			SEND_SIGNAL_OLD(toremove, COMSIG_REMOVE, src)
 			visible_message(SPAN_NOTICE("\The [toremove] detaches from \the [src]."))
 			. = TRUE
 
 	refresh_upgrades()
-	if (.) // this is so it always returns true if it did something
+	if(.) // this is so it always returns true if it did something
 		..()
 	else
 		. = ..()
 
 /obj/item/tool/make_young()
 	var/list/stored_upgrades = item_upgrades.Copy()
-	for (var/obj/item/toremove in stored_upgrades)
+	for(var/obj/item/toremove in stored_upgrades)
 		var/datum/component/item_upgrade/IU = toremove.GetComponent(/datum/component/item_upgrade)
-		if (IU)
+		if(IU)
 			SEND_SIGNAL_OLD(toremove, COMSIG_REMOVE, src)
 			visible_message(SPAN_NOTICE("\The [toremove] detaches from \the [src]."))
 			. = TRUE
 
 	refresh_upgrades()
-	if (.) // this is so it always returns true if it did something
+	if(.) // this is so it always returns true if it did something
 		..()
 	else
 		. = ..()
@@ -87,10 +87,10 @@
 		name = "[pick("old", "worn", "rusted", "weathered", "expired", "dirty", "frayed", "beaten", "ancient", "tarnished")] [name]"
 		desc += "\n "
 		desc += pick("Its warranty has expired.",
-		 "The inscriptions on this thing have been erased by time.",
-		  "Looks completely ruined.",
-		   "It is difficult to make out what this thing once was.",
-	 	   "A relic from a bygone age.")
+		"The inscriptions on this thing have been erased by time.",
+		"Looks completely ruined.",
+		"It is difficult to make out what this thing once was.",
+		"A relic from a bygone age.")
 
 		if(prob(80))
 			color = pick("#AA7744", "#774411", "#777777")
@@ -108,7 +108,7 @@
 		desc += pick("Its shaped rather strangely.",
 			"The fine details on this thing have been erased.",
 			"Looks completely crooked.",
-	 		"Looks like it could break at any moment.")
+			"Looks like it could break at any moment.")
 
 	price_tag *= RAND_DECIMAL(0.1, 0.6) //Tank the price of it
 
@@ -387,7 +387,7 @@
 /*
 /obj/effect/decal/mecha_wreckage/make_old(low_quality_oldification)
 	.=..()
-	if (.)
+	if(.)
 		salvage_num = max(1, salvage_num - pick(1, 2, 3))
 */
 /obj/item/part/gun/make_old(low_quality_oldification)

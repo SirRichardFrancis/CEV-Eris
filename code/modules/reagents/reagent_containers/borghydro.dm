@@ -59,7 +59,7 @@
 		to_chat(user, SPAN_WARNING("The injector is empty."))
 		return
 
-	if (M.can_inject(user, 1))
+	if(M.can_inject(user, 1))
 		to_chat(user, SPAN_NOTICE("You inject [M] with the injector."))
 		to_chat(M, SPAN_NOTICE("You feel a tiny prick!"))
 
@@ -71,7 +71,7 @@
 			to_chat(user, SPAN_NOTICE("[t] units injected. [reagent_volumes[reagent_ids[mode]]] units remaining."))
 	return
 
-/obj/item/reagent_containers/borghypo/attack_self(mob/user as mob) //Change the mode
+/obj/item/reagent_containers/borghypo/attack_self(mob/user) //Change the mode
 	var/t = ""
 	for(var/i = 1 to reagent_ids.len)
 		if(t)
@@ -79,7 +79,7 @@
 		if(mode == i)
 			t += "<b>[reagent_names[i]]</b>"
 		else
-			t += "<a href='?src=\ref[src];reagent=[reagent_ids[i]]'>[reagent_names[i]]</a>"
+			t += "<a href='byond://?src=\ref[src];reagent=[reagent_ids[i]]'>[reagent_names[i]]</a>"
 	t = "Available reagents: [t]."
 	to_chat(user, t)
 

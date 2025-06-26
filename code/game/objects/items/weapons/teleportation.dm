@@ -54,7 +54,7 @@
 	var/list/L = list()
 	for(var/obj/machinery/teleport/hub/R in world)
 		var/obj/machinery/computer/teleporter/com = locate(/obj/machinery/computer/teleporter, locate(R.x - 2, R.y, R.z))
-		if (istype(com, /obj/machinery/computer/teleporter) && com.locked && !com.one_time_use)
+		if(istype(com, /obj/machinery/computer/teleporter) && com.locked && !com.one_time_use)
 			if(R.icon_state == "tele1")
 				L["[com.id] (Active)"] = com.locked
 			else
@@ -70,7 +70,7 @@
 	if(turfs.len)
 		L["None (Dangerous)"] = pick(turfs)
 	var/t1 = input(user, "Please select a teleporter to lock in on.", "Hand Teleporter") in L
-	if ((user.get_active_hand() != src || user.stat || user.restrained()))
+	if((user.get_active_hand() != src || user.stat || user.restrained()))
 		return
 	var/T = L[t1]
 	to_chat(user, SPAN_NOTICE("Portal locked in."))
@@ -79,7 +79,7 @@
 	P.entropy_value += entropy_value
 	if(portal_fail_chance)
 		P.failchance = portal_fail_chance
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 
 /obj/item/hand_tele/MouseDrop(over_object)
 	if((src.loc == usr) && istype(over_object, /obj/screen/inventory/hand) && eject_item(cell, usr))
@@ -154,7 +154,7 @@
 	var/entropy_value = 1 //for bluespace entropy
 
 /obj/item/tele_spear/attack(mob/living/carbon/human/M, mob/living/carbon/user)
-	playsound(src.loc, 'sound/effects/EMPulse.ogg', 65, 1)
+	playsound(loc, 'sound/effects/EMPulse.ogg', 65, 1)
 	var/turf/teleport_location = pick( getcircle(user.loc, 8) )
 	if(prob(5))
 		go_to_bluespace(get_turf(src), entropy_value, FALSE, user, teleport_location, 1)

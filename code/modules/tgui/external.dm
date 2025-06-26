@@ -42,7 +42,7 @@
  *
  * required user mob The mob interacting with the UI.
  *
- * return list Statuic Data to be sent to the UI.
+ * return list Static Data to be sent to the UI.
  */
 /datum/proc/ui_static_data(mob/user)
 	return list()
@@ -70,7 +70,7 @@
  * change static data.
  */
 /datum/proc/update_static_data_for_all_viewers()
-	for (var/datum/tgui/window as anything in SStgui.open_uis_by_src[REF(src)])
+	for(var/datum/tgui/window as anything in SStgui.open_uis)
 		window.send_full_update()
 
 /**
@@ -86,7 +86,7 @@
  */
 /datum/proc/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	SHOULD_CALL_PARENT(TRUE)
-	SEND_SIGNAL_OLD(src, COMSIG_UI_ACT, usr, action)
+	SEND_SIGNAL(src, COMSIG_UI_ACT, usr, action, params)
 	// If UI is not interactive or usr calling Topic is not the UI user, bail.
 	if(!ui || ui.status != UI_INTERACTIVE)
 		return TRUE
@@ -190,7 +190,7 @@
 	// Unconditionally collect tgui logs
 	if(type == "log")
 		var/context = href_list["window_id"]
-		if (href_list["ns"])
+		if(href_list["ns"])
 			context += " ([href_list["ns"]])"
 		log_tgui(usr, href_list["message"],
 			context = context)
@@ -204,7 +204,7 @@
 		var/list/windows = usr.client.tgui_windows
 		for(var/window_id in windows)
 			var/datum/tgui_window/window = windows[window_id]
-			if (window.status == TGUI_WINDOW_READY)
+			if(window.status == TGUI_WINDOW_READY)
 				window.on_message(type, null, href_list)
 		return TRUE
 	// Locate window
@@ -224,7 +224,7 @@
 	if(href_list["payload"])
 		var/payload_text = href_list["payload"]
 
-		if (!rustg_json_is_valid(payload_text))
+		if(!rustg_json_is_valid(payload_text))
 			log_tgui(usr, "Error: Invalid JSON")
 			return TRUE
 

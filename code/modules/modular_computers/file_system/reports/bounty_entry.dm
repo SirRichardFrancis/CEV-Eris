@@ -23,7 +23,7 @@ GLOBAL_LIST_EMPTY(all_bounty_entries)
 	add_field(/datum/report_field/signature/anon, "Employer")
 	add_field(/datum/report_field/array/signed_people, "People who signed for job")
 
-/datum/computer_file/report/bounty_entry/proc/publish(var/mob/user)
+/datum/computer_file/report/bounty_entry/proc/publish(mob/user)
 	if(user)
 		if(field_from_name("Title").get_value() && field_from_name("Job description").get_value() && field_from_name("Reward").get_value() && field_from_name("Employer").get_value())
 			if(!owner_id_card)
@@ -57,7 +57,7 @@ GLOBAL_LIST_EMPTY(all_bounty_entries)
 			log_game("Bounty: [field_from_name("Title").get_value()] created by [user]")
 			for(var/mob/living/carbon/human/H in GLOB.human_mob_list)
 				if(ishuman(H))
-					if (H == user)
+					if(H == user)
 						continue
 					var/obj/item/modular_computer/C = locate(/obj/item/modular_computer) in H.GetAllContents()
 					if(C)
@@ -68,7 +68,6 @@ GLOBAL_LIST_EMPTY(all_bounty_entries)
 			return TRUE
 		else
 			return FALSE
-
 
 /datum/computer_file/report/bounty_entry/proc/remove(mob/living/carbon/human/contractor)
 	var/destroy = FALSE
@@ -93,7 +92,7 @@ GLOBAL_LIST_EMPTY(all_bounty_entries)
 			if(C)
 				var/datum/computer_file/program/P = C.getProgramByType(/datum/computer_file/program/bounty_board_app)
 				if(P)
-					if (H == contractor)
+					if(H == contractor)
 						playsound(src, 'sound/machines/buzz-two.ogg', 50, 1)
 						C.visible_message("\The [C] buzz softly and states \"Bounty reward was transfered to your account\".")
 					else

@@ -24,7 +24,7 @@
 	wifi_sender = null
 	return ..()
 
-/obj/machinery/button/attackby(obj/item/W, mob/user as mob)
+/obj/machinery/button/attackby(obj/item/W, mob/user)
 	return attack_hand(user)
 
 /obj/machinery/button/attack_hand(mob/living/user)
@@ -146,7 +146,8 @@
 				2 = idscan
 				4 = bolts
 				8 = shock
-				16 = door safties  */
+				16 = door safties
+*/
 
 /obj/machinery/button/toggle/door/update_icon()
 	if(active)

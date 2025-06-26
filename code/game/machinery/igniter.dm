@@ -32,18 +32,18 @@
 	wifi_receiver = null
 	return ..()
 
-/obj/machinery/igniter/attack_ai(mob/user as mob)
+/obj/machinery/igniter/attack_ai(mob/user)
 	return src.attack_hand(user)
 
-/obj/machinery/igniter/attack_hand(mob/user as mob)
+/obj/machinery/igniter/attack_hand(mob/user)
 	if(..())
 		return 1
 	ignite()
 
 /obj/machinery/igniter/Process()	//ugh why is this even in process()?
-	if (on && powered() )
+	if(on && powered() )
 		var/turf/location = src.loc
-		if (isturf(location))
+		if(isturf(location))
 			location.hotspot_expose(1000,500,1)
 	return 1
 
@@ -100,8 +100,8 @@
 	..()
 	update_icon()
 
-/obj/machinery/sparker/attackby(obj/item/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/tool/screwdriver))
+/obj/machinery/sparker/attackby(obj/item/W as obj, mob/user)
+	if(istype(W, /obj/item/tool/screwdriver))
 		add_fingerprint(user)
 		disable = !disable
 		if(disable)
@@ -111,16 +111,16 @@
 		update_icon()
 
 /obj/machinery/sparker/attack_ai()
-	if (anchored)
+	if(anchored)
 		return ignite()
 	else
 		return
 
 /obj/machinery/sparker/proc/ignite()
-	if (!powered())
+	if(!powered())
 		return
 
-	if (disable || (last_spark && world.time < last_spark + 50))
+	if(disable || (last_spark && world.time < last_spark + 50))
 		return
 
 
@@ -131,7 +131,7 @@
 	src.last_spark = world.time
 	use_power(1000)
 	var/turf/location = src.loc
-	if (isturf(location))
+	if(isturf(location))
 		location.hotspot_expose(1000,500,1)
 	return 1
 
@@ -146,7 +146,7 @@
 	name = "ignition switch"
 	desc = "A remote control switch for a mounted igniter."
 
-/obj/machinery/button/ignition/attack_hand(mob/user as mob)
+/obj/machinery/button/ignition/attack_hand(mob/user)
 
 	if(..())
 		return
@@ -157,7 +157,7 @@
 	icon_state = "launcher1"
 
 	for(var/obj/machinery/sparker/M in GLOB.machines)
-		if (M.id == id)
+		if(M.id == id)
 			spawn( 0 )
 				M.ignite()
 
